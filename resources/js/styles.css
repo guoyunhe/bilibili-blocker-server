@@ -140,21 +140,19 @@ a {
   text-align: left;
 }
 
-.avatar {
-  display: grid;
-  width: 68px;
-  height: 68px;
-  margin: 0 auto 20px;
-  place-items: center;
-  border-radius: 50%;
-  color: #fff;
-  background: #e6505c;
-  font-size: 1.2rem;
-  font-weight: 800;
-}
-
 .account-card h1 {
   font-size: 1.55rem;
+}
+
+.role-badge {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #9c2732;
+  background: #fff0f1;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .account-card .primary-button {

@@ -6,9 +6,9 @@ import { loginValidator, signupValidator } from '#validators/user'
 
 export default class AuthController {
   async register({ request, serialize }: HttpContext) {
-    const { fullName, email, password } = await request.validateUsing(signupValidator)
+    const { name, email, password } = await request.validateUsing(signupValidator)
 
-    const user = await User.create({ fullName, email, password })
+    const user = await User.create({ name, email, password })
     const token = await User.accessTokens.create(user)
 
     return serialize({

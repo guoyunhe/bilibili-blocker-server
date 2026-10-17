@@ -110,11 +110,9 @@ export default function App() {
       <main className="page">
         <section className="card account-card">
           <p className="eyebrow">BILIBILI BLOCKER</p>
-          <div className="avatar" aria-hidden="true">
-            {user.initials}
-          </div>
-          <h1>欢迎回来，{user.fullName || user.email}</h1>
+          <h1>欢迎回来，{user.name}</h1>
           <p className="muted">{user.email}</p>
+          <p className="role-badge">{user.role === 'admin' ? '管理员' : '普通用户'}</p>
           {error && (
             <p className="error" role="alert">
               {error}

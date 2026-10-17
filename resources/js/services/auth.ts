@@ -1,8 +1,8 @@
 export type AuthUser = {
   id: number
-  fullName: string | null
+  name: string
   email: string
-  initials: string
+  role: string
 }
 
 type AuthResponse = {
@@ -70,13 +70,13 @@ export async function login(email: string, password: string) {
 }
 
 export async function register(
-  fullName: string,
+  name: string,
   email: string,
   password: string,
   passwordConfirmation: string
 ) {
   const response = await request<AuthResponse>('register', {
-    fullName,
+    name,
     email,
     password,
     passwordConfirmation,
