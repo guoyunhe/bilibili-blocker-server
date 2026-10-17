@@ -28,6 +28,7 @@ export default defineConfig({
     () => import('@adonisjs/core/commands'),
     () => import('@adonisjs/lucid/commands'),
     () => import('@adonisjs/session/commands'),
+    () => import('@adonisjs/queue/commands'),
   ],
 
   /*
@@ -55,6 +56,8 @@ export default defineConfig({
     () => import('@adonisjs/vite/vite_provider'),
     () => import('@adonisjs/core/providers/edge_provider'),
     () => import('@adonisjs/static/static_provider'),
+    () => import('@adonisjs/drive/drive_provider'),
+    () => import('@adonisjs/queue/queue_provider'),
     () => import('#providers/api_provider'),
   ],
 
@@ -70,6 +73,10 @@ export default defineConfig({
     () => import('#start/routes'),
     () => import('#start/kernel'),
     () => import('#start/validator'),
+    {
+      file: () => import('#start/scheduler'),
+      environment: ['web'],
+    },
   ],
 
   /*

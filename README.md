@@ -11,6 +11,7 @@ Bilibili Blocker 的服务端项目，提供账户认证 API、按 UID 查询账
 - `user` / `admin` 角色及可用于路由授权的管理员中间件
 - `user:role` 命令，用邮箱查找用户并修改角色
 - 从浏览器扩展规则清单导入规则、UID 账号和多对多关联
+- 每天凌晨 3 点导出已审核通过的规则到 public Drive，可从 `/uploads/rules/{规则 code}.txt` 下载
 - 仅在 development 环境运行的演示投票 seeder
 - Podman Compose 管理本地 MariaDB 开发容器
 - 仅在 development/test 环境运行的演示用户 seeder
@@ -51,6 +52,22 @@ pnpm dev
 ```
 
 浏览器打开 <http://localhost:3520>。登录和注册页面分别位于 `/login` 和 `/register`。
+计划任务使用数据库队列：首次部署需执行 `node ace migration:run`，并保持 `pnpm worker` 进程运行。规则文件写入项目 `storage/rules` 目录，下载地址为 `/uploads/rules/{规则 code}.txt`。
+需要立即重新生成规则文件时，可运行 `node ace rules:export`。
+
+### PM2 部署
+
+准备好生产 `.env` 并安装 PM2 后，在项目根目录运行：
+
+```sh
+pnpm install --frozen-lockfile
+pnpm build
+node ace migration:run
+pm2 start ecosystem.config.cjs --env production
+pm2 save
+```
+
+`ecosystem.config.cjs` 会以 cluster 模式启动 Web 服务，并以单实例启动队列 worker。发布新版本后重新构建并运行 `pm2 reload ecosystem.config.cjs --env production`。
 
 Seeder 只会在 development/test 环境创建以下演示账户，不要在真实部署中使用这些凭据：
 

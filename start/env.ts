@@ -24,4 +24,8 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   // Session
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
+
+  // Drive and queue
+  DRIVE_DISK: Env.schema.enum.optional(['fs'] as const),
+  QUEUE_DRIVER: Env.schema.enum.optional(['database', 'sync'] as const),
 })
