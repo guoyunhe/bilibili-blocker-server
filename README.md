@@ -46,7 +46,7 @@ node ace db:seed
 pnpm dev
 ```
 
-浏览器打开 <http://localhost:3333>。登录和注册页面分别位于 `/login` 和 `/register`。
+浏览器打开 <http://localhost:3520>。登录和注册页面分别位于 `/login` 和 `/register`。
 
 Seeder 只会在 development/test 环境创建以下演示账户，不要在真实部署中使用这些凭据：
 
