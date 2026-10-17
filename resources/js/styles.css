@@ -1,17 +1,9 @@
 :root {
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
-  color: #202534;
-  background: #f5f6fa;
+  font-family: Inter, 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
@@ -22,149 +14,187 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  background: #f4f9fc;
 }
 
-button,
-input {
-  font: inherit;
-}
-
-.page {
-  display: grid;
+#root,
+.app-shell {
   min-height: 100vh;
-  place-items: center;
-  padding: 24px;
 }
 
-.card {
+.site-header {
+  background: rgb(255 255 255 / 94%);
+  border-bottom: 1px solid #dcecf3;
+  backdrop-filter: blur(14px);
+}
+
+.site-header-inner {
+  width: min(100%, 1280px);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.brand {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 9px;
+  color: var(--mantine-color-bilibili-6);
+  font-size: 1.05rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand:hover {
+  color: var(--mantine-color-bilibili-7);
+  text-decoration: none;
+}
+
+.header-search {
   width: min(100%, 420px);
-  padding: 38px;
-  border: 1px solid #e3e6ed;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 18px 50px rgb(32 37 52 / 8%);
+  min-width: 0;
+  margin: 0 auto;
 }
 
-.eyebrow {
-  margin: 0 0 24px;
-  color: #e6505c;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(1.65rem, 5vw, 2rem);
-  letter-spacing: -0.035em;
-}
-
-.muted {
-  margin: 10px 0 26px;
-  color: #71798b;
-  line-height: 1.6;
-}
-
-.form {
-  display: grid;
-  gap: 18px;
-}
-
-.form label {
-  display: grid;
-  gap: 8px;
-  color: #353c4b;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.form input {
+.account-search,
+.account-search-input {
   width: 100%;
-  padding: 12px 13px;
-  border: 1px solid #d8dce5;
-  border-radius: 8px;
-  outline: none;
-  color: #202534;
-  background: #fff;
+  min-width: 0;
 }
 
-.form input:focus {
-  border-color: #e6505c;
-  box-shadow: 0 0 0 3px rgb(230 80 92 / 13%);
-}
-
-.primary-button {
+.account-search .mantine-Group-root {
   width: 100%;
-  min-height: 46px;
-  margin-top: 2px;
-  border: 0;
-  border-radius: 8px;
-  color: #fff;
-  background: #e6505c;
-  font-weight: 700;
-  cursor: pointer;
 }
 
-.primary-button:hover:not(:disabled) {
-  background: #d83e4a;
+.account-search-input {
+  flex: 1 1 auto;
 }
 
-.primary-button:disabled {
-  cursor: wait;
-  opacity: 0.7;
+.account-search .mantine-Button-root {
+  flex: 0 0 auto;
+  min-width: 92px;
+  white-space: nowrap;
 }
 
-.switch-mode {
-  margin: 24px 0 0;
-  color: #71798b;
-  text-align: center;
+.account-search[data-size='sm'] .mantine-Button-root {
+  min-width: 76px;
 }
 
-a {
-  color: #cf3946;
-  font-weight: 650;
+.header-actions {
+  flex: 0 0 auto;
 }
 
-.error {
-  margin: 0;
-  color: #b42330;
-  font-size: 0.9rem;
-  line-height: 1.5;
+.app-main {
+  min-height: calc(100vh - 68px);
+  background:
+    radial-gradient(ellipse at 86% 12%, rgb(251 114 153 / 9%), transparent 32rem),
+    radial-gradient(ellipse at 13% 18%, rgb(0 161 214 / 10%), transparent 36rem), #f4f9fc;
 }
 
-.account-card {
-  text-align: center;
+.app-error {
+  width: min(calc(100% - 32px), 780px);
+  margin: 16px auto 0;
 }
 
-.account-card .eyebrow {
-  text-align: left;
+.home-page {
+  display: flex;
+  min-height: calc(100vh - 68px);
+  align-items: center;
+  padding-top: 52px;
+  padding-bottom: 64px;
 }
 
-.account-card h1 {
-  font-size: 1.55rem;
+.home-page > .mantine-Stack-root {
+  width: 100%;
 }
 
-.role-badge {
-  display: inline-block;
-  margin: 0 0 10px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  color: #9c2732;
-  background: #fff0f1;
-  font-size: 0.8rem;
-  font-weight: 700;
+.home-hero {
+  max-width: 760px;
 }
 
-.account-card .primary-button {
-  margin-top: 12px;
+.hero-icon {
+  box-shadow: 0 10px 32px rgb(0 161 214 / 14%);
+}
+
+.home-title {
+  max-width: 760px;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1.2;
+}
+
+.home-description {
+  max-width: 620px;
+  line-height: 1.8;
+}
+
+.home-search {
+  width: min(100%, 760px);
+}
+
+.home-features {
+  max-width: 1000px;
+}
+
+.feature-card {
+  height: 100%;
+  border-color: #e1edf2;
+  background: rgb(255 255 255 / 76%);
+}
+
+.details-page {
+  padding-top: 40px;
+  padding-bottom: 56px;
+}
+
+.flag-item {
+  border-color: #e4edf1;
+  background: #fcfeff;
+}
+
+.auth-page {
+  display: grid;
+  min-height: calc(100vh - 68px);
+  align-content: center;
+  padding-top: 40px;
+  padding-bottom: 56px;
+}
+
+.auth-paper {
+  border: 1px solid #e1edf2;
+  background: rgb(255 255 255 / 96%);
+}
+
+@media (max-width: 720px) {
+  .header-search {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
-  .page {
-    padding: 16px;
+  .site-header-inner {
+    gap: 8px;
+    padding-right: 12px;
+    padding-left: 16px;
   }
 
-  .card {
-    padding: 28px 22px;
+  .brand {
+    gap: 6px;
+    font-size: 0.9rem;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+
+  .header-actions .mantine-Button-root {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+
+  .home-page {
+    padding-top: 40px;
+    padding-bottom: 48px;
   }
 }

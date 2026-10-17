@@ -4,5 +4,6 @@
  */
 
 export const controllers = {
+  Accounts: () => import('#controllers/accounts_controller'),
   Auth: () => import('#controllers/auth_controller'),
 }

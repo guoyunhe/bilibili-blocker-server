@@ -1,40 +1,30 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { Alert, AppShell } from '@mantine/core'
+import { useEffect, useState } from 'react'
 
+import AccountDetailsPage from './components/AccountDetailsPage.js'
+import AppHeader from './components/AppHeader.js'
+import AuthPage from './components/AuthPage.js'
+import HomePage from './components/HomePage.js'
 import {
   ApiError,
   clearAuthToken,
   getAuthToken,
   getCurrentUser,
-  login,
   logout,
-  register,
   type AuthUser,
 } from './services/auth.js'
-
-type AuthMode = 'login' | 'register'
-
-function errorMessage(reason: unknown) {
-  return reason instanceof Error ? reason.message : '请求失败，请稍后重试'
-}
-
-function initialMode(): AuthMode {
-  return window.location.pathname === '/register' ? 'register' : 'login'
-}
+import { errorMessage } from './utils/error_message.js'
 
 export default function App() {
-  const [mode, setMode] = useState<AuthMode>(initialMode)
+  const [pathname, setPathname] = useState(window.location.pathname)
   const [user, setUser] = useState<AuthUser | null>(null)
-  const [ready, setReady] = useState(!getAuthToken())
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordConfirmation, setPasswordConfirmation] = useState('')
+  const [authReady, setAuthReady] = useState(!getAuthToken())
+  const [logoutBusy, setLogoutBusy] = useState(false)
   const [error, setError] = useState('')
-  const [busy, setBusy] = useState(false)
 
   useEffect(() => {
     function handlePopState() {
-      setMode(initialMode())
+      setPathname(window.location.pathname)
     }
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
@@ -51,161 +41,60 @@ export default function App() {
         }
         setError(errorMessage(reason))
       })
-      .finally(() => setReady(true))
+      .finally(() => setAuthReady(true))
   }, [])
 
-  function navigate(nextMode: AuthMode) {
-    window.history.pushState({}, '', nextMode === 'register' ? '/register' : '/login')
-    setMode(nextMode)
+  function navigateTo(path: string) {
+    window.history.pushState({}, '', path)
+    setPathname(path)
     setError('')
-  }
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setError('')
-    setBusy(true)
-
-    try {
-      if (mode === 'register') {
-        setUser(await register(name.trim(), email, password, passwordConfirmation))
-      } else {
-        setUser(await login(email, password))
-      }
-      window.history.pushState({}, '', '/')
-    } catch (reason) {
-      setError(errorMessage(reason))
-    } finally {
-      setBusy(false)
-    }
   }
 
   async function handleLogout() {
     setError('')
-    setBusy(true)
+    setLogoutBusy(true)
     try {
       await logout()
       setUser(null)
-      setMode('login')
-      window.history.pushState({}, '', '/login')
+      navigateTo('/')
     } catch (reason) {
       setError(errorMessage(reason))
     } finally {
-      setBusy(false)
+      setLogoutBusy(false)
     }
   }
 
-  if (!ready) {
-    return (
-      <main className="page">
-        <section className="card" aria-live="polite">
-          <p className="eyebrow">BILIBILI BLOCKER</p>
-          <p>正在载入账户…</p>
-        </section>
-      </main>
-    )
-  }
+  const accountRoute = pathname.match(/^\/accounts\/([^/]+)$/)
+  const authMode = pathname === '/login' ? 'login' : pathname === '/register' ? 'register' : null
 
-  if (user) {
-    return (
-      <main className="page">
-        <section className="card account-card">
-          <p className="eyebrow">BILIBILI BLOCKER</p>
-          <h1>欢迎回来，{user.name}</h1>
-          <p className="muted">{user.email}</p>
-          <p className="role-badge">{user.role === 'admin' ? '管理员' : '普通用户'}</p>
-          {error && (
-            <p className="error" role="alert">
-              {error}
-            </p>
-          )}
-          <button className="primary-button" type="button" disabled={busy} onClick={handleLogout}>
-            {busy ? '正在退出…' : '退出登录'}
-          </button>
-        </section>
-      </main>
-    )
+  function renderPage() {
+    if (accountRoute) {
+      return <AccountDetailsPage uid={accountRoute[1]} />
+    }
+    if (authMode) {
+      return <AuthPage mode={authMode} onAuthenticated={setUser} onNavigate={navigateTo} />
+    }
+    return <HomePage onSearch={(uid) => navigateTo(`/accounts/${uid}`)} />
   }
-
-  const isRegister = mode === 'register'
 
   return (
-    <main className="page">
-      <section className="card">
-        <p className="eyebrow">BILIBILI BLOCKER</p>
-        <h1>{isRegister ? '创建账户' : '欢迎回来'}</h1>
-        <p className="muted">{isRegister ? '注册账户以继续使用。' : '登录以继续使用你的账户。'}</p>
-        <form className="form" onSubmit={handleSubmit}>
-          {isRegister && (
-            <label>
-              姓名
-              <input
-                autoComplete="name"
-                maxLength={32}
-                required
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-              />
-            </label>
-          )}
-          <label>
-            邮箱
-            <input
-              autoComplete="email"
-              type="email"
-              maxLength={254}
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </label>
-          <label>
-            密码
-            <input
-              autoComplete={isRegister ? 'new-password' : 'current-password'}
-              type="password"
-              minLength={isRegister ? 8 : undefined}
-              maxLength={32}
-              required
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-          </label>
-          {isRegister && (
-            <label>
-              确认密码
-              <input
-                autoComplete="new-password"
-                type="password"
-                minLength={8}
-                maxLength={32}
-                required
-                value={passwordConfirmation}
-                onChange={(event) => setPasswordConfirmation(event.target.value)}
-              />
-            </label>
-          )}
-          {error && (
-            <p className="error" role="alert">
-              {error}
-            </p>
-          )}
-          <button className="primary-button" type="submit" disabled={busy}>
-            {busy ? '请稍候…' : isRegister ? '注册' : '登录'}
-          </button>
-        </form>
-        <p className="switch-mode">
-          {isRegister ? '已有账户？' : '还没有账户？'}{' '}
-          <a
-            href={isRegister ? '/login' : '/register'}
-            onClick={(event) => {
-              event.preventDefault()
-              navigate(isRegister ? 'login' : 'register')
-            }}
-          >
-            {isRegister ? '登录' : '立即注册'}
-          </a>
-        </p>
-      </section>
-    </main>
+    <AppShell className="app-shell" header={{ height: 68 }}>
+      <AppHeader
+        authReady={authReady}
+        logoutBusy={logoutBusy}
+        user={user}
+        onLogout={handleLogout}
+        onNavigate={navigateTo}
+        onSearch={(uid) => navigateTo(`/accounts/${uid}`)}
+      />
+      <AppShell.Main className="app-main">
+        {error && (
+          <Alert className="app-error" color="red" role="alert" title="请求失败">
+            {error}
+          </Alert>
+        )}
+        {renderPage()}
+      </AppShell.Main>
+    </AppShell>
   )
 }

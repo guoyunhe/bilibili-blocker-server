@@ -14,6 +14,7 @@ import { controllers } from '#generated/controllers'
 router
   .group(() => {
     router.get('/', () => ({ hello: 'world' }))
+    router.get('accounts/:uid', [controllers.Accounts, 'show'])
 
     router
       .group(() => {

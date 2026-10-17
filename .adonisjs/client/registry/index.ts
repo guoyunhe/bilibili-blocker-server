@@ -6,6 +6,12 @@ import type { ApiDefinition } from './tree.d.ts'
 const placeholder: any = {}
 
 const routes = {
+  'accounts.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/accounts/:uid',
+    tokens: [{"old":"/api/accounts/:uid","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid","type":1,"val":"uid","end":""}],
+    types: placeholder as Registry['accounts.show']['types'],
+  },
   'auth.auth.register': {
     methods: ["POST"],
     pattern: '/api/auth/register',
