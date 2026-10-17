@@ -3,9 +3,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Account from '#models/account'
 import AccountFlag from '#models/account_flag'
 import Flag from '#models/flag'
-import { voteValueForDirection } from '#models/account_flag_vote'
+import AccountFlagVote, { voteValueForDirection } from '#models/account_flag_vote'
 import { getAccountDetails } from '#services/account_details_service'
-import db from '@adonisjs/lucid/services/db'
 import { accountFlagVoteValidator } from '#validators/account_flag_vote'
 
 export default class AccountFlagVotesController {
@@ -29,36 +28,23 @@ export default class AccountFlagVotesController {
       return response.notFound({ message: '未找到该 flag' })
     }
 
-    const now = new Date()
-    await db
-      .table('accounts_flags')
-      .insert({
-        account_id: account.id,
-        flag_id: flag.id,
-        status: null,
-        created_at: now,
-        updated_at: now,
-      })
-      .onConflict(['account_id', 'flag_id'])
-      .ignore()
+    // find or create the account flag record
+    const accountFlag = await AccountFlag.firstOrCreate({ accountId: account.id, flagId: flag.id })
 
-    const accountFlag = await AccountFlag.query()
-      .where('accountId', account.id)
-      .where('flagId', flag.id)
-      .first()
-    if (!accountFlag) {
-      throw new Error(`Failed to create account-flag relation for UID "${uid}" and "${code}"`)
+    // admin's vote auto-approves or auto-rejects the account flag
+    if (user.role === 'admin') {
+      accountFlag.status = direction === 'up' ? 'approved' : 'rejected'
+      await accountFlag.save()
     }
+
+    // create or update vote
     const vote = voteValueForDirection(direction)
-    await db.rawQuery(
-      `INSERT INTO account_flag_votes
-        (user_id, account_flag_id, vote, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?)
-       ON DUPLICATE KEY UPDATE
-         vote = IF(vote = VALUES(vote), 0, VALUES(vote)),
-         updated_at = VALUES(updated_at)`,
-      [user.id, accountFlag.id, vote, now, now]
-    )
+    const accountFlagVote = await AccountFlagVote.firstOrNew({
+      userId: user.id,
+      accountFlagId: accountFlag.id,
+    })
+    accountFlagVote.vote = accountFlagVote.vote === vote ? 0 : vote
+    await accountFlagVote.save()
 
     return serialize(await getAccountDetails(account, user.id))
   }

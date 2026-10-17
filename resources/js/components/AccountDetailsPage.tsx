@@ -7,7 +7,6 @@ import {
   Group,
   Loader,
   Paper,
-  Select,
   Stack,
   Text,
   Title,
@@ -20,9 +19,7 @@ import { useEffect, useState } from 'react'
 import {
   getAccount,
   type AccountDetails,
-  type FlagStatus,
   type VoteDirection,
-  setFlagStatus,
   voteForFlag,
 } from '../services/accounts.js'
 import type { AuthUser } from '../services/auth.js'
@@ -36,10 +33,6 @@ type AccountDetailsPageProps = {
   user: AuthUser | null
 }
 
-function isFlagStatus(status: string | null): status is FlagStatus {
-  return status === null || status === 'approved' || status === 'rejected'
-}
-
 export default function AccountDetailsPage({
   authReady,
   onNavigate,
@@ -50,19 +43,16 @@ export default function AccountDetailsPage({
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [voteError, setVoteError] = useState('')
-  const [statusError, setStatusError] = useState('')
   const [votingFlag, setVotingFlag] = useState<{
     code: string
     direction: VoteDirection
   } | null>(null)
-  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
     setAccount(null)
     setError('')
     setVoteError('')
-    setStatusError('')
 
     if (!/^\d+$/.test(uid)) {
       setError('UID 必须为纯数字')
@@ -103,20 +93,6 @@ export default function AccountDetailsPage({
       setVoteError(errorMessage(reason))
     } finally {
       setVotingFlag(null)
-    }
-  }
-
-  async function handleStatusChange(code: string, status: string | null) {
-    if (user?.role !== 'admin' || !isFlagStatus(status)) return
-
-    setStatusError('')
-    setUpdatingStatus(code)
-    try {
-      setAccount(await setFlagStatus(uid, code, status))
-    } catch (reason) {
-      setStatusError(errorMessage(reason))
-    } finally {
-      setUpdatingStatus(null)
     }
   }
 
@@ -176,11 +152,6 @@ export default function AccountDetailsPage({
                   {voteError}
                 </Alert>
               )}
-              {statusError && (
-                <Alert color="red" icon={<WarningCircleIcon size={20} />} title="更新关联状态失败">
-                  {statusError}
-                </Alert>
-              )}
               {account.flags.length > 0 ? (
                 <Stack gap="sm">
                   {account.flags.map((flag) => (
@@ -198,9 +169,9 @@ export default function AccountDetailsPage({
                             <Badge
                               color={
                                 flag.status === 'approved'
-                                  ? 'bilibiliPink'
+                                  ? 'bilibili'
                                   : flag.status === 'rejected'
-                                    ? 'red'
+                                    ? 'bilibiliPink'
                                     : 'gray'
                               }
                               variant="light"
@@ -208,27 +179,9 @@ export default function AccountDetailsPage({
                               {flag.status === 'approved'
                                 ? '认可'
                                 : flag.status === 'rejected'
-                                  ? '否定'
-                                  : '未设置'}
+                                  ? '不认可'
+                                  : '待定'}
                             </Badge>
-                            <Badge color="bilibili" variant="light">
-                              {flag.code}
-                            </Badge>
-                            {user?.role === 'admin' && (
-                              <Select
-                                aria-label={`设置 ${flag.name} 的关联状态`}
-                                data={[
-                                  { value: 'approved', label: '认可' },
-                                  { value: 'rejected', label: '否定' },
-                                ]}
-                                clearable
-                                disabled={updatingStatus !== null}
-                                placeholder="未设置"
-                                size="xs"
-                                value={flag.status}
-                                onChange={(status) => handleStatusChange(flag.code, status)}
-                              />
-                            )}
                           </Group>
                           <Text c="dimmed" mt={4} size="sm">
                             {flag.description}

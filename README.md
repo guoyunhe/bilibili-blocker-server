@@ -84,16 +84,16 @@ Seeder 只会在 development/test 环境创建以下演示账户，不要在真�
 
 API 前缀为 `/api`。除健康检查和注销外，接口响应数据包装在 `data` 字段中。
 
-| 方法   | 路径                                   | 认证 | 说明                                                                                    |
-| ------ | -------------------------------------- | ---- | --------------------------------------------------------------------------------------- |
-| `GET`  | `/api/`                                | 否   | API 健康检查                                                                            |
-| `GET`  | `/api/flags`                           | 否   | 列出所有可用 flag，包含 `code`、`name` 和 `description`                                |
-| `GET`  | `/api/accounts/:uid`                   | 否   | 按 UID 查询账号、所有 flag 的关联状态、up/down 票数和净得分；登录时也返回自己的投票状态 |
-| `POST` | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；每位用户对每个账号/flag 只有一票   |
-| `POST` | `/api/auth/register`                   | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation`                      |
-| `POST` | `/api/auth/login`                      | 否   | 登录并获取 Bearer token                                                                 |
-| `GET`  | `/api/auth/user`                       | 是   | 获取当前用户                                                                            |
-| `POST` | `/api/auth/logout`                     | 是   | 注销当前 token                                                                          |
+| 方法   | 路径                                   | 认证 | 说明                                                                                                                        |
+| ------ | -------------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------------------- |
+| `GET`  | `/api/`                                | 否   | API 健康检查                                                                                                                |
+| `GET`  | `/api/flags`                           | 否   | 列出所有可用 flag，包含 `code`、`name` 和 `description`                                                                     |
+| `GET`  | `/api/accounts/:uid`                   | 否   | 按 UID 查询账号、所有 flag 的关联状态、up/down 票数和净得分；登录时也返回自己的投票状态                                     |
+| `POST` | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；每位用户对每个账号/flag 只有一票，管理员投票会直接将状态设为认可或否定 |
+| `POST` | `/api/auth/register`                   | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation`                                                          |
+| `POST` | `/api/auth/login`                      | 否   | 登录并获取 Bearer token                                                                                                     |
+| `GET`  | `/api/auth/user`                       | 是   | 获取当前用户                                                                                                                |
+| `POST` | `/api/auth/logout`                     | 是   | 注销当前 token                                                                                                              |
 
 认证接口需要在请求头中发送 `Authorization: Bearer <token>`。管理员路由可组合使用 `auth` 和 `admin` 中间件；修改用户角色的命令示例：
 
