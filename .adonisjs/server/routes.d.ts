@@ -4,6 +4,7 @@ type ParamValue = string | number | bigint | boolean
 
 export type ScannedRoutes = {
   ALL: {
+    'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
     'account_flag_status.update': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
@@ -13,10 +14,12 @@ export type ScannedRoutes = {
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }
   GET: {
+    'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
+    'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }

@@ -78,7 +78,6 @@
     "@phosphor-icons/react": "^2.1.10",
     "@tuyau/core": "^1.2.2",
     "@vinejs/vine": "^4.4.0",
-    "better-sqlite3": "^13.0.3",
     "chalk": "^6.0.1",
     "edge.js": "^6.5.1",
     "luxon": "^3.7.2",
@@ -95,7 +94,6 @@
   },
   "allowScripts": {
     "@swc/core": true,
-    "better-sqlite3": true,
     "esbuild": true,
     "fsevents": true
   },

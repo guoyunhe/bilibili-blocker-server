@@ -56,9 +56,6 @@ importers:
       '@vinejs/vine':
         specifier: ^4.4.0
         version: 4.4.0
-      better-sqlite3:
-        specifier: ^13.0.3
-        version: 13.0.3
       chalk:
         specifier: ^6.0.1
         version: 6.0.1
@@ -4166,6 +4163,7 @@ snapshots:
   better-sqlite3@13.0.3:
     dependencies:
       node-addon-api: 8.9.2
+    optional: true
 
   brace-expansion@5.0.12:
     dependencies:
@@ -5046,7 +5044,8 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  node-addon-api@8.9.2: {}
+  node-addon-api@8.9.2:
+    optional: true
 
   node-releases@2.0.59: {}
 
