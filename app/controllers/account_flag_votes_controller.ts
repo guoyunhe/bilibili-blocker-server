@@ -29,12 +29,15 @@ export default class AccountFlagVotesController {
       return response.notFound({ message: '未找到该 flag' })
     }
 
+    const now = new Date()
     await db
       .table('accounts_flags')
       .insert({
         account_id: account.id,
         flag_id: flag.id,
         is_associated: false,
+        created_at: now,
+        updated_at: now,
       })
       .onConflict(['account_id', 'flag_id'])
       .ignore()
@@ -46,9 +49,7 @@ export default class AccountFlagVotesController {
     if (!accountFlag) {
       throw new Error(`Failed to create account-flag relation for UID "${uid}" and "${code}"`)
     }
-
     const vote = voteValueForDirection(direction)
-    const now = new Date()
     await db.rawQuery(
       `INSERT INTO account_flag_votes
         (user_id, account_flag_id, vote, created_at, updated_at)

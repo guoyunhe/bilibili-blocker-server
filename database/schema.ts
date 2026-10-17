@@ -8,25 +8,33 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class AccountSchema extends BaseModel {
-  static $columns = ['id', 'uid'] as const
+  static $columns = ['createdAt', 'id', 'uid', 'updatedAt'] as const
   $columns = AccountSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
   @column({ isPrimary: true })
   declare id: number
   @column()
   declare uid: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 }
 
 export class AccountsFlagSchema extends BaseModel {
-  static $columns = ['accountId', 'flagId', 'id', 'isAssociated'] as const
+  static $columns = ['accountId', 'createdAt', 'flagId', 'id', 'isAssociated', 'updatedAt'] as const
   $columns = AccountsFlagSchema.$columns
   @column()
   declare accountId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
   @column()
   declare flagId: number
   @column({ isPrimary: true })
   declare id: number
   @column()
   declare isAssociated: boolean
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 }
 
 export class AccountFlagVoteSchema extends BaseModel {
@@ -72,14 +80,18 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class FlagSchema extends BaseModel {
-  static $columns = ['code', 'id', 'name'] as const
+  static $columns = ['code', 'createdAt', 'id', 'name', 'updatedAt'] as const
   $columns = FlagSchema.$columns
   @column()
   declare code: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
   @column({ isPrimary: true })
   declare id: number
   @column()
   declare name: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 }
 
 export class UserSchema extends BaseModel {

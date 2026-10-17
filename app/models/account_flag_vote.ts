@@ -1,6 +1,6 @@
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import { AccountFlagVoteSchema } from '#database/schema'
+import { belongsTo } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import { DateTime } from 'luxon'
 
 import AccountFlag from '#models/account_flag'
 import User from '#models/user'
@@ -20,26 +20,10 @@ export function voteDirectionForValue(value: number): VoteDirection | null {
   throw new Error(`Invalid account flag vote value: ${value}`)
 }
 
-export default class AccountFlagVote extends BaseModel {
+export default class AccountFlagVote extends AccountFlagVoteSchema {
   static table = 'account_flag_votes'
 
-  @column({ isPrimary: true })
-  declare id: number
-
-  @column()
-  declare userId: number
-
-  @column()
-  declare accountFlagId: number
-
-  @column()
   declare vote: VoteValue
-
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>

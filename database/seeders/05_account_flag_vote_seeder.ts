@@ -44,6 +44,7 @@ export default class AccountFlagVoteSeeder extends BaseSeeder {
       [spamFlag.code, spamFlag.id],
     ])
     const flagIds = [...flagIdByCode.values()]
+    const now = new Date()
     await db
       .table('accounts_flags')
       .insert(
@@ -51,6 +52,8 @@ export default class AccountFlagVoteSeeder extends BaseSeeder {
           account_id: account.id,
           flag_id: flagId,
           is_associated: false,
+          created_at: now,
+          updated_at: now,
         }))
       )
       .onConflict(['account_id', 'flag_id'])
@@ -62,7 +65,6 @@ export default class AccountFlagVoteSeeder extends BaseSeeder {
       .select('id', 'flag_id')
     const accountFlagIdByFlagId = new Map(accountFlags.map(({ id, flag_id }) => [flag_id, id]))
 
-    const now = new Date()
     const votes = seededVoteDefinitions.map(({ userEmail, flagCode, vote }) => {
       const userId = userIdByEmail.get(userEmail)
       const flagId = flagIdByCode.get(flagCode)

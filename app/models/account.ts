@@ -1,16 +1,11 @@
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { AccountSchema } from '#database/schema'
+import { hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 
 import AccountFlag from '#models/account_flag'
 import AccountFlagVote from '#models/account_flag_vote'
 
-export default class Account extends BaseModel {
-  @column({ isPrimary: true })
-  declare id: number
-
-  @column()
-  declare uid: string
-
+export default class Account extends AccountSchema {
   @hasMany(() => AccountFlag)
   declare accountFlags: HasMany<typeof AccountFlag>
 
