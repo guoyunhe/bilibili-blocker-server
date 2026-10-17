@@ -5,6 +5,7 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
+    'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
     'auth.auth.register': { paramsTuple?: []; params?: {} }
     'auth.auth.login': { paramsTuple?: []; params?: {} }
     'auth.auth.logout': { paramsTuple?: []; params?: {} }
@@ -19,6 +20,7 @@ export type ScannedRoutes = {
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }
   POST: {
+    'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
     'auth.auth.register': { paramsTuple?: []; params?: {} }
     'auth.auth.login': { paramsTuple?: []; params?: {} }
     'auth.auth.logout': { paramsTuple?: []; params?: {} }

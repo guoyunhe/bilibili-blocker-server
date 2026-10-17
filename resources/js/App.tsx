@@ -69,7 +69,14 @@ export default function App() {
 
   function renderPage() {
     if (accountRoute) {
-      return <AccountDetailsPage uid={accountRoute[1]} />
+      return (
+        <AccountDetailsPage
+          authReady={authReady}
+          onNavigate={navigateTo}
+          uid={accountRoute[1]}
+          user={user}
+        />
+      )
     }
     if (authMode) {
       return <AuthPage mode={authMode} onAuthenticated={setUser} onNavigate={navigateTo} />

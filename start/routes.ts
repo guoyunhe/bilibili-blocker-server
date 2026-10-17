@@ -15,6 +15,9 @@ router
   .group(() => {
     router.get('/', () => ({ hello: 'world' }))
     router.get('accounts/:uid', [controllers.Accounts, 'show'])
+    router
+      .post('accounts/:uid/flags/:code/votes', [controllers.AccountFlagVotes, 'store'])
+      .use(middleware.auth())
 
     router
       .group(() => {

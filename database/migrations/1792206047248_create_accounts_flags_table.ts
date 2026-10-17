@@ -5,12 +5,17 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.integer('account_id').unsigned().notNullable()
-      table.integer('flag_id').unsigned().notNullable()
-      table.primary(['account_id', 'flag_id'])
+      table.increments('id').notNullable()
+      table
+        .integer('account_id')
+        .unsigned()
+        .notNullable()
+        .references('accounts.id')
+        .onDelete('CASCADE')
+      table.integer('flag_id').unsigned().notNullable().references('flags.id').onDelete('CASCADE')
+      table.boolean('is_associated').notNullable().defaultTo(true)
+      table.unique(['account_id', 'flag_id'])
       table.index('flag_id')
-      table.foreign('account_id').references('accounts.id').onDelete('CASCADE')
-      table.foreign('flag_id').references('flags.id').onDelete('CASCADE')
     })
   }
 

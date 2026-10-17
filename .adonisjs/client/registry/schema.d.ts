@@ -19,6 +19,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['show']>>>
     }
   }
+  'account_flag_votes.store': {
+    methods: ["POST"]
+    pattern: '/api/accounts/:uid/flags/:code/votes'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/account_flag_vote').accountFlagVoteValidator)>>
+      paramsTuple: [ParamValue, ParamValue]
+      params: { uid: ParamValue; code: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/account_flag_vote').accountFlagVoteValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'auth.auth.register': {
     methods: ["POST"]
     pattern: '/api/auth/register'

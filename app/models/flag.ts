@@ -1,7 +1,8 @@
-import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
-import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 
-import Account from '#models/account'
+import AccountFlag from '#models/account_flag'
+import AccountFlagVote from '#models/account_flag_vote'
 
 export default class Flag extends BaseModel {
   @column({ isPrimary: true })
@@ -13,6 +14,9 @@ export default class Flag extends BaseModel {
   @column()
   declare name: string
 
-  @manyToMany(() => Account, { pivotTable: 'accounts_flags' })
-  declare accounts: ManyToMany<typeof Account>
+  @hasMany(() => AccountFlag)
+  declare accountFlags: HasMany<typeof AccountFlag>
+
+  @hasMany(() => AccountFlagVote)
+  declare votes: HasMany<typeof AccountFlagVote>
 }

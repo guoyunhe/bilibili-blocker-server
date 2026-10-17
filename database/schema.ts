@@ -17,12 +17,33 @@ export class AccountSchema extends BaseModel {
 }
 
 export class AccountsFlagSchema extends BaseModel {
-  static $columns = ['accountId', 'flagId'] as const
+  static $columns = ['accountId', 'flagId', 'id', 'isAssociated'] as const
   $columns = AccountsFlagSchema.$columns
-  @column({ isPrimary: true })
+  @column()
   declare accountId: number
   @column()
   declare flagId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isAssociated: boolean
+}
+
+export class AccountFlagVoteSchema extends BaseModel {
+  static $columns = ['accountFlagId', 'createdAt', 'id', 'updatedAt', 'userId', 'vote'] as const
+  $columns = AccountFlagVoteSchema.$columns
+  @column()
+  declare accountFlagId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: number
+  @column()
+  declare vote: number
 }
 
 export class AuthAccessTokenSchema extends BaseModel {

@@ -1,19 +1,57 @@
-import { Alert, Badge, Container, Group, Loader, Paper, Stack, Text, Title } from '@mantine/core'
+import {
+  Alert,
+  Anchor,
+  Badge,
+  Button,
+  Container,
+  Group,
+  Loader,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core'
+import { ThumbsDownIcon } from '@phosphor-icons/react/ThumbsDown'
+import { ThumbsUpIcon } from '@phosphor-icons/react/ThumbsUp'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
 
-import { getAccount, type AccountDetails } from '../services/accounts.js'
+import {
+  getAccount,
+  type AccountDetails,
+  type VoteDirection,
+  voteForFlag,
+} from '../services/accounts.js'
+import type { AuthUser } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
 
-export default function AccountDetailsPage({ uid }: { uid: string }) {
+type AccountDetailsPageProps = {
+  authReady: boolean
+  onNavigate: (path: string) => void
+  uid: string
+  user: AuthUser | null
+}
+
+export default function AccountDetailsPage({
+  authReady,
+  onNavigate,
+  uid,
+  user,
+}: AccountDetailsPageProps) {
   const [account, setAccount] = useState<AccountDetails | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [voteError, setVoteError] = useState('')
+  const [votingFlag, setVotingFlag] = useState<{
+    code: string
+    direction: VoteDirection
+  } | null>(null)
 
   useEffect(() => {
     let active = true
     setAccount(null)
     setError('')
+    setVoteError('')
 
     if (!/^\d+$/.test(uid)) {
       setError('UID 必须为纯数字')
@@ -39,6 +77,25 @@ export default function AccountDetailsPage({ uid }: { uid: string }) {
       active = false
     }
   }, [uid])
+
+  async function handleVote(code: string, direction: VoteDirection) {
+    if (!user) {
+      onNavigate('/login')
+      return
+    }
+
+    setVoteError('')
+    setVotingFlag({ code, direction })
+    try {
+      setAccount(await voteForFlag(uid, code, direction))
+    } catch (reason) {
+      setVoteError(errorMessage(reason))
+    } finally {
+      setVotingFlag(null)
+    }
+  }
+
+  const associatedFlagCount = account?.flags.filter((flag) => flag.isAssociated).length ?? 0
 
   return (
     <Container className="details-page" size="md">
@@ -66,26 +123,96 @@ export default function AccountDetailsPage({ uid }: { uid: string }) {
           {account && (
             <>
               <Group>
-                <Text c="dimmed">关联屏蔽规则</Text>
+                <Text c="dimmed">已关联屏蔽规则</Text>
                 <Badge color="bilibiliPink" variant="light">
-                  {account.flags.length} 条
+                  {associatedFlagCount} 条
                 </Badge>
               </Group>
+              {associatedFlagCount === 0 && <Text c="dimmed">该账号目前没有关联的屏蔽规则。</Text>}
+              <div>
+                <Title order={3} size="h4">
+                  规则标签投票
+                </Title>
+                <Text c="dimmed" mt={4} size="sm">
+                  为该账号的每个 flag 投 up 或 down vote。每位用户对每个 flag 只能投一票。
+                </Text>
+              </div>
+              {authReady && !user && (
+                <Text c="dimmed" size="sm">
+                  <Anchor component="button" type="button" onClick={() => onNavigate('/login')}>
+                    登录
+                  </Anchor>
+                  后即可参与投票。
+                </Text>
+              )}
+              {voteError && (
+                <Alert color="red" icon={<WarningCircleIcon size={20} />} title="投票失败">
+                  {voteError}
+                </Alert>
+              )}
               {account.flags.length > 0 ? (
                 <Stack gap="sm">
                   {account.flags.map((flag) => (
                     <Paper className="flag-item" key={flag.code} p="md" radius="md" withBorder>
-                      <Group justify="space-between" wrap="nowrap">
-                        <Text fw={600}>{flag.name}</Text>
-                        <Badge color="bilibili" variant="light">
-                          {flag.code}
-                        </Badge>
+                      <Group justify="space-between" wrap="wrap">
+                        <Group gap="sm">
+                          <Text fw={600}>{flag.name}</Text>
+                          <Badge
+                            color={flag.isAssociated ? 'bilibiliPink' : 'gray'}
+                            variant="light"
+                          >
+                            {flag.isAssociated ? '已关联' : '未关联'}
+                          </Badge>
+                          <Badge color="bilibili" variant="light">
+                            {flag.code}
+                          </Badge>
+                        </Group>
+                        <Group gap="xs">
+                          <Text
+                            aria-label={`净得分 ${flag.score}`}
+                            c={flag.score < 0 ? 'red' : 'bilibili'}
+                            component="span"
+                            size="sm"
+                          >
+                            {flag.score > 0 ? `+${flag.score}` : flag.score}
+                          </Text>
+                          <Button
+                            aria-label={`赞成 ${flag.name}，${flag.upVotes} 票`}
+                            aria-pressed={flag.userVote === 'up'}
+                            color="bilibili"
+                            disabled={!authReady || !user || votingFlag !== null}
+                            loading={
+                              votingFlag?.code === flag.code && votingFlag.direction === 'up'
+                            }
+                            leftSection={<ThumbsUpIcon size={18} />}
+                            size="sm"
+                            variant={flag.userVote === 'up' ? 'filled' : 'light'}
+                            onClick={() => handleVote(flag.code, 'up')}
+                          >
+                            {flag.upVotes}
+                          </Button>
+                          <Button
+                            aria-label={`反对 ${flag.name}，${flag.downVotes} 票`}
+                            aria-pressed={flag.userVote === 'down'}
+                            color="bilibiliPink"
+                            disabled={!authReady || !user || votingFlag !== null}
+                            loading={
+                              votingFlag?.code === flag.code && votingFlag.direction === 'down'
+                            }
+                            leftSection={<ThumbsDownIcon size={18} />}
+                            size="sm"
+                            variant={flag.userVote === 'down' ? 'filled' : 'light'}
+                            onClick={() => handleVote(flag.code, 'down')}
+                          >
+                            {flag.downVotes}
+                          </Button>
+                        </Group>
                       </Group>
                     </Paper>
                   ))}
                 </Stack>
               ) : (
-                <Text c="dimmed">该账号目前没有关联的屏蔽规则。</Text>
+                <Text c="dimmed">尚未定义任何 flag。</Text>
               )}
             </>
           )}

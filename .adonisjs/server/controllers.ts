@@ -4,6 +4,7 @@
  */
 
 export const controllers = {
+  AccountFlagVotes: () => import('#controllers/account_flag_votes_controller'),
   Accounts: () => import('#controllers/accounts_controller'),
   Auth: () => import('#controllers/auth_controller'),
 }

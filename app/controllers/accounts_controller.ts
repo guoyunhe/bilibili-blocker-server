@@ -1,26 +1,21 @@
 import type { HttpContext } from '@adonisjs/core/http'
 
 import Account from '#models/account'
+import { getAccountDetails } from '#services/account_details_service'
 
 export default class AccountsController {
-  async show({ params, response, serialize }: HttpContext) {
+  async show({ auth, params, response, serialize }: HttpContext) {
     const uid = params.uid
     if (!/^\d+$/.test(uid)) {
       return response.badRequest({ message: 'UID 必须为纯数字' })
     }
 
-    const account = await Account.query()
-      .where('uid', uid)
-      .preload('flags', (query) => query.orderBy('code'))
-      .first()
+    const account = await Account.findBy('uid', uid)
 
     if (!account) {
       return response.notFound({ message: '未找到该 UID 对应的账号' })
     }
 
-    return serialize({
-      uid: account.uid,
-      flags: account.flags.map(({ code, name }) => ({ code, name })),
-    })
+    return serialize(await getAccountDetails(account, auth.user?.id))
   }
 }

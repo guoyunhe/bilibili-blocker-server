@@ -69,9 +69,9 @@ export default class FlagAccountSeeder extends BaseSeeder {
       return id
     })
 
-    await db.from('accounts_flags').whereIn('flag_id', flagIds).delete()
+    await db.from('accounts_flags').whereIn('flag_id', flagIds).update({ is_associated: false })
 
-    const associations: Array<{ account_id: number; flag_id: number }> = []
+    const associations: Array<{ account_id: number; flag_id: number; is_associated: boolean }> = []
     for (const { code, uids } of flagAccounts) {
       const flagId = flagIdByCode.get(code)
       if (flagId === undefined) throw new Error(`Flag "${code}" was not created`)
@@ -79,12 +79,16 @@ export default class FlagAccountSeeder extends BaseSeeder {
       for (const uid of new Set(uids)) {
         const accountId = accountIdByUid.get(uid)
         if (accountId === undefined) throw new Error(`Account UID "${uid}" was not created`)
-        associations.push({ account_id: accountId, flag_id: flagId })
+        associations.push({ account_id: accountId, flag_id: flagId, is_associated: true })
       }
     }
 
     for (let index = 0; index < associations.length; index += batchSize) {
-      await db.table('accounts_flags').insert(associations.slice(index, index + batchSize))
+      await db
+        .table('accounts_flags')
+        .insert(associations.slice(index, index + batchSize))
+        .onConflict(['account_id', 'flag_id'])
+        .merge(['is_associated'])
     }
   }
 }

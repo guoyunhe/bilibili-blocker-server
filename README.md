@@ -5,11 +5,13 @@ Bilibili Blocker 的服务端项目，提供账户认证 API、按 UID 查询账
 ## 功能
 
 - 无需登录即可按 UID 查询账号与屏蔽规则；登录、注册入口位于页面顶栏
+- 登录用户可对账号的任意已定义 flag 进行 up/down vote，详情页展示票数及关联状态
 - 提供 Chrome、Firefox 和 Edge 浏览器插件商店下载链接
 - JSON API：注册、登录、获取当前用户、退出登录和按 UID 查询账号
 - `user` / `admin` 角色及可用于路由授权的管理员中间件
 - `user:role` 命令，用邮箱查找用户并修改角色
 - 从浏览器扩展规则清单导入规则、UID 账号和多对多关联
+- 仅在 development 环境运行的演示投票 seeder
 - Podman Compose 管理本地 MariaDB 开发容器
 - 仅在 development/test 环境运行的演示用户 seeder
 
@@ -59,18 +61,21 @@ Seeder 只会在 development/test 环境创建以下演示账户，不要在真�
 
 `node ace db:seed` 还会运行规则数据 seeder，从 Bilibili Blocker CDN 下载规则文件，将规则写入 `flags`，将去重后的 UID 写入 `accounts`，并同步 `accounts_flags` 关联。执行该 seeder 需要网络连接；规则 code 和中文名称保存在 seeder 中，UID 列表不会随项目仓库分发。
 
+投票 seeder 使用演示用户和已导入的账号、flag 创建可重复运行的示例投票，仅在 development 环境执行。
+
 ### API
 
 API 前缀为 `/api`。除健康检查和注销外，接口响应数据包装在 `data` 字段中。
 
-| 方法   | 路径                 | 认证 | 说明                                                               |
-| ------ | -------------------- | ---- | ------------------------------------------------------------------ |
-| `GET`  | `/api/`              | 否   | API 健康检查                                                       |
-| `GET`  | `/api/accounts/:uid` | 否   | 按 UID 查询账号及关联的屏蔽规则                                    |
-| `POST` | `/api/auth/register` | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation` |
-| `POST` | `/api/auth/login`    | 否   | 登录并获取 Bearer token                                            |
-| `GET`  | `/api/auth/user`     | 是   | 获取当前用户                                                       |
-| `POST` | `/api/auth/logout`   | 是   | 注销当前 token                                                     |
+| 方法   | 路径                                   | 认证 | 说明                                                                                    |
+| ------ | -------------------------------------- | ---- | --------------------------------------------------------------------------------------- |
+| `GET`  | `/api/`                                | 否   | API 健康检查                                                                            |
+| `GET`  | `/api/accounts/:uid`                   | 否   | 按 UID 查询账号、所有 flag 的关联状态、up/down 票数和净得分；登录时也返回自己的投票状态 |
+| `POST` | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；每位用户对每个账号/flag 只有一票   |
+| `POST` | `/api/auth/register`                   | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation`                      |
+| `POST` | `/api/auth/login`                      | 否   | 登录并获取 Bearer token                                                                 |
+| `GET`  | `/api/auth/user`                       | 是   | 获取当前用户                                                                            |
+| `POST` | `/api/auth/logout`                     | 是   | 注销当前 token                                                                          |
 
 认证接口需要在请求头中发送 `Authorization: Bearer <token>`。管理员路由可组合使用 `auth` 和 `admin` 中间件；修改用户角色的命令示例：
 
