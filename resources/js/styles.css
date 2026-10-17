@@ -143,6 +143,15 @@ body {
   background: rgb(255 255 255 / 76%);
 }
 
+.browser-logo {
+  display: block;
+  object-fit: contain;
+}
+
+.extension-download-button {
+  min-height: 52px;
+}
+
 .details-page {
   padding-top: 40px;
   padding-bottom: 56px;

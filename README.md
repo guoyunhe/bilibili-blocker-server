@@ -5,6 +5,7 @@ Bilibili Blocker 的服务端项目，提供账户认证 API、按 UID 查询账
 ## 功能
 
 - 无需登录即可按 UID 查询账号与屏蔽规则；登录、注册入口位于页面顶栏
+- 提供 Chrome、Firefox 和 Edge 浏览器插件商店下载链接
 - JSON API：注册、登录、获取当前用户、退出登录和按 UID 查询账号
 - `user` / `admin` 角色及可用于路由授权的管理员中间件
 - `user:role` 命令，用邮箱查找用户并修改角色

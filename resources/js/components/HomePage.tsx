@@ -1,5 +1,6 @@
 import {
   Badge,
+  Button,
   Container,
   Group,
   Paper,
@@ -14,6 +15,24 @@ import { MagnifyingGlassIcon } from '@phosphor-icons/react/MagnifyingGlass'
 import { ShieldCheckIcon } from '@phosphor-icons/react/ShieldCheck'
 
 import AccountSearchForm from './AccountSearchForm.js'
+
+const extensionDownloads = [
+  {
+    browser: 'Chrome',
+    iconPath: '/browser-logos/chrome.svg',
+    url: 'https://chromewebstore.google.com/detail/bilibili-blocker/egfeldkfhdbjcmpjbipdaafnopgpglje',
+  },
+  {
+    browser: 'Firefox',
+    iconPath: '/browser-logos/firefox.svg',
+    url: 'https://addons.mozilla.org/zh-CN/firefox/addon/bilibili-blocker/',
+  },
+  {
+    browser: 'Edge',
+    iconPath: '/browser-logos/edge.svg',
+    url: 'https://microsoftedge.microsoft.com/addons/detail/bilibili-blocker/opmgomhndfglgnbkbiijnknljnopfahc',
+  },
+]
 
 type HomePageProps = {
   onSearch: (uid: string) => void
@@ -83,6 +102,34 @@ export default function HomePage({ onSearch }: HomePageProps) {
             </Group>
           </Paper>
         </SimpleGrid>
+
+        <Group className="extension-downloads" gap="md" justify="center" wrap="wrap">
+          {extensionDownloads.map(({ browser, iconPath, url }) => (
+            <Button
+              component="a"
+              className="extension-download-button"
+              href={url}
+              key={browser}
+              px="xl"
+              leftSection={
+                <img
+                  alt=""
+                  aria-hidden="true"
+                  className="browser-logo"
+                  height="24"
+                  src={iconPath}
+                  width="24"
+                />
+              }
+              rel="noopener noreferrer"
+              size="lg"
+              target="_blank"
+              variant="default"
+            >
+              {browser} 插件
+            </Button>
+          ))}
+        </Group>
       </Stack>
     </Container>
   )
