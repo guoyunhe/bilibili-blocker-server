@@ -7,6 +7,24 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class AccountSchema extends BaseModel {
+  static $columns = ['id', 'uid'] as const
+  $columns = AccountSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare uid: string
+}
+
+export class AccountsFlagSchema extends BaseModel {
+  static $columns = ['accountId', 'flagId'] as const
+  $columns = AccountsFlagSchema.$columns
+  @column({ isPrimary: true })
+  declare accountId: number
+  @column()
+  declare flagId: number
+}
+
 export class AuthAccessTokenSchema extends BaseModel {
   static $columns = ['abilities', 'createdAt', 'expiresAt', 'hash', 'id', 'lastUsedAt', 'name', 'tokenableId', 'type', 'updatedAt'] as const
   $columns = AuthAccessTokenSchema.$columns
@@ -30,6 +48,17 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare type: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+}
+
+export class FlagSchema extends BaseModel {
+  static $columns = ['code', 'id', 'name'] as const
+  $columns = FlagSchema.$columns
+  @column()
+  declare code: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
 }
 
 export class UserSchema extends BaseModel {

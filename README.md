@@ -1,6 +1,6 @@
 # Bilibili Blocker Server
 
-Bilibili Blocker 的服务端项目，提供账户认证 API 和 React 登录页面。当前实现包括注册、登录、访问令牌认证、用户角色和管理员中间件；MariaDB 负责保存用户和访问令牌数据。
+Bilibili Blocker 的服务端项目，提供账户认证 API 和 React 登录页面。当前实现包括注册、登录、访问令牌认证、用户角色和管理员中间件；MariaDB 负责保存用户、访问令牌、屏蔽规则、账号及其关联数据。
 
 ## 功能
 
@@ -8,6 +8,7 @@ Bilibili Blocker 的服务端项目，提供账户认证 API 和 React 登录页
 - JSON API：注册、登录、获取当前用户和退出登录
 - `user` / `admin` 角色及可用于路由授权的管理员中间件
 - `user:role` 命令，用邮箱查找用户并修改角色
+- 从浏览器扩展规则清单导入规则、UID 账号和多对多关联
 - Podman Compose 管理本地 MariaDB 开发容器
 - 仅在 development/test 环境运行的演示用户 seeder
 
@@ -50,22 +51,24 @@ pnpm dev
 
 Seeder 只会在 development/test 环境创建以下演示账户，不要在真实部署中使用这些凭据：
 
-| 角色 | 邮箱 | 密码 |
-|---|---|---|
-| 管理员 | `admin@example.com` | `Admin123!` |
-| 普通用户 | `user@example.com` | `User123!` |
+| 角色     | 邮箱                | 密码        |
+| -------- | ------------------- | ----------- |
+| 管理员   | `admin@example.com` | `Admin123!` |
+| 普通用户 | `user@example.com`  | `User123!`  |
+
+`node ace db:seed` 还会运行规则数据 seeder，从 Bilibili Blocker CDN 下载规则文件，将规则写入 `flags`，将去重后的 UID 写入 `accounts`，并同步 `accounts_flags` 关联。执行该 seeder 需要网络连接；规则 code 和中文名称保存在 seeder 中，UID 列表不会随项目仓库分发。
 
 ### API
 
 API 前缀为 `/api`。注册、登录和获取当前用户接口的响应数据包装在 `data` 字段中；健康检查和注销接口返回普通 JSON 对象。
 
-| 方法 | 路径 | 认证 | 说明 |
-|---|---|---|---|
-| `GET` | `/api/` | 否 | API 健康检查 |
-| `POST` | `/api/auth/register` | 否 | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation` |
-| `POST` | `/api/auth/login` | 否 | 登录并获取 Bearer token |
-| `GET` | `/api/auth/user` | 是 | 获取当前用户 |
-| `POST` | `/api/auth/logout` | 是 | 注销当前 token |
+| 方法   | 路径                 | 认证 | 说明                                                               |
+| ------ | -------------------- | ---- | ------------------------------------------------------------------ |
+| `GET`  | `/api/`              | 否   | API 健康检查                                                       |
+| `POST` | `/api/auth/register` | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation` |
+| `POST` | `/api/auth/login`    | 否   | 登录并获取 Bearer token                                            |
+| `GET`  | `/api/auth/user`     | 是   | 获取当前用户                                                       |
+| `POST` | `/api/auth/logout`   | 是   | 注销当前 token                                                     |
 
 认证接口需要在请求头中发送 `Authorization: Bearer <token>`。管理员路由可组合使用 `auth` 和 `admin` 中间件；修改用户角色的命令示例：
 
