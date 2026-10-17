@@ -80,12 +80,14 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class FlagSchema extends BaseModel {
-  static $columns = ['code', 'createdAt', 'id', 'name', 'updatedAt'] as const
+  static $columns = ['code', 'createdAt', 'description', 'id', 'name', 'updatedAt'] as const
   $columns = FlagSchema.$columns
   @column()
   declare code: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
+  @column()
+  declare description: string
   @column({ isPrimary: true })
   declare id: number
   @column()

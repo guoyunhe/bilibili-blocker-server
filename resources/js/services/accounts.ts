@@ -5,6 +5,7 @@ export type VoteDirection = 'up' | 'down'
 export type AccountFlag = {
   code: string
   name: string
+  description: string
   isAssociated: boolean
   upVotes: number
   downVotes: number

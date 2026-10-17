@@ -6,21 +6,8 @@ import Flag from '#models/flag'
 
 const batchSize = 1000
 const ruleUrl = 'https://bilibili-blocker.netlify.app/rules'
-const flagDefinitions = [
-  { code: 'aislop', name: 'AI 泔水' },
-  { code: 'aivoice', name: 'AI 配音' },
-  { code: 'catfish', name: '钓鱼内容' },
-  { code: 'clickbait', name: '标题党' },
-  { code: 'copycat', name: '搬运与切片(未授权)' },
-  { code: 'fakenews', name: '假新闻' },
-  { code: 'finance', name: '投资理财与欺诈风险' },
-  { code: 'sales', name: '推销带货' },
-  { code: 'spam', name: '垃圾内容' },
-  { code: 'superstition', name: '封建迷信与宗教' },
-  { code: 'troll', name: '对立引战' },
-]
 
-async function downloadFlagAccounts({ code, name }: (typeof flagDefinitions)[number]) {
+async function downloadFlagAccounts(code: string) {
   const response = await fetch(`${ruleUrl}/${code}.txt`, {
     signal: AbortSignal.timeout(30_000),
   })
@@ -42,24 +29,21 @@ async function downloadFlagAccounts({ code, name }: (typeof flagDefinitions)[num
     throw new Error(`Rule "${code}" contained no UIDs`)
   }
 
-  return { code, name, uids: [...uids] }
+  return { code, uids: [...uids] }
 }
 
-export default class FlagAccountSeeder extends BaseSeeder {
+export default class AccountSeeder extends BaseSeeder {
   async run() {
-    const flagAccounts = await Promise.all(flagDefinitions.map(downloadFlagAccounts))
-    const flagRecords = flagAccounts.map(({ code, name }) => ({ code, name }))
-    for (let index = 0; index < flagRecords.length; index += batchSize) {
-      await Flag.updateOrCreateMany('code', flagRecords.slice(index, index + batchSize))
-    }
+    const flags = await Flag.query().select('id', 'code')
+    if (flags.length === 0) throw new Error('Cannot seed accounts: no flags are defined')
 
+    const flagAccounts = await Promise.all(flags.map(({ code }) => downloadFlagAccounts(code)))
     const accountUids = [...new Set(flagAccounts.flatMap(({ uids }) => uids))]
     const accountRecords = accountUids.map((uid) => ({ uid }))
     for (let index = 0; index < accountRecords.length; index += batchSize) {
       await Account.updateOrCreateMany('uid', accountRecords.slice(index, index + batchSize))
     }
 
-    const flags = await Flag.query().select('id', 'code')
     const flagIdByCode = new Map(flags.map(({ id, code }) => [code, id]))
     const accounts = await Account.query().select('id', 'uid')
     const accountIdByUid = new Map(accounts.map(({ id, uid }) => [uid, id]))

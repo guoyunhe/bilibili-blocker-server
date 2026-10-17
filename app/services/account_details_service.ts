@@ -57,7 +57,7 @@ export async function getAccountDetails(account: Account, currentUserId?: number
   return {
     uid: account.uid,
     flags: flags
-      .map(({ id, code, name }) => {
+      .map(({ id, code, name, description }) => {
         const accountFlagId = accountFlagIdByFlagId.get(id)
         const counts =
           accountFlagId === undefined
@@ -66,6 +66,7 @@ export async function getAccountDetails(account: Account, currentUserId?: number
         return {
           code,
           name,
+          description,
           isAssociated: isAssociatedByFlagId.get(id) ?? false,
           upVotes: counts.up,
           downVotes: counts.down,

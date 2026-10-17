@@ -154,19 +154,24 @@ export default function AccountDetailsPage({
                 <Stack gap="sm">
                   {account.flags.map((flag) => (
                     <Paper className="flag-item" key={flag.code} p="md" radius="md" withBorder>
-                      <Group justify="space-between" wrap="wrap">
-                        <Group gap="sm">
-                          <Text fw={600}>{flag.name}</Text>
-                          <Badge
-                            color={flag.isAssociated ? 'bilibiliPink' : 'gray'}
-                            variant="light"
-                          >
-                            {flag.isAssociated ? '已关联' : '未关联'}
-                          </Badge>
-                          <Badge color="bilibili" variant="light">
-                            {flag.code}
-                          </Badge>
-                        </Group>
+                      <Group align="flex-start" justify="space-between" wrap="wrap">
+                        <div>
+                          <Group gap="sm">
+                            <Text fw={600}>{flag.name}</Text>
+                            <Badge
+                              color={flag.isAssociated ? 'bilibiliPink' : 'gray'}
+                              variant="light"
+                            >
+                              {flag.isAssociated ? '已关联' : '未关联'}
+                            </Badge>
+                            <Badge color="bilibili" variant="light">
+                              {flag.code}
+                            </Badge>
+                          </Group>
+                          <Text c="dimmed" mt={4} size="sm">
+                            {flag.description}
+                          </Text>
+                        </div>
                         <Group gap="xs">
                           <Text
                             aria-label={`净得分 ${flag.score}`}
