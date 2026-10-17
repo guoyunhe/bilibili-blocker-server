@@ -19,6 +19,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'flags.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/flags'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['index']>>>
+    }
+  }
   'accounts.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/accounts/:uid'

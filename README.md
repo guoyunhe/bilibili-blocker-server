@@ -7,7 +7,7 @@ Bilibili Blocker 的服务端项目，提供账户认证 API、按 UID 查询账
 - 无需登录即可按 UID 查询账号与屏蔽规则；登录、注册入口位于页面顶栏
 - 登录用户可对账号的任意已定义 flag 进行 up/down vote，详情页展示票数及关联状态
 - 提供 Chrome、Firefox 和 Edge 浏览器插件商店下载链接
-- JSON API：注册、登录、获取当前用户、退出登录和按 UID 查询账号
+- JSON API：注册、登录、获取当前用户、退出登录、列出可用 flag 和按 UID 查询账号
 - `user` / `admin` 角色及可用于路由授权的管理员中间件
 - `user:role` 命令，用邮箱查找用户并修改角色
 - 从浏览器扩展规则清单导入规则、UID 账号和多对多关联
@@ -87,6 +87,7 @@ API 前缀为 `/api`。除健康检查和注销外，接口响应数据包装在
 | 方法   | 路径                                   | 认证 | 说明                                                                                    |
 | ------ | -------------------------------------- | ---- | --------------------------------------------------------------------------------------- |
 | `GET`  | `/api/`                                | 否   | API 健康检查                                                                            |
+| `GET`  | `/api/flags`                           | 否   | 列出所有可用 flag，包含 `code`、`name` 和 `description`                                |
 | `GET`  | `/api/accounts/:uid`                   | 否   | 按 UID 查询账号、所有 flag 的关联状态、up/down 票数和净得分；登录时也返回自己的投票状态 |
 | `POST` | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；每位用户对每个账号/flag 只有一票   |
 | `POST` | `/api/auth/register`                   | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation`                      |

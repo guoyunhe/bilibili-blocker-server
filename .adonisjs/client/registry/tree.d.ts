@@ -7,6 +7,9 @@ export interface ApiDefinition {
       serve: typeof routes['drive.fs.serve']
     }
   }
+  flags: {
+    index: typeof routes['flags.index']
+  }
   accounts: {
     show: typeof routes['accounts.show']
   }

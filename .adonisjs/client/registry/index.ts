@@ -12,6 +12,12 @@ const routes = {
     tokens: [{"old":"/uploads/*","type":0,"val":"uploads","end":""},{"old":"/uploads/*","type":2,"val":"*","end":""}],
     types: placeholder as Registry['drive.fs.serve']['types'],
   },
+  'flags.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/flags',
+    tokens: [{"old":"/api/flags","type":0,"val":"api","end":""},{"old":"/api/flags","type":0,"val":"flags","end":""}],
+    types: placeholder as Registry['flags.index']['types'],
+  },
   'accounts.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/accounts/:uid',
