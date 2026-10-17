@@ -74,6 +74,11 @@ export async function getAccountDetails(account: Account, currentUserId?: number
             accountFlagId === undefined ? null : (userVoteByFlagId.get(accountFlagId) ?? null),
         }
       })
-      .sort((left, right) => right.score - left.score || left.code.localeCompare(right.code)),
+      .sort(
+        (left, right) =>
+          Number(right.isAssociated) - Number(left.isAssociated) ||
+          right.score - left.score ||
+          left.code.localeCompare(right.code)
+      ),
   }
 }
