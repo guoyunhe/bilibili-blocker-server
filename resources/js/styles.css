@@ -86,10 +86,26 @@ body {
 }
 
 .app-main {
-  min-height: calc(100vh - 68px);
+  min-height: calc(100vh - 136px);
   background:
     radial-gradient(ellipse at 86% 12%, rgb(251 114 153 / 9%), transparent 32rem),
     radial-gradient(ellipse at 13% 18%, rgb(0 161 214 / 10%), transparent 36rem), #f4f9fc;
+}
+
+.site-footer {
+  min-height: 68px;
+  border-top: 1px solid #dcecf3;
+  background: rgb(255 255 255 / 94%);
+}
+
+.site-footer-inner {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 .app-error {
@@ -99,7 +115,7 @@ body {
 
 .home-page {
   display: flex;
-  min-height: calc(100vh - 68px);
+  min-height: calc(100vh - 136px);
   align-items: center;
   padding-top: 52px;
   padding-bottom: 64px;
@@ -164,7 +180,7 @@ body {
 
 .auth-page {
   display: grid;
-  min-height: calc(100vh - 68px);
+  min-height: calc(100vh - 136px);
   align-content: center;
   padding-top: 40px;
   padding-bottom: 56px;
@@ -205,5 +221,10 @@ body {
   .home-page {
     padding-top: 40px;
     padding-bottom: 48px;
+  }
+
+  .site-footer-inner {
+    flex-direction: column;
+    justify-content: center;
   }
 }

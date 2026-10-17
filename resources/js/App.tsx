@@ -2,6 +2,7 @@ import { Alert, AppShell } from '@mantine/core'
 import { useEffect, useState } from 'react'
 
 import AccountDetailsPage from './components/AccountDetailsPage.js'
+import AppFooter from './components/AppFooter.js'
 import AppHeader from './components/AppHeader.js'
 import AuthPage from './components/AuthPage.js'
 import HomePage from './components/HomePage.js'
@@ -102,6 +103,7 @@ export default function App() {
         )}
         {renderPage()}
       </AppShell.Main>
+      <AppFooter />
     </AppShell>
   )
 }
