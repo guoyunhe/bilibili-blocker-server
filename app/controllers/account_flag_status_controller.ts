@@ -42,6 +42,6 @@ export default class AccountFlagStatusController {
         updated_at: now,
       })
 
-    return serialize(await getAccountDetails(account, auth.getUserOrFail().id))
+    return serialize(await getAccountDetails(uid, account, auth.getUserOrFail().id))
   }
 }

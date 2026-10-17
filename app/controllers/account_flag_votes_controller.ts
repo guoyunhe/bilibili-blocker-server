@@ -16,17 +16,11 @@ export default class AccountFlagVotesController {
 
     const { direction } = await request.validateUsing(accountFlagVoteValidator)
     const user = auth.getUserOrFail()
-    const [account, flag] = await Promise.all([
-      Account.findBy('uid', uid),
-      Flag.findBy('code', code),
-    ])
-
-    if (!account) {
-      return response.notFound({ message: '未找到该 UID 对应的账号' })
-    }
+    const flag = await Flag.findBy('code', code)
     if (!flag) {
       return response.notFound({ message: '未找到该 flag' })
     }
+    const account = await Account.firstOrCreate({ uid })
 
     // find or create the account flag record
     const accountFlag = await AccountFlag.firstOrCreate({ accountId: account.id, flagId: flag.id })
@@ -46,6 +40,6 @@ export default class AccountFlagVotesController {
     accountFlagVote.vote = accountFlagVote.vote === vote ? 0 : vote
     await accountFlagVote.save()
 
-    return serialize(await getAccountDetails(account, user.id))
+    return serialize(await getAccountDetails(uid, account, user.id))
   }
 }

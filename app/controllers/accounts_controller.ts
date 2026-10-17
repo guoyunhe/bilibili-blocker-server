@@ -12,10 +12,6 @@ export default class AccountsController {
 
     const account = await Account.findBy('uid', uid)
 
-    if (!account) {
-      return response.notFound({ message: '未找到该 UID 对应的账号' })
-    }
-
-    return serialize(await getAccountDetails(account, auth.user?.id))
+    return serialize(await getAccountDetails(uid, account, auth.user?.id))
   }
 }

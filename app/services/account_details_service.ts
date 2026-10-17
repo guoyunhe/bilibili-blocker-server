@@ -4,10 +4,16 @@ import { voteDirectionForValue } from '#models/account_flag_vote'
 import Flag from '#models/flag'
 import db from '@adonisjs/lucid/services/db'
 
-export async function getAccountDetails(account: Account, currentUserId?: number) {
+export async function getAccountDetails(
+  uid: string,
+  account: Account | null,
+  currentUserId?: number
+) {
   const [flags, accountFlags] = await Promise.all([
     Flag.query().orderBy('code'),
-    AccountFlag.query().where('accountId', account.id).select('id', 'flagId', 'status'),
+    account
+      ? AccountFlag.query().where('accountId', account.id).select('id', 'flagId', 'status')
+      : Promise.resolve([]),
   ])
   const accountFlagIdByFlagId = new Map(accountFlags.map(({ id, flagId }) => [flagId, id]))
   const statusByFlagId = new Map(accountFlags.map(({ flagId, status }) => [flagId, status]))
@@ -53,7 +59,7 @@ export async function getAccountDetails(account: Account, currentUserId?: number
   )
 
   return {
-    uid: account.uid,
+    uid,
     flags: flags
       .map(({ id, code, name, description }) => {
         const accountFlagId = accountFlagIdByFlagId.get(id)

@@ -88,8 +88,8 @@ API 前缀为 `/api`。除健康检查和注销外，接口响应数据包装在
 | ------ | -------------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------------------- |
 | `GET`  | `/api/`                                | 否   | API 健康检查                                                                                                                |
 | `GET`  | `/api/flags`                           | 否   | 列出所有可用 flag，包含 `code`、`name` 和 `description`                                                                     |
-| `GET`  | `/api/accounts/:uid`                   | 否   | 按 UID 查询账号、所有 flag 的关联状态、up/down 票数和净得分；登录时也返回自己的投票状态                                     |
-| `POST` | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；每位用户对每个账号/flag 只有一票，管理员投票会直接将状态设为认可或否定 |
+| `GET`  | `/api/accounts/:uid`                   | 否   | 查询 UID 的所有 flag、关联状态和投票数；未记录的 UID 也可查看，登录时会返回自己的投票状态                                     |
+| `POST` | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；首次投票会创建账号，每位用户对每个账号/flag 只有一票，管理员投票会直接将状态设为认可或否定 |
 | `POST` | `/api/auth/register`                   | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation`                                                          |
 | `POST` | `/api/auth/login`                      | 否   | 登录并获取 Bearer token                                                                                                     |
 | `GET`  | `/api/auth/user`                       | 是   | 获取当前用户                                                                                                                |
