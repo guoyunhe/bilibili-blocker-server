@@ -1,0 +1,61 @@
+.homePage {
+  display: flex;
+  min-height: calc(100vh - 136px);
+  align-items: center;
+  padding-top: 52px;
+  padding-bottom: 64px;
+}
+
+.homePage > :global(.mantine-Stack-root) {
+  width: 100%;
+}
+
+.homeHero {
+  max-width: 760px;
+}
+
+.heroIcon {
+  box-shadow: 0 10px 32px rgb(0 161 214 / 14%);
+}
+
+.homeTitle {
+  max-width: 760px;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1.2;
+}
+
+.homeDescription {
+  max-width: 620px;
+  line-height: 1.8;
+}
+
+.homeSearch {
+  width: min(100%, 760px);
+}
+
+.homeFeatures {
+  max-width: 1000px;
+}
+
+.featureCard {
+  height: 100%;
+  border-color: #e1edf2;
+  background: rgb(255 255 255 / 76%);
+}
+
+.browserLogo {
+  display: block;
+  object-fit: contain;
+}
+
+.extensionDownloadButton {
+  min-height: 52px;
+}
+
+@media (max-width: 480px) {
+  .homePage {
+    padding-top: 40px;
+    padding-bottom: 48px;
+  }
+}

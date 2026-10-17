@@ -8,6 +8,7 @@ import type { MouseEvent } from 'react'
 
 import AccountSearchForm from './AccountSearchForm.js'
 import type { AuthUser } from '../services/auth.js'
+import styles from './AppHeader.module.css'
 
 type AppHeaderProps = {
   authReady: boolean
@@ -32,10 +33,10 @@ export default function AppHeader({
   }
 
   return (
-    <AppShell.Header className="site-header">
-      <Group className="site-header-inner" gap="lg" wrap="nowrap">
+    <AppShell.Header className={styles.siteHeader}>
+      <Group className={styles.siteHeaderInner} gap="lg" wrap="nowrap">
         <Text
-          className="brand"
+          className={styles.brand}
           component="a"
           href="/"
           fw={800}
@@ -44,10 +45,10 @@ export default function AppHeader({
           <ShieldCheckIcon size={28} weight="fill" />
           Bilibili Blocker
         </Text>
-        <div className="header-search">
+        <div className={styles.headerSearch}>
           <AccountSearchForm onSearch={onSearch} placeholder="按 UID 查询" size="sm" />
         </div>
-        <Group className="header-actions" gap="xs" wrap="nowrap">
+        <Group className={styles.headerActions} gap="xs" wrap="nowrap">
           {authReady &&
             (user ? (
               <Menu position="bottom-end" shadow="md" width={220}>

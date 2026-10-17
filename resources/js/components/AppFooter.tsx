@@ -1,4 +1,5 @@
 import { Anchor, Container, Group, Text } from '@mantine/core'
+import styles from './AppFooter.module.css'
 
 const externalLinks = [
   { label: '作者', href: 'https://guoyunhe.me' },
@@ -8,8 +9,8 @@ const externalLinks = [
 
 export default function AppFooter() {
   return (
-    <footer className="site-footer">
-      <Container className="site-footer-inner" size="lg">
+    <footer className={styles.siteFooter}>
+      <Container className={styles.siteFooterInner} size="lg">
         <Text c="dimmed" size="sm">
           Bilibili Blocker
         </Text>

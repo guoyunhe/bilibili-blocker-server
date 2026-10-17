@@ -1,0 +1,23 @@
+.accountSearch,
+.accountSearchInput {
+  width: 100%;
+  min-width: 0;
+}
+
+.accountSearch :global(.mantine-Group-root) {
+  width: 100%;
+}
+
+.accountSearchInput {
+  flex: 1 1 auto;
+}
+
+.accountSearch :global(.mantine-Button-root) {
+  flex: 0 0 auto;
+  min-width: 92px;
+  white-space: nowrap;
+}
+
+.accountSearch[data-size='sm'] :global(.mantine-Button-root) {
+  min-width: 76px;
+}

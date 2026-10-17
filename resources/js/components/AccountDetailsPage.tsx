@@ -27,6 +27,7 @@ import {
 } from '../services/accounts.js'
 import type { AuthUser } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
+import styles from './AccountDetailsPage.module.css'
 
 type AccountDetailsPageProps = {
   authReady: boolean
@@ -123,7 +124,7 @@ export default function AccountDetailsPage({
     account?.flags.filter((flag) => flag.status === 'approved').length ?? 0
 
   return (
-    <Container className="details-page" size="md">
+    <Container className={styles.detailsPage} size="md">
       <Stack gap="lg">
         <Stack gap="lg">
           <div>
@@ -183,7 +184,13 @@ export default function AccountDetailsPage({
               {account.flags.length > 0 ? (
                 <Stack gap="sm">
                   {account.flags.map((flag) => (
-                    <Paper className="flag-item" key={flag.code} p="md" radius="md" withBorder>
+                    <Paper
+                      className={styles.flagItem}
+                      key={flag.code}
+                      p="md"
+                      radius="md"
+                      withBorder
+                    >
                       <Group align="flex-start" justify="space-between" wrap="wrap">
                         <div>
                           <Group gap="sm">

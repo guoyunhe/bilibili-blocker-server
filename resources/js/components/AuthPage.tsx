@@ -19,6 +19,7 @@ import { useState, type FormEvent } from 'react'
 
 import { login, register, type AuthUser } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
+import styles from './AuthPage.module.css'
 
 type AuthMode = 'login' | 'register'
 
@@ -56,8 +57,8 @@ export default function AuthPage({ mode, onAuthenticated, onNavigate }: AuthPage
   }
 
   return (
-    <Container className="auth-page" size="xs">
-      <Paper className="auth-paper" p={{ base: 'lg', sm: 'xl' }} radius="lg" shadow="sm">
+    <Container className={styles.authPage} size="xs">
+      <Paper className={styles.authPaper} p={{ base: 'lg', sm: 'xl' }} radius="lg" shadow="sm">
         <Stack gap="lg">
           <Group align="center" gap="sm">
             <ThemeIcon color="bilibili" radius="md" size="lg" variant="light">

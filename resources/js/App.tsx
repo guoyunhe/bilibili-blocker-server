@@ -15,6 +15,7 @@ import {
   type AuthUser,
 } from './services/auth.js'
 import { errorMessage } from './utils/error_message.js'
+import styles from './App.module.css'
 
 export default function App() {
   const [pathname, setPathname] = useState(window.location.pathname)
@@ -86,7 +87,7 @@ export default function App() {
   }
 
   return (
-    <AppShell className="app-shell" header={{ height: 68 }}>
+    <AppShell className={styles.appShell} header={{ height: 68 }}>
       <AppHeader
         authReady={authReady}
         logoutBusy={logoutBusy}
@@ -95,9 +96,9 @@ export default function App() {
         onNavigate={navigateTo}
         onSearch={(uid) => navigateTo(`/accounts/${uid}`)}
       />
-      <AppShell.Main className="app-main">
+      <AppShell.Main className={styles.appMain}>
         {error && (
-          <Alert className="app-error" color="red" role="alert" title="请求失败">
+          <Alert className={styles.appError} color="red" role="alert" title="请求失败">
             {error}
           </Alert>
         )}

@@ -1,0 +1,15 @@
+.appShell {
+  min-height: 100vh;
+}
+
+.appMain {
+  min-height: calc(100vh - 136px);
+  background:
+    radial-gradient(ellipse at 86% 12%, rgb(251 114 153 / 9%), transparent 32rem),
+    radial-gradient(ellipse at 13% 18%, rgb(0 161 214 / 10%), transparent 36rem), #f4f9fc;
+}
+
+.appError {
+  width: min(calc(100% - 32px), 780px);
+  margin: 16px auto 0;
+}

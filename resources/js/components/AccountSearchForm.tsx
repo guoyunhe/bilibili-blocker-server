@@ -2,6 +2,8 @@ import { Button, Group, TextInput } from '@mantine/core'
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/MagnifyingGlass'
 import { useState, type FormEvent } from 'react'
 
+import styles from './AccountSearchForm.module.css'
+
 type AccountSearchFormProps = {
   onSearch: (uid: string) => void
   size?: 'sm' | 'md' | 'lg'
@@ -28,11 +30,11 @@ export default function AccountSearchForm({
   }
 
   return (
-    <form className="account-search" data-size={size} onSubmit={handleSubmit}>
+    <form className={styles.accountSearch} data-size={size} onSubmit={handleSubmit}>
       <Group gap="xs" wrap="nowrap">
         <TextInput
           aria-label="Bilibili UID"
-          className="account-search-input"
+          className={styles.accountSearchInput}
           error={error || undefined}
           inputMode="numeric"
           leftSection={<MagnifyingGlassIcon size={20} />}
