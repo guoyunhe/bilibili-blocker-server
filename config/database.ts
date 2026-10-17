@@ -2,6 +2,8 @@ import env from '#start/env'
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
 
+const dbPort = env.get('DB_PORT')
+
 const dbConfig = defineConfig({
   connection: 'mysql',
 
@@ -10,7 +12,7 @@ const dbConfig = defineConfig({
       client: 'mysql2',
       connection: {
         host: env.get('DB_HOST'),
-        port: env.get('DB_PORT'),
+        port: dbPort ? Number(dbPort) : undefined,
         user: env.get('DB_USER'),
         password: env.get('DB_PASSWORD'),
         database: env.get('DB_DATABASE'),

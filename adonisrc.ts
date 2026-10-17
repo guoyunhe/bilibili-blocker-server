@@ -52,6 +52,9 @@ export default defineConfig({
     () => import('@adonisjs/lucid/database_provider'),
     () => import('@adonisjs/cors/cors_provider'),
     () => import('@adonisjs/auth/auth_provider'),
+    () => import('@adonisjs/vite/vite_provider'),
+    () => import('@adonisjs/core/providers/edge_provider'),
+    () => import('@adonisjs/static/static_provider'),
     () => import('#providers/api_provider'),
   ],
 
@@ -103,7 +106,16 @@ export default defineConfig({
   | the production build.
   |
   */
-  metaFiles: [],
+  metaFiles: [
+    {
+      pattern: 'public/**',
+      reloadServer: false,
+    },
+    {
+      pattern: 'resources/views/**/*.edge',
+      reloadServer: false,
+    },
+  ],
 
   hooks: {
     init: [
@@ -112,5 +124,6 @@ export default defineConfig({
       }),
       generateRegistry(),
     ],
+    buildStarting: [() => import('@adonisjs/vite/build_hook')],
   },
 })
