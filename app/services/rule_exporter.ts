@@ -10,8 +10,13 @@ export async function exportRules() {
     .from('accounts_flags')
     .join('accounts', 'accounts.id', 'accounts_flags.account_id')
     .join('flags', 'flags.id', 'accounts_flags.flag_id')
-    .where('accounts_flags.status', 'approved')
+    .leftJoin('account_flag_votes', 'account_flag_votes.account_flag_id', 'accounts_flags.id')
+    .whereIn('accounts_flags.status', ['approved', 'rejected'])
     .select('flags.code as code', 'accounts.uid as uid')
+    .groupBy('accounts_flags.id', 'accounts_flags.status', 'flags.code', 'accounts.uid')
+    .havingRaw('accounts_flags.status = ? OR COALESCE(SUM(account_flag_votes.vote), 0) > 0', [
+      'approved',
+    ])
     .orderBy('flags.code')
     .orderBy('accounts.uid')
 
