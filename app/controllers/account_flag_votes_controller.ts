@@ -35,7 +35,7 @@ export default class AccountFlagVotesController {
       .insert({
         account_id: account.id,
         flag_id: flag.id,
-        is_associated: false,
+        status: null,
         created_at: now,
         updated_at: now,
       })

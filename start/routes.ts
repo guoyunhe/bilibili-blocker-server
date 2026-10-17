@@ -18,6 +18,10 @@ router
     router
       .post('accounts/:uid/flags/:code/votes', [controllers.AccountFlagVotes, 'store'])
       .use(middleware.auth())
+    router
+      .patch('accounts/:uid/flags/:code/status', [controllers.AccountFlagStatus, 'update'])
+      .use(middleware.auth())
+      .use(middleware.admin())
 
     router
       .group(() => {

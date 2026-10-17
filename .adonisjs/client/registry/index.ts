@@ -18,6 +18,12 @@ const routes = {
     tokens: [{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"flags","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"code","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"votes","end":""}],
     types: placeholder as Registry['account_flag_votes.store']['types'],
   },
+  'account_flag_status.update': {
+    methods: ["PATCH"],
+    pattern: '/api/accounts/:uid/flags/:code/status',
+    tokens: [{"old":"/api/accounts/:uid/flags/:code/status","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":0,"val":"flags","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":1,"val":"code","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":0,"val":"status","end":""}],
+    types: placeholder as Registry['account_flag_status.update']['types'],
+  },
   'auth.auth.register': {
     methods: ["POST"],
     pattern: '/api/auth/register',

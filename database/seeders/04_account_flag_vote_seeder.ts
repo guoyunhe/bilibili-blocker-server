@@ -51,7 +51,7 @@ export default class AccountFlagVoteSeeder extends BaseSeeder {
         flagIds.map((flagId) => ({
           account_id: account.id,
           flag_id: flagId,
-          is_associated: false,
+          status: null,
           created_at: now,
           updated_at: now,
         }))

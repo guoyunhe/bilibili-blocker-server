@@ -21,7 +21,7 @@ export class AccountSchema extends BaseModel {
 }
 
 export class AccountsFlagSchema extends BaseModel {
-  static $columns = ['accountId', 'createdAt', 'flagId', 'id', 'isAssociated', 'updatedAt'] as const
+  static $columns = ['accountId', 'createdAt', 'flagId', 'id', 'status', 'updatedAt'] as const
   $columns = AccountsFlagSchema.$columns
   @column()
   declare accountId: number
@@ -32,7 +32,7 @@ export class AccountsFlagSchema extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
   @column()
-  declare isAssociated: boolean
+  declare status: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 }

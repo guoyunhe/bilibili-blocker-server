@@ -8,6 +8,9 @@ export interface ApiDefinition {
   accountFlagVotes: {
     store: typeof routes['account_flag_votes.store']
   }
+  accountFlagStatus: {
+    update: typeof routes['account_flag_status.update']
+  }
   auth: {
     auth: {
       register: typeof routes['auth.auth.register']

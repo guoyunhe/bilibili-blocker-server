@@ -6,8 +6,12 @@ import AccountFlagVote from '#models/account_flag_vote'
 import Account from '#models/account'
 import Flag from '#models/flag'
 
+export type AccountFlagStatus = 'approved' | 'rejected' | null
+
 export default class AccountFlag extends AccountsFlagSchema {
   static table = 'accounts_flags'
+
+  declare status: AccountFlagStatus
 
   @belongsTo(() => Account)
   declare account: BelongsTo<typeof Account>

@@ -13,7 +13,7 @@ export default class extends BaseSchema {
         .references('accounts.id')
         .onDelete('CASCADE')
       table.integer('flag_id').unsigned().notNullable().references('flags.id').onDelete('CASCADE')
-      table.boolean('is_associated').notNullable().defaultTo(true)
+      table.string('status', 16).nullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').notNullable()
       table.unique(['account_id', 'flag_id'])

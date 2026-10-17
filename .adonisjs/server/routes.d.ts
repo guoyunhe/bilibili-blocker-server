@@ -6,6 +6,7 @@ export type ScannedRoutes = {
   ALL: {
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+    'account_flag_status.update': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
     'auth.auth.register': { paramsTuple?: []; params?: {} }
     'auth.auth.login': { paramsTuple?: []; params?: {} }
     'auth.auth.logout': { paramsTuple?: []; params?: {} }
@@ -24,6 +25,9 @@ export type ScannedRoutes = {
     'auth.auth.register': { paramsTuple?: []; params?: {} }
     'auth.auth.login': { paramsTuple?: []; params?: {} }
     'auth.auth.logout': { paramsTuple?: []; params?: {} }
+  }
+  PATCH: {
+    'account_flag_status.update': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

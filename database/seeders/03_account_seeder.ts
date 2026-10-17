@@ -47,22 +47,11 @@ export default class AccountSeeder extends BaseSeeder {
     const flagIdByCode = new Map(flags.map(({ id, code }) => [code, id]))
     const accounts = await Account.query().select('id', 'uid')
     const accountIdByUid = new Map(accounts.map(({ id, uid }) => [uid, id]))
-    const flagIds = flagAccounts.map(({ code }) => {
-      const id = flagIdByCode.get(code)
-      if (id === undefined) throw new Error(`Flag "${code}" was not created`)
-      return id
-    })
-
     const now = new Date()
-    await db
-      .from('accounts_flags')
-      .whereIn('flag_id', flagIds)
-      .update({ is_associated: false, updated_at: now })
-
-    const associations: Array<{
+    const accountFlagRows: Array<{
       account_id: number
       flag_id: number
-      is_associated: boolean
+      status: 'approved'
       created_at: Date
       updated_at: Date
     }> = []
@@ -73,22 +62,25 @@ export default class AccountSeeder extends BaseSeeder {
       for (const uid of new Set(uids)) {
         const accountId = accountIdByUid.get(uid)
         if (accountId === undefined) throw new Error(`Account UID "${uid}" was not created`)
-        associations.push({
+        accountFlagRows.push({
           account_id: accountId,
           flag_id: flagId,
-          is_associated: true,
+          status: 'approved',
           created_at: now,
           updated_at: now,
         })
       }
     }
 
-    for (let index = 0; index < associations.length; index += batchSize) {
+    for (let index = 0; index < accountFlagRows.length; index += batchSize) {
       await db
         .table('accounts_flags')
-        .insert(associations.slice(index, index + batchSize))
+        .insert(accountFlagRows.slice(index, index + batchSize))
         .onConflict(['account_id', 'flag_id'])
-        .merge(['is_associated', 'updated_at'])
+        .merge({
+          status: db.raw('IF(status IS NULL, VALUES(status), status)'),
+          updated_at: now,
+        })
     }
   }
 }

@@ -7,12 +7,10 @@ import db from '@adonisjs/lucid/services/db'
 export async function getAccountDetails(account: Account, currentUserId?: number) {
   const [flags, accountFlags] = await Promise.all([
     Flag.query().orderBy('code'),
-    AccountFlag.query().where('accountId', account.id).select('id', 'flagId', 'isAssociated'),
+    AccountFlag.query().where('accountId', account.id).select('id', 'flagId', 'status'),
   ])
   const accountFlagIdByFlagId = new Map(accountFlags.map(({ id, flagId }) => [flagId, id]))
-  const isAssociatedByFlagId = new Map(
-    accountFlags.map(({ flagId, isAssociated }) => [flagId, isAssociated])
-  )
+  const statusByFlagId = new Map(accountFlags.map(({ flagId, status }) => [flagId, status]))
   const accountFlagIds = accountFlags.map(({ id }) => id)
   const voteCounts =
     accountFlagIds.length === 0
@@ -67,7 +65,7 @@ export async function getAccountDetails(account: Account, currentUserId?: number
           code,
           name,
           description,
-          isAssociated: isAssociatedByFlagId.get(id) ?? false,
+          status: statusByFlagId.get(id) ?? null,
           upVotes: counts.up,
           downVotes: counts.down,
           score: counts.score,
@@ -77,7 +75,7 @@ export async function getAccountDetails(account: Account, currentUserId?: number
       })
       .sort(
         (left, right) =>
-          Number(right.isAssociated) - Number(left.isAssociated) ||
+          Number(right.status === 'approved') - Number(left.status === 'approved') ||
           right.score - left.score ||
           left.code.localeCompare(right.code)
       ),
