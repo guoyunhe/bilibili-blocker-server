@@ -22,9 +22,6 @@ export default await Env.create(new URL('../', import.meta.url), {
   APP_KEY: Env.schema.secret(),
   APP_URL: Env.schema.string({ format: 'url', tld: false }),
 
-  // Session
-  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
-
   // Drive and queue
   DRIVE_DISK: Env.schema.enum.optional(['fs'] as const),
   QUEUE_DRIVER: Env.schema.enum.optional(['database', 'sync'] as const),
@@ -37,5 +34,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   MAIL_MAILER: Env.schema.enum(['resend'] as const),
   MAIL_FROM_NAME: Env.schema.string(),
   MAIL_FROM_ADDRESS: Env.schema.string(),
-  RESEND_API_KEY: Env.schema.string()
+  RESEND_API_KEY: Env.schema.string(),
 })
