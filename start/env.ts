@@ -28,4 +28,14 @@ export default await Env.create(new URL('../', import.meta.url), {
   // Drive and queue
   DRIVE_DISK: Env.schema.enum.optional(['fs'] as const),
   QUEUE_DRIVER: Env.schema.enum.optional(['database', 'sync'] as const),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring the mail package
+  |----------------------------------------------------------
+  */
+  MAIL_MAILER: Env.schema.enum(['resend'] as const),
+  MAIL_FROM_NAME: Env.schema.string(),
+  MAIL_FROM_ADDRESS: Env.schema.string(),
+  RESEND_API_KEY: Env.schema.string()
 })
