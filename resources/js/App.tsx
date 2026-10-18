@@ -1,5 +1,5 @@
 import { Alert, AppShell } from '@mantine/core'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 
 import AccountDetailsPage from './components/AccountDetailsPage.js'
 import AppFooter from './components/AppFooter.js'
@@ -16,6 +16,9 @@ import {
 } from './services/auth.js'
 import { errorMessage } from './utils/error_message.js'
 import styles from './App.module.css'
+
+const AdminPage = lazy(() => import('./components/AdminPage.js'))
+const UserProfilePage = lazy(() => import('./components/UserProfilePage.js'))
 
 export default function App() {
   const [pathname, setPathname] = useState(window.location.pathname)
@@ -67,7 +70,9 @@ export default function App() {
   }
 
   const accountRoute = pathname.match(/^\/accounts\/([^/]+)$/)
+  const userRoute = pathname.match(/^\/users\/([^/]+)$/)
   const authMode = pathname === '/login' ? 'login' : pathname === '/register' ? 'register' : null
+  const isAdminRoute = pathname === '/admin'
 
   function renderPage() {
     if (accountRoute) {
@@ -82,6 +87,20 @@ export default function App() {
     }
     if (authMode) {
       return <AuthPage mode={authMode} onAuthenticated={setUser} onNavigate={navigateTo} />
+    }
+    if (isAdminRoute) {
+      return (
+        <Suspense fallback={null}>
+          <AdminPage authReady={authReady} onNavigate={navigateTo} user={user} />
+        </Suspense>
+      )
+    }
+    if (userRoute) {
+      return (
+        <Suspense fallback={null}>
+          <UserProfilePage onNavigate={navigateTo} userId={userRoute[1]} />
+        </Suspense>
+      )
     }
     return <HomePage onSearch={(uid) => navigateTo(`/accounts/${uid}`)} />
   }

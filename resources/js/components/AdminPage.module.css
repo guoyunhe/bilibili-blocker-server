@@ -1,0 +1,13 @@
+.adminPage {
+  padding-top: 36px;
+  padding-bottom: 56px;
+}
+
+.section {
+  border-color: #e4edf1;
+  background: #fcfeff;
+}
+
+.tableScroll {
+  overflow-x: auto;
+}

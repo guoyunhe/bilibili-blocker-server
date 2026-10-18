@@ -1,0 +1,13 @@
+.profilePage {
+  padding-top: 36px;
+  padding-bottom: 56px;
+}
+
+.profileCard {
+  border-color: #e4edf1;
+  background: #fcfeff;
+}
+
+.tableScroll {
+  overflow-x: auto;
+}

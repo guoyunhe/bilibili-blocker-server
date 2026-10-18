@@ -71,20 +71,3 @@ export async function voteForFlag(uid: string, code: string, direction: VoteDire
 
   return readResponse<AccountDetails>(response, '提交投票失败，请稍后重试')
 }
-
-export async function setFlagStatus(uid: string, code: string, status: FlagStatus) {
-  const response = await fetch(
-    `/api/accounts/${encodeURIComponent(uid)}/flags/${encodeURIComponent(code)}/status`,
-    {
-      method: 'PATCH',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        ...authorizationHeader(),
-      },
-      body: JSON.stringify({ status }),
-    }
-  )
-
-  return readResponse<AccountDetails>(response, '更新关联状态失败，请稍后重试')
-}

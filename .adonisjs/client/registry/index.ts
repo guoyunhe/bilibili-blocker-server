@@ -24,17 +24,35 @@ const routes = {
     tokens: [{"old":"/api/accounts/:uid","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid","type":1,"val":"uid","end":""}],
     types: placeholder as Registry['accounts.show']['types'],
   },
+  'users.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/users/:id',
+    tokens: [{"old":"/api/users/:id","type":0,"val":"api","end":""},{"old":"/api/users/:id","type":0,"val":"users","end":""},{"old":"/api/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['users.show']['types'],
+  },
   'account_flag_votes.store': {
     methods: ["POST"],
     pattern: '/api/accounts/:uid/flags/:code/votes',
     tokens: [{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"flags","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"code","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"votes","end":""}],
     types: placeholder as Registry['account_flag_votes.store']['types'],
   },
-  'account_flag_status.update': {
-    methods: ["PATCH"],
-    pattern: '/api/accounts/:uid/flags/:code/status',
-    tokens: [{"old":"/api/accounts/:uid/flags/:code/status","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":0,"val":"flags","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":1,"val":"code","end":""},{"old":"/api/accounts/:uid/flags/:code/status","type":0,"val":"status","end":""}],
-    types: placeholder as Registry['account_flag_status.update']['types'],
+  'users.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/users',
+    tokens: [{"old":"/api/admin/users","type":0,"val":"api","end":""},{"old":"/api/admin/users","type":0,"val":"admin","end":""},{"old":"/api/admin/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['users.index']['types'],
+  },
+  'users.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/admin/users/:id',
+    tokens: [{"old":"/api/admin/users/:id","type":0,"val":"api","end":""},{"old":"/api/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/api/admin/users/:id","type":0,"val":"users","end":""},{"old":"/api/admin/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['users.destroy']['types'],
+  },
+  'votes.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/votes',
+    tokens: [{"old":"/api/admin/votes","type":0,"val":"api","end":""},{"old":"/api/admin/votes","type":0,"val":"admin","end":""},{"old":"/api/admin/votes","type":0,"val":"votes","end":""}],
+    types: placeholder as Registry['votes.index']['types'],
   },
   'auth.auth.register': {
     methods: ["POST"],

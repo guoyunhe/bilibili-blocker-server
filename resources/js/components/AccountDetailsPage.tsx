@@ -107,9 +107,18 @@ export default function AccountDetailsPage({
             <Text c="dimmed" fw={600} size="sm">
               账号详情
             </Text>
-            <Title order={1} size="h2">
-              UID {uid}
-            </Title>
+            <Group align="center" justify="space-between" wrap="wrap">
+              <Title order={1} size="h2">
+                UID {uid}
+              </Title>
+              <Anchor
+                href={`https://space.bilibili.com/${uid}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                打开 Bilibili 个人空间
+              </Anchor>
+            </Group>
           </div>
           {loading && (
             <Group c="dimmed" gap="sm">

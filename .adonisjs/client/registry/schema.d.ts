@@ -43,6 +43,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['show']>>>
     }
   }
+  'users.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/users/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/users_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/users_controller').default['show']>>>
+    }
+  }
   'account_flag_votes.store': {
     methods: ["POST"]
     pattern: '/api/accounts/:uid/flags/:code/votes'
@@ -55,16 +67,40 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'account_flag_status.update': {
-    methods: ["PATCH"]
-    pattern: '/api/accounts/:uid/flags/:code/status'
+  'users.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/users'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/account_flag_status').accountFlagStatusValidator)>>
-      paramsTuple: [ParamValue, ParamValue]
-      params: { uid: ParamValue; code: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/account_flag_status').accountFlagStatusValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_flag_status_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_flag_status_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['index']>>>
+    }
+  }
+  'users.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/admin/users/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['destroy']>>>
+    }
+  }
+  'votes.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/votes'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_votes_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_votes_controller').default['index']>>>
     }
   }
   'auth.auth.register': {

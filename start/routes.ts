@@ -16,11 +16,17 @@ router
     router.get('/', () => ({ hello: 'world' }))
     router.get('flags', [controllers.Flags, 'index'])
     router.get('accounts/:uid', [controllers.Accounts, 'show'])
+    router.get('users/:id', [controllers.Users, 'show'])
     router
       .post('accounts/:uid/flags/:code/votes', [controllers.AccountFlagVotes, 'store'])
       .use(middleware.auth())
+
     router
-      .patch('accounts/:uid/flags/:code/status', [controllers.AccountFlagStatus, 'update'])
+      .group(() => {
+        router.resource('users', controllers.AdminUsers).only(['index', 'destroy'])
+        router.resource('votes', controllers.AdminVotes).only(['index'])
+      })
+      .prefix('admin')
       .use(middleware.auth())
       .use(middleware.admin())
 

@@ -64,6 +64,9 @@ export default function AppHeader({
                       {user.email}
                     </Text>
                   </Menu.Label>
+                  {user.role === 'admin' && (
+                    <Menu.Item onClick={() => onNavigate('/admin')}>管理员后台</Menu.Item>
+                  )}
                   <Menu.Item
                     color="red"
                     disabled={logoutBusy}

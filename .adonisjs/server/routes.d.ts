@@ -7,8 +7,11 @@ export type ScannedRoutes = {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'flags.index': { paramsTuple?: []; params?: {} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
+    'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
-    'account_flag_status.update': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+    'users.index': { paramsTuple?: []; params?: {} }
+    'users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'votes.index': { paramsTuple?: []; params?: {} }
     'auth.auth.register': { paramsTuple?: []; params?: {} }
     'auth.auth.login': { paramsTuple?: []; params?: {} }
     'auth.auth.logout': { paramsTuple?: []; params?: {} }
@@ -18,12 +21,18 @@ export type ScannedRoutes = {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'flags.index': { paramsTuple?: []; params?: {} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
+    'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.index': { paramsTuple?: []; params?: {} }
+    'votes.index': { paramsTuple?: []; params?: {} }
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'flags.index': { paramsTuple?: []; params?: {} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
+    'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.index': { paramsTuple?: []; params?: {} }
+    'votes.index': { paramsTuple?: []; params?: {} }
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }
   POST: {
@@ -32,8 +41,8 @@ export type ScannedRoutes = {
     'auth.auth.login': { paramsTuple?: []; params?: {} }
     'auth.auth.logout': { paramsTuple?: []; params?: {} }
   }
-  PATCH: {
-    'account_flag_status.update': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+  DELETE: {
+    'users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

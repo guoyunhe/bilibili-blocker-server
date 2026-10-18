@@ -4,9 +4,11 @@
  */
 
 export const controllers = {
-  AccountFlagStatus: () => import('#controllers/account_flag_status_controller'),
   AccountFlagVotes: () => import('#controllers/account_flag_votes_controller'),
   Accounts: () => import('#controllers/accounts_controller'),
+  AdminUsers: () => import('#controllers/admin_users_controller'),
+  AdminVotes: () => import('#controllers/admin_votes_controller'),
   Auth: () => import('#controllers/auth_controller'),
   Flags: () => import('#controllers/flags_controller'),
+  Users: () => import('#controllers/users_controller'),
 }

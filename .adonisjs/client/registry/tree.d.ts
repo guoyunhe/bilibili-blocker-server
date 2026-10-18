@@ -13,11 +13,16 @@ export interface ApiDefinition {
   accounts: {
     show: typeof routes['accounts.show']
   }
+  users: {
+    show: typeof routes['users.show']
+    index: typeof routes['users.index']
+    destroy: typeof routes['users.destroy']
+  }
   accountFlagVotes: {
     store: typeof routes['account_flag_votes.store']
   }
-  accountFlagStatus: {
-    update: typeof routes['account_flag_status.update']
+  votes: {
+    index: typeof routes['votes.index']
   }
   auth: {
     auth: {
