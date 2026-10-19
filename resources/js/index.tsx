@@ -6,6 +6,7 @@ import { Router } from 'wouter'
 import { MantineProvider } from '@mantine/core'
 
 import App from './App.js'
+import { AuthProvider } from './contexts/AuthContext.js'
 import { theme } from './theme.js'
 import './styles.css'
 
@@ -18,9 +19,11 @@ if (!root) {
 createRoot(root).render(
   <React.StrictMode>
     <MantineProvider defaultColorScheme="light" theme={theme}>
-      <Router>
-        <App />
-      </Router>
+      <AuthProvider>
+        <Router>
+          <App />
+        </Router>
+      </AuthProvider>
     </MantineProvider>
   </React.StrictMode>
 )

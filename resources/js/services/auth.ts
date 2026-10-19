@@ -6,9 +6,14 @@ export type AuthUser = {
   emailVerifiedAt: string | null
 }
 
-type AuthResponse = {
+export type AuthSession = {
   user: AuthUser
   token: string
+}
+
+export type PersistedAuthState = {
+  token: string | null
+  user: AuthUser | null
 }
 
 type ApiEnvelope<T> = {
@@ -30,14 +35,50 @@ export class ApiError extends Error {
   }
 }
 
-const tokenKey = 'auth-token'
+const authStorageKey = 'auth-state'
+const legacyTokenKey = 'auth-token'
 
-export function getAuthToken() {
-  return localStorage.getItem(tokenKey)
+function isAuthUser(value: unknown): value is AuthUser {
+  if (typeof value !== 'object' || value === null) return false
+  if (!('id' in value) || !('name' in value) || !('email' in value) || !('role' in value)) {
+    return false
+  }
+  if (!('emailVerifiedAt' in value)) return false
+
+  return (
+    typeof value.id === 'number' &&
+    typeof value.name === 'string' &&
+    typeof value.email === 'string' &&
+    typeof value.role === 'string' &&
+    (typeof value.emailVerifiedAt === 'string' || value.emailVerifiedAt === null)
+  )
 }
 
-export function clearAuthToken() {
-  localStorage.removeItem(tokenKey)
+export function parseAuthState(serialized: string): PersistedAuthState {
+  const auth: unknown = JSON.parse(serialized)
+  if (typeof auth !== 'object' || auth === null || !('token' in auth) || !('user' in auth)) {
+    throw new Error('Invalid persisted authentication state')
+  }
+  if (auth.token !== null && typeof auth.token !== 'string') {
+    throw new Error('Invalid authentication token')
+  }
+  if (auth.user !== null && !isAuthUser(auth.user)) {
+    throw new Error('Invalid authenticated user')
+  }
+
+  return { token: auth.token, user: auth.user }
+}
+
+export function getAuthToken() {
+  const storedAuth = localStorage.getItem(authStorageKey)
+  if (!storedAuth) return localStorage.getItem(legacyTokenKey)
+
+  try {
+    return parseAuthState(storedAuth).token
+  } catch (reason) {
+    console.error('Failed to read persisted authentication state', reason)
+    return null
+  }
 }
 
 async function request<T>(path: string, payload?: object, routePrefix = '/api/auth'): Promise<T> {
@@ -64,10 +105,8 @@ async function request<T>(path: string, payload?: object, routePrefix = '/api/au
   return (body as ApiEnvelope<T>).data
 }
 
-export async function login(email: string, password: string) {
-  const response = await request<AuthResponse>('login', { email, password })
-  localStorage.setItem(tokenKey, response.token)
-  return response.user
+export function login(email: string, password: string) {
+  return request<AuthSession>('login', { email, password })
 }
 
 export async function register(
@@ -76,14 +115,12 @@ export async function register(
   password: string,
   passwordConfirmation: string
 ) {
-  const response = await request<AuthResponse>('register', {
+  return request<AuthSession>('register', {
     name,
     email,
     password,
     passwordConfirmation,
   })
-  localStorage.setItem(tokenKey, response.token)
-  return response.user
 }
 
 export function verifyEmail(token: string) {
@@ -98,10 +135,6 @@ export function getCurrentUser() {
   return request<AuthUser>('user')
 }
 
-export async function logout() {
-  try {
-    await request<void>('logout', {})
-  } finally {
-    clearAuthToken()
-  }
+export function logout() {
+  return request<void>('logout', {})
 }

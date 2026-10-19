@@ -17,24 +17,20 @@ import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'wouter'
 
+import { useAuth } from '../contexts/AuthContext.js'
 import {
   getAccount,
   type AccountDetails,
   type VoteDirection,
   voteForFlag,
 } from '../services/accounts.js'
-import type { AuthUser } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
 import styles from './AccountDetailsPage.module.css'
 
-type AccountDetailsPageProps = {
-  authReady: boolean
-  user: AuthUser | null
-}
-
-export default function AccountDetailsPage({ authReady, user }: AccountDetailsPageProps) {
+export default function AccountDetailsPage() {
   const [, navigate] = useLocation()
   const { uid = '' } = useParams<{ uid?: string }>()
+  const { authReady, user } = useAuth()
   const [account, setAccount] = useState<AccountDetails | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)

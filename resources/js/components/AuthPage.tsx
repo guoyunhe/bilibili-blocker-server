@@ -18,7 +18,8 @@ import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useState, type FormEvent } from 'react'
 import { useLocation } from 'wouter'
 
-import { login, register, type AuthUser } from '../services/auth.js'
+import { useAuth } from '../contexts/AuthContext.js'
+import { login, register } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
 import styles from './AuthPage.module.css'
 
@@ -26,11 +27,11 @@ type AuthMode = 'login' | 'register'
 
 type AuthPageProps = {
   mode: AuthMode
-  onAuthenticated: (user: AuthUser) => void
 }
 
-export default function AuthPage({ mode, onAuthenticated }: AuthPageProps) {
+export default function AuthPage({ mode }: AuthPageProps) {
   const [, navigate] = useLocation()
+  const { setAuth } = useAuth()
   const isRegister = mode === 'register'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -45,10 +46,10 @@ export default function AuthPage({ mode, onAuthenticated }: AuthPageProps) {
     setBusy(true)
 
     try {
-      const user = isRegister
+      const session = isRegister
         ? await register(name.trim(), email, password, passwordConfirmation)
         : await login(email, password)
-      onAuthenticated(user)
+      setAuth(session)
       navigate(isRegister ? '/verify-email' : '/')
     } catch (reason) {
       setError(errorMessage(reason))

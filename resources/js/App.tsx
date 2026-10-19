@@ -1,5 +1,5 @@
 import { Alert, AppShell, Button, Group } from '@mantine/core'
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Route, Switch, useLocation, useRoute } from 'wouter'
 
 import AccountDetailsPage from './components/AccountDetailsPage.js'
@@ -9,14 +9,8 @@ import AuthPage from './components/AuthPage.js'
 import EmailVerificationPage from './components/EmailVerificationPage.js'
 import EmailVerificationSendPage from './components/EmailVerificationSendPage.js'
 import HomePage from './components/HomePage.js'
-import {
-  ApiError,
-  clearAuthToken,
-  getAuthToken,
-  getCurrentUser,
-  logout,
-  type AuthUser,
-} from './services/auth.js'
+import { useAuth } from './contexts/AuthContext.js'
+import { logout } from './services/auth.js'
 import { errorMessage } from './utils/error_message.js'
 import styles from './App.module.css'
 
@@ -26,28 +20,14 @@ const UserProfilePage = lazy(() => import('./components/UserProfilePage.js'))
 export default function App() {
   const [pathname, navigate] = useLocation()
   const [matchesVerificationLink] = useRoute('/email/verify/:token')
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [authReady, setAuthReady] = useState(!getAuthToken())
   const [logoutBusy, setLogoutBusy] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    if (!getAuthToken()) return
-
-    getCurrentUser()
-      .then(setUser)
-      .catch((reason: unknown) => {
-        if (reason instanceof ApiError && (reason.status === 401 || reason.status === 403)) {
-          clearAuthToken()
-        }
-        setError(errorMessage(reason))
-      })
-      .finally(() => setAuthReady(true))
-  }, [])
+  const { authReady, clearAuth, clearError, error: authError, user } = useAuth()
 
   function navigateTo(path: string) {
     navigate(path)
     setError('')
+    clearError()
   }
 
   async function handleLogout() {
@@ -55,11 +35,11 @@ export default function App() {
     setLogoutBusy(true)
     try {
       await logout()
-      setUser(null)
       navigateTo('/')
     } catch (reason) {
       setError(errorMessage(reason))
     } finally {
+      clearAuth()
       setLogoutBusy(false)
     }
   }
@@ -74,9 +54,7 @@ export default function App() {
   return (
     <AppShell className={styles.appShell} header={{ height: 68 }}>
       <AppHeader
-        authReady={authReady}
         logoutBusy={logoutBusy}
-        user={user}
         onLogout={handleLogout}
         onSearch={(uid) => navigateTo(`/accounts/${uid}`)}
       />
@@ -84,6 +62,11 @@ export default function App() {
         {error && (
           <Alert className={styles.appError} color="red" role="alert" title="请求失败">
             {error}
+          </Alert>
+        )}
+        {authError && (
+          <Alert className={styles.appError} color="red" role="alert" title="认证状态加载失败">
+            {authError}
           </Alert>
         )}
         {showEmailVerificationNotice && (
@@ -98,13 +81,13 @@ export default function App() {
         )}
         <Switch>
           <Route path="/accounts/:uid">
-            <AccountDetailsPage authReady={authReady} user={user} />
+            <AccountDetailsPage />
           </Route>
           <Route path="/login">
-            <AuthPage mode="login" onAuthenticated={setUser} />
+            <AuthPage mode="login" />
           </Route>
           <Route path="/register">
-            <AuthPage mode="register" onAuthenticated={setUser} />
+            <AuthPage mode="register" />
           </Route>
           <Route path="/verify-email">
             <EmailVerificationSendPage email={user?.email} />
@@ -114,7 +97,7 @@ export default function App() {
           </Route>
           <Route path="/admin">
             <Suspense fallback={null}>
-              <AdminPage authReady={authReady} user={user} />
+              <AdminPage />
             </Suspense>
           </Route>
           <Route path="/users/:userId">

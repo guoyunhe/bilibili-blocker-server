@@ -38,6 +38,9 @@ importers:
       '@adonisjs/vite':
         specifier: ^6.0.3
         version: 6.0.3(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@adonisjs/shield@9.0.0(55af4446a100c4c3aecd7bdd51fb8abb))(edge.js@6.5.1)(vite@8.3.4(@types/node@26.6.5))
+      '@guoyunhe/react-storage':
+        specifier: ^2.0.3
+        version: 2.0.3(react@19.3.1)
       '@japa/api-client':
         specifier: ^3.2.1
         version: 3.2.1(@japa/assert@4.2.0(@japa/runner@5.4.0))(@japa/runner@5.4.0)(supports-color@10.2.2)
@@ -679,6 +682,16 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@guoyunhe/react-storage@2.0.3':
+    resolution: {integrity: sha512-SAloNhExBOEBH/FZOktRerq5eY5XvbTb3AykRI+XV/jmmOIugGra4EAbacMmvGox0GgI7H3diY4XSlz/IEVwXw==}
+    peerDependencies:
+      react: '>=16.8.0'
+
+  '@guoyunhe/use-latest-callback@1.0.0':
+    resolution: {integrity: sha512-MYnapFjp1R8xEgHWRSfqW2s66ZJQcydNtiO9eawAnMu5XeBXTmIMXTicI1TLFWUlBFDJm+6IVKcypZ4RH7G77A==}
+    peerDependencies:
+      react: '>=16.8.0'
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -3689,6 +3702,15 @@ snapshots:
       tabbable: 6.5.0
 
   '@floating-ui/utils@0.2.12': {}
+
+  '@guoyunhe/react-storage@2.0.3(react@19.3.1)':
+    dependencies:
+      '@guoyunhe/use-latest-callback': 1.0.0(react@19.3.1)
+      react: 19.3.1
+
+  '@guoyunhe/use-latest-callback@1.0.0(react@19.3.1)':
+    dependencies:
+      react: 19.3.1
 
   '@humanfs/core@0.19.2':
     dependencies:

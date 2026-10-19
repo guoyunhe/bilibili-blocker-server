@@ -7,26 +7,19 @@ import { UserPlusIcon } from '@phosphor-icons/react/UserPlus'
 import type { MouseEvent } from 'react'
 import { useLocation } from 'wouter'
 
+import { useAuth } from '../contexts/AuthContext.js'
 import AccountSearchForm from './AccountSearchForm.js'
-import type { AuthUser } from '../services/auth.js'
 import styles from './AppHeader.module.css'
 
 type AppHeaderProps = {
-  authReady: boolean
   logoutBusy: boolean
-  user: AuthUser | null
   onLogout: () => void
   onSearch: (uid: string) => void
 }
 
-export default function AppHeader({
-  authReady,
-  logoutBusy,
-  user,
-  onLogout,
-  onSearch,
-}: AppHeaderProps) {
+export default function AppHeader({ logoutBusy, onLogout, onSearch }: AppHeaderProps) {
   const [, navigate] = useLocation()
+  const { authReady, user } = useAuth()
 
   function handleNavigate(event: MouseEvent<HTMLAnchorElement>, path: string) {
     event.preventDefault()

@@ -19,6 +19,7 @@ import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'wouter'
 
+import { useAuth } from '../contexts/AuthContext.js'
 import {
   deleteAdminUser,
   getAdminUsers,
@@ -27,21 +28,16 @@ import {
   type RecentVote,
   type UserPagination,
 } from '../services/admin.js'
-import type { AuthUser } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
 import styles from './AdminPage.module.css'
-
-type AdminPageProps = {
-  authReady: boolean
-  user: AuthUser | null
-}
 
 function formatDate(value: string) {
   return new Date(value).toLocaleString()
 }
 
-export default function AdminPage({ authReady, user }: AdminPageProps) {
+export default function AdminPage() {
   const [, navigate] = useLocation()
+  const { authReady, user } = useAuth()
   const [users, setUsers] = useState<AdminUser[]>([])
   const [votes, setVotes] = useState<RecentVote[]>([])
   const [userPagination, setUserPagination] = useState<UserPagination | null>(null)
