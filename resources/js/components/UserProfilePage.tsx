@@ -14,7 +14,7 @@ import {
 } from '@mantine/core'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'wouter'
+import { useLocation, useParams } from 'wouter'
 
 import {
   getUserProfile,
@@ -25,16 +25,13 @@ import {
 import { errorMessage } from '../utils/error_message.js'
 import styles from './UserProfilePage.module.css'
 
-type UserProfilePageProps = {
-  userId: string
-}
-
 function formatDate(value: string) {
   return new Date(value).toLocaleString()
 }
 
-export default function UserProfilePage({ userId }: UserProfilePageProps) {
+export default function UserProfilePage() {
   const [, navigate] = useLocation()
+  const { userId = '' } = useParams<{ userId?: string }>()
   const [profile, setProfile] = useState<PublicUserProfile | null>(null)
   const [votes, setVotes] = useState<PublicUserVote[]>([])
   const [pagination, setPagination] = useState<UserProfilePagination | null>(null)

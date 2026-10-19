@@ -14,7 +14,7 @@ import { CheckCircleIcon } from '@phosphor-icons/react/CheckCircle'
 import { EnvelopeSimpleIcon } from '@phosphor-icons/react/EnvelopeSimple'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'wouter'
+import { useLocation, useParams } from 'wouter'
 
 import { resendVerificationEmail, verifyEmail } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
@@ -22,18 +22,13 @@ import styles from './EmailVerificationPage.module.css'
 
 type EmailVerificationPageProps = {
   email?: string
-  onEmailVerified: (email: string) => void
-  token?: string
 }
 
 type VerificationStatus = 'pending' | 'verifying' | 'success' | 'error'
 
-export default function EmailVerificationPage({
-  email,
-  onEmailVerified,
-  token,
-}: EmailVerificationPageProps) {
+export default function EmailVerificationPage({ email }: EmailVerificationPageProps) {
   const [, navigate] = useLocation()
+  const { token } = useParams<{ token?: string }>()
   const [status, setStatus] = useState<VerificationStatus>(token ? 'verifying' : 'pending')
   const [error, setError] = useState('')
   const [resendError, setResendError] = useState('')
@@ -56,10 +51,7 @@ export default function EmailVerificationPage({
     }
 
     verifyEmail(decodedToken)
-      .then((response) => {
-        onEmailVerified(response.email)
-        setStatus('success')
-      })
+      .then(() => setStatus('success'))
       .catch((reason: unknown) => {
         setError(errorMessage(reason))
         setStatus('error')

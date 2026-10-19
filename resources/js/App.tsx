@@ -70,22 +70,6 @@ export default function App() {
     pathname !== '/verify-email' &&
     !matchesVerificationLink
 
-  function renderEmailVerification(token?: string) {
-    return (
-      <EmailVerificationPage
-        email={user?.email}
-        onEmailVerified={(email) => {
-          setUser((currentUser) =>
-            currentUser?.email === email
-              ? { ...currentUser, emailVerifiedAt: new Date().toISOString() }
-              : currentUser
-          )
-        }}
-        token={token}
-      />
-    )
-  }
-
   return (
     <AppShell className={styles.appShell} header={{ height: 68 }}>
       <AppHeader
@@ -113,7 +97,7 @@ export default function App() {
         )}
         <Switch>
           <Route path="/accounts/:uid">
-            {(params) => <AccountDetailsPage authReady={authReady} uid={params.uid} user={user} />}
+            <AccountDetailsPage authReady={authReady} user={user} />
           </Route>
           <Route path="/login">
             <AuthPage mode="login" onAuthenticated={setUser} />
@@ -121,9 +105,11 @@ export default function App() {
           <Route path="/register">
             <AuthPage mode="register" onAuthenticated={setUser} />
           </Route>
-          <Route path="/verify-email">{renderEmailVerification()}</Route>
+          <Route path="/verify-email">
+            <EmailVerificationPage email={user?.email} />
+          </Route>
           <Route path="/email/verify/:token">
-            {(params) => renderEmailVerification(params.token)}
+            <EmailVerificationPage email={user?.email} />
           </Route>
           <Route path="/admin">
             <Suspense fallback={null}>
@@ -131,11 +117,9 @@ export default function App() {
             </Suspense>
           </Route>
           <Route path="/users/:userId">
-            {(params) => (
-              <Suspense fallback={null}>
-                <UserProfilePage userId={params.userId} />
-              </Suspense>
-            )}
+            <Suspense fallback={null}>
+              <UserProfilePage />
+            </Suspense>
           </Route>
           <Route>
             <HomePage onSearch={(uid) => navigateTo(`/accounts/${uid}`)} />

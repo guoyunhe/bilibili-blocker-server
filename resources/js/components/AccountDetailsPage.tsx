@@ -15,7 +15,7 @@ import { ThumbsDownIcon } from '@phosphor-icons/react/ThumbsDown'
 import { ThumbsUpIcon } from '@phosphor-icons/react/ThumbsUp'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'wouter'
+import { useLocation, useParams } from 'wouter'
 
 import {
   getAccount,
@@ -29,12 +29,12 @@ import styles from './AccountDetailsPage.module.css'
 
 type AccountDetailsPageProps = {
   authReady: boolean
-  uid: string
   user: AuthUser | null
 }
 
-export default function AccountDetailsPage({ authReady, uid, user }: AccountDetailsPageProps) {
+export default function AccountDetailsPage({ authReady, user }: AccountDetailsPageProps) {
   const [, navigate] = useLocation()
+  const { uid = '' } = useParams<{ uid?: string }>()
   const [account, setAccount] = useState<AccountDetails | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
