@@ -35,11 +35,7 @@ const extensionDownloads = [
   },
 ]
 
-type HomePageProps = {
-  onSearch: (uid: string) => void
-}
-
-export default function HomePage({ onSearch }: HomePageProps) {
+export default function HomePage() {
   return (
     <Container className={styles.homePage} size="lg">
       <Stack align="center" gap="xl">
@@ -65,7 +61,7 @@ export default function HomePage({ onSearch }: HomePageProps) {
         </Stack>
 
         <div className={styles.homeSearch}>
-          <AccountSearchForm onSearch={onSearch} size="lg" />
+          <AccountSearchForm size="lg" />
         </div>
 
         <SimpleGrid className={styles.homeFeatures} cols={{ base: 1, sm: 3 }} spacing="md" w="100%">

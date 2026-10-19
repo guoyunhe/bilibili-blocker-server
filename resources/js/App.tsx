@@ -57,11 +57,7 @@ export default function App() {
 
   return (
     <AppShell className={styles.appShell} header={{ height: 68 }}>
-      <AppHeader
-        logoutBusy={logoutBusy}
-        onLogout={handleLogout}
-        onSearch={(uid) => navigateTo(`/accounts/${uid}`)}
-      />
+      <AppHeader logoutBusy={logoutBusy} onLogout={handleLogout} />
       <AppShell.Main className={styles.appMain}>
         {error && (
           <Alert className={styles.appError} color="red" role="alert" title="请求失败">
@@ -101,7 +97,7 @@ export default function App() {
             <RegisterPage />
           </Route>
           <Route path="/email/verification/send">
-            <EmailVerificationSendPage email={user?.email} />
+            <EmailVerificationSendPage />
           </Route>
           <Route path="/email/verification/:token">
             <EmailVerificationPage />
@@ -117,7 +113,7 @@ export default function App() {
             </Suspense>
           </Route>
           <Route>
-            <HomePage onSearch={(uid) => navigateTo(`/accounts/${uid}`)} />
+            <HomePage />
           </Route>
         </Switch>
       </AppShell.Main>

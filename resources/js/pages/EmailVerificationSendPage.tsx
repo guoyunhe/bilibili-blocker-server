@@ -7,13 +7,11 @@ import useResendVerificationEmail, {
   ResendVerificationStatus,
 } from '../components/useResendVerificationEmail.js'
 import { getSavedReturnPath } from '../utils/return_path.js'
+import { useAuth } from '../contexts/AuthContext.js'
 
-type EmailVerificationSendPageProps = {
-  email?: string
-}
-
-export default function EmailVerificationSendPage({ email }: EmailVerificationSendPageProps) {
+export default function EmailVerificationSendPage() {
   const [, navigate] = useLocation()
+  const { user } = useAuth()
   const resend = useResendVerificationEmail()
   const returnTo = getSavedReturnPath()
 
@@ -35,7 +33,8 @@ export default function EmailVerificationSendPage({ email }: EmailVerificationSe
               请验证您的邮箱
             </Title>
             <Text c="dimmed" ta="center">
-              我们已向{email ? ` ${email} ` : '您'}发送验证邮件，请点击邮件中的链接完成验证。
+              我们已向{user?.email ? ` ${user.email} ` : '您'}
+              发送验证邮件，请点击邮件中的链接完成验证。
             </Text>
           </Stack>
 

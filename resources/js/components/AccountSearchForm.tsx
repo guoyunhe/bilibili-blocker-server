@@ -1,20 +1,20 @@
 import { Button, Group, TextInput } from '@mantine/core'
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/MagnifyingGlass'
 import { useState, type FormEvent } from 'react'
+import { useLocation } from 'wouter'
 
 import styles from './AccountSearchForm.module.css'
 
 type AccountSearchFormProps = {
-  onSearch: (uid: string) => void
   size?: 'sm' | 'md' | 'lg'
   placeholder?: string
 }
 
 export default function AccountSearchForm({
-  onSearch,
   size = 'md',
   placeholder = '输入 Bilibili UID',
 }: AccountSearchFormProps) {
+  const [, navigate] = useLocation()
   const [uid, setUid] = useState('')
   const [error, setError] = useState('')
 
@@ -26,7 +26,7 @@ export default function AccountSearchForm({
       return
     }
     setError('')
-    onSearch(normalizedUid)
+    navigate(`/accounts/${normalizedUid}`)
   }
 
   return (

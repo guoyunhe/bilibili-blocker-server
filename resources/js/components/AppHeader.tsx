@@ -14,10 +14,9 @@ import styles from './AppHeader.module.css'
 type AppHeaderProps = {
   logoutBusy: boolean
   onLogout: () => void
-  onSearch: (uid: string) => void
 }
 
-export default function AppHeader({ logoutBusy, onLogout, onSearch }: AppHeaderProps) {
+export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
   const [, navigate] = useLocation()
   const { authReady, user } = useAuth()
 
@@ -40,7 +39,7 @@ export default function AppHeader({ logoutBusy, onLogout, onSearch }: AppHeaderP
           Bilibili Blocker
         </Text>
         <div className={styles.headerSearch}>
-          <AccountSearchForm onSearch={onSearch} placeholder="按 UID 查询" size="sm" />
+          <AccountSearchForm placeholder="按 UID 查询" size="sm" />
         </div>
         <Group className={styles.headerActions} gap="xs" wrap="nowrap">
           {authReady &&
