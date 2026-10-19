@@ -11,9 +11,14 @@ export type ScannedRoutes = {
     'email_verification.send': { paramsTuple?: []; params?: {} }
     'email_verification.verify': { paramsTuple?: []; params?: {} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
-    'users.index': { paramsTuple?: []; params?: {} }
-    'users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'votes.index': { paramsTuple?: []; params?: {} }
+    'admin.flags.index': { paramsTuple?: []; params?: {} }
+    'admin.flags.store': { paramsTuple?: []; params?: {} }
+    'admin.flags.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.flags.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.flags.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.users.index': { paramsTuple?: []; params?: {} }
+    'admin.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.votes.index': { paramsTuple?: []; params?: {} }
     'auth.auth.register': { paramsTuple?: []; params?: {} }
     'auth.auth.login': { paramsTuple?: []; params?: {} }
     'auth.auth.logout': { paramsTuple?: []; params?: {} }
@@ -24,8 +29,10 @@ export type ScannedRoutes = {
     'flags.index': { paramsTuple?: []; params?: {} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'users.index': { paramsTuple?: []; params?: {} }
-    'votes.index': { paramsTuple?: []; params?: {} }
+    'admin.flags.index': { paramsTuple?: []; params?: {} }
+    'admin.flags.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.users.index': { paramsTuple?: []; params?: {} }
+    'admin.votes.index': { paramsTuple?: []; params?: {} }
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
@@ -33,20 +40,30 @@ export type ScannedRoutes = {
     'flags.index': { paramsTuple?: []; params?: {} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'users.index': { paramsTuple?: []; params?: {} }
-    'votes.index': { paramsTuple?: []; params?: {} }
+    'admin.flags.index': { paramsTuple?: []; params?: {} }
+    'admin.flags.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.users.index': { paramsTuple?: []; params?: {} }
+    'admin.votes.index': { paramsTuple?: []; params?: {} }
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'email_verification.send': { paramsTuple?: []; params?: {} }
     'email_verification.verify': { paramsTuple?: []; params?: {} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+    'admin.flags.store': { paramsTuple?: []; params?: {} }
     'auth.auth.register': { paramsTuple?: []; params?: {} }
     'auth.auth.login': { paramsTuple?: []; params?: {} }
     'auth.auth.logout': { paramsTuple?: []; params?: {} }
   }
+  PUT: {
+    'admin.flags.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  PATCH: {
+    'admin.flags.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
   DELETE: {
-    'users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.flags.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

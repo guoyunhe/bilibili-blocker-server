@@ -26,10 +26,12 @@ router
 
     router
       .group(() => {
+        router.resource('flags', controllers.AdminFlags).apiOnly()
         router.resource('users', controllers.AdminUsers).only(['index', 'destroy'])
         router.resource('votes', controllers.AdminVotes).only(['index'])
       })
       .prefix('admin')
+      .as('admin')
       .use(middleware.auth())
       .use(middleware.admin())
 

@@ -48,23 +48,53 @@ const routes = {
     tokens: [{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"flags","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"code","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"votes","end":""}],
     types: placeholder as Registry['account_flag_votes.store']['types'],
   },
-  'users.index': {
+  'admin.flags.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/flags',
+    tokens: [{"old":"/api/admin/flags","type":0,"val":"api","end":""},{"old":"/api/admin/flags","type":0,"val":"admin","end":""},{"old":"/api/admin/flags","type":0,"val":"flags","end":""}],
+    types: placeholder as Registry['admin.flags.index']['types'],
+  },
+  'admin.flags.store': {
+    methods: ["POST"],
+    pattern: '/api/admin/flags',
+    tokens: [{"old":"/api/admin/flags","type":0,"val":"api","end":""},{"old":"/api/admin/flags","type":0,"val":"admin","end":""},{"old":"/api/admin/flags","type":0,"val":"flags","end":""}],
+    types: placeholder as Registry['admin.flags.store']['types'],
+  },
+  'admin.flags.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/flags/:id',
+    tokens: [{"old":"/api/admin/flags/:id","type":0,"val":"api","end":""},{"old":"/api/admin/flags/:id","type":0,"val":"admin","end":""},{"old":"/api/admin/flags/:id","type":0,"val":"flags","end":""},{"old":"/api/admin/flags/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.flags.show']['types'],
+  },
+  'admin.flags.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/admin/flags/:id',
+    tokens: [{"old":"/api/admin/flags/:id","type":0,"val":"api","end":""},{"old":"/api/admin/flags/:id","type":0,"val":"admin","end":""},{"old":"/api/admin/flags/:id","type":0,"val":"flags","end":""},{"old":"/api/admin/flags/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.flags.update']['types'],
+  },
+  'admin.flags.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/admin/flags/:id',
+    tokens: [{"old":"/api/admin/flags/:id","type":0,"val":"api","end":""},{"old":"/api/admin/flags/:id","type":0,"val":"admin","end":""},{"old":"/api/admin/flags/:id","type":0,"val":"flags","end":""},{"old":"/api/admin/flags/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.flags.destroy']['types'],
+  },
+  'admin.users.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/admin/users',
     tokens: [{"old":"/api/admin/users","type":0,"val":"api","end":""},{"old":"/api/admin/users","type":0,"val":"admin","end":""},{"old":"/api/admin/users","type":0,"val":"users","end":""}],
-    types: placeholder as Registry['users.index']['types'],
+    types: placeholder as Registry['admin.users.index']['types'],
   },
-  'users.destroy': {
+  'admin.users.destroy': {
     methods: ["DELETE"],
     pattern: '/api/admin/users/:id',
     tokens: [{"old":"/api/admin/users/:id","type":0,"val":"api","end":""},{"old":"/api/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/api/admin/users/:id","type":0,"val":"users","end":""},{"old":"/api/admin/users/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['users.destroy']['types'],
+    types: placeholder as Registry['admin.users.destroy']['types'],
   },
-  'votes.index': {
+  'admin.votes.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/admin/votes',
     tokens: [{"old":"/api/admin/votes","type":0,"val":"api","end":""},{"old":"/api/admin/votes","type":0,"val":"admin","end":""},{"old":"/api/admin/votes","type":0,"val":"votes","end":""}],
-    types: placeholder as Registry['votes.index']['types'],
+    types: placeholder as Registry['admin.votes.index']['types'],
   },
   'auth.auth.register': {
     methods: ["POST"],

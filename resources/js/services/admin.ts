@@ -10,6 +10,13 @@ export type AdminUser = {
   createdAt: string
 }
 
+export type AdminFlag = {
+  id: number
+  code: string
+  name: string
+  description: string
+}
+
 export type RecentVote = {
   id: number
   userId: number
@@ -62,6 +69,53 @@ export async function getAdminUsers(page: number) {
     },
   })
   return readResponse<{ users: AdminUser[]; pagination: UserPagination }>(response)
+}
+
+export async function getAdminFlags() {
+  const response = await fetch('/api/admin/flags', {
+    headers: {
+      Accept: 'application/json',
+      ...authorizationHeader(),
+    },
+  })
+  return readResponse<{ flags: AdminFlag[] }>(response)
+}
+
+export async function createAdminFlag(data: Omit<AdminFlag, 'id'>) {
+  const response = await fetch('/api/admin/flags', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      ...authorizationHeader(),
+    },
+    body: JSON.stringify(data),
+  })
+  return readResponse<{ flag: AdminFlag }>(response)
+}
+
+export async function updateAdminFlag(id: number, data: Omit<AdminFlag, 'id'>) {
+  const response = await fetch(`/api/admin/flags/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      ...authorizationHeader(),
+    },
+    body: JSON.stringify(data),
+  })
+  return readResponse<{ flag: AdminFlag }>(response)
+}
+
+export async function deleteAdminFlag(id: number) {
+  const response = await fetch(`/api/admin/flags/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      ...authorizationHeader(),
+    },
+  })
+  return readResponse<{ message: string }>(response)
 }
 
 export async function getRecentVotes(page: number) {

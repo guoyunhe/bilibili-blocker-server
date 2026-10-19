@@ -15,8 +15,6 @@ export interface ApiDefinition {
   }
   users: {
     show: typeof routes['users.show']
-    index: typeof routes['users.index']
-    destroy: typeof routes['users.destroy']
   }
   emailVerification: {
     send: typeof routes['email_verification.send']
@@ -25,8 +23,21 @@ export interface ApiDefinition {
   accountFlagVotes: {
     store: typeof routes['account_flag_votes.store']
   }
-  votes: {
-    index: typeof routes['votes.index']
+  admin: {
+    flags: {
+      index: typeof routes['admin.flags.index']
+      store: typeof routes['admin.flags.store']
+      show: typeof routes['admin.flags.show']
+      update: typeof routes['admin.flags.update']
+      destroy: typeof routes['admin.flags.destroy']
+    }
+    users: {
+      index: typeof routes['admin.users.index']
+      destroy: typeof routes['admin.users.destroy']
+    }
+    votes: {
+      index: typeof routes['admin.votes.index']
+    }
   }
   auth: {
     auth: {

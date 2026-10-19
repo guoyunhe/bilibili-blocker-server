@@ -91,7 +91,67 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'users.index': {
+  'admin.flags.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/flags'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['index']>>>
+    }
+  }
+  'admin.flags.store': {
+    methods: ["POST"]
+    pattern: '/api/admin/flags'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/admin_flag').adminFlagValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/admin_flag').adminFlagValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.flags.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/flags/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['show']>>>
+    }
+  }
+  'admin.flags.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/admin/flags/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/admin_flag').adminFlagValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/admin_flag').adminFlagValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.flags.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/admin/flags/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_flags_controller').default['destroy']>>>
+    }
+  }
+  'admin.users.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/admin/users'
     types: {
@@ -103,7 +163,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['index']>>>
     }
   }
-  'users.destroy': {
+  'admin.users.destroy': {
     methods: ["DELETE"]
     pattern: '/api/admin/users/:id'
     types: {
@@ -115,7 +175,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['destroy']>>>
     }
   }
-  'votes.index': {
+  'admin.votes.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/admin/votes'
     types: {

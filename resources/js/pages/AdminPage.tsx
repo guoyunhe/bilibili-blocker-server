@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'wouter'
 
 import { useAuth } from '../contexts/AuthContext.js'
+import AdminFlagsSection from './AdminFlagsSection.js'
 import {
   deleteAdminUser,
   getAdminUsers,
@@ -181,6 +182,8 @@ export default function AdminPage() {
             {error}
           </Alert>
         )}
+
+        <AdminFlagsSection />
 
         <Paper className={styles.section} p="lg" radius="lg" withBorder>
           <Stack gap="md">
