@@ -13,7 +13,7 @@ export default class AdminUsersController {
     }
 
     const paginator = await User.query()
-      .select('id', 'name', 'email', 'role', 'createdAt')
+      .select('id', 'name', 'email', 'role', 'emailVerifiedAt', 'createdAt')
       .withCount('votes', (query) => query.whereNot('vote', 0))
       .orderBy('id', 'desc')
       .paginate(page, usersPerPage)

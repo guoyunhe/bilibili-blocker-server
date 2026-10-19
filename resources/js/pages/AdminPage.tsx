@@ -194,11 +194,12 @@ export default function AdminPage() {
               </Text>
             </div>
             <div className={styles.tableScroll}>
-              <Table highlightOnHover miw={680} striped>
+              <Table highlightOnHover miw={760} striped>
                 <Table.Thead>
                   <Table.Tr>
                     <Table.Th>用户</Table.Th>
                     <Table.Th>邮箱</Table.Th>
+                    <Table.Th>邮箱验证</Table.Th>
                     <Table.Th>角色</Table.Th>
                     <Table.Th ta="right">有效 vote</Table.Th>
                     <Table.Th>注册时间</Table.Th>
@@ -222,6 +223,11 @@ export default function AdminPage() {
                         </Text>
                       </Table.Td>
                       <Table.Td>{item.email}</Table.Td>
+                      <Table.Td>
+                        <Badge color={item.emailVerifiedAt ? 'green' : 'yellow'} variant="light">
+                          {item.emailVerifiedAt ? '已验证' : '未验证'}
+                        </Badge>
+                      </Table.Td>
                       <Table.Td>
                         <Badge color={item.role === 'admin' ? 'bilibili' : 'gray'} variant="light">
                           {item.role === 'admin' ? '管理员' : '用户'}
@@ -248,7 +254,7 @@ export default function AdminPage() {
                   ))}
                   {!loading && users.length === 0 && (
                     <Table.Tr>
-                      <Table.Td colSpan={6}>
+                      <Table.Td colSpan={7}>
                         <Text c="dimmed" py="md" ta="center">
                           暂无用户
                         </Text>

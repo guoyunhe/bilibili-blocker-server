@@ -5,6 +5,7 @@ export type AdminUser = {
   name: string
   email: string
   role: string
+  emailVerifiedAt: string | null
   voteCount: number
   createdAt: string
 }

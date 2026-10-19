@@ -76,6 +76,10 @@ export default function AccountDetailsPage() {
       navigate('/login')
       return
     }
+    if (!user.emailVerifiedAt) {
+      navigate('/email/verification/send')
+      return
+    }
 
     setVoteError('')
     setVotingFlag({ code, direction })
@@ -148,6 +152,19 @@ export default function AccountDetailsPage() {
                   后即可参与投票。
                 </Text>
               )}
+              {authReady && user && !user.emailVerifiedAt && (
+                <Text c="dimmed" size="sm">
+                  请先验证邮箱后再参与投票。
+                  <Anchor
+                    component="button"
+                    ml={4}
+                    type="button"
+                    onClick={() => navigate('/email/verification/send')}
+                  >
+                    前往验证
+                  </Anchor>
+                </Text>
+              )}
               {voteError && (
                 <Alert color="red" icon={<WarningCircleIcon size={20} />} title="投票失败">
                   {voteError}
@@ -201,7 +218,7 @@ export default function AccountDetailsPage() {
                             aria-label={`赞成 ${flag.name}，${flag.upVotes} 票`}
                             aria-pressed={flag.userVote === 'up'}
                             color="bilibili"
-                            disabled={!authReady || !user || votingFlag !== null}
+                            disabled={!authReady || !user?.emailVerifiedAt || votingFlag !== null}
                             loading={
                               votingFlag?.code === flag.code && votingFlag.direction === 'up'
                             }
@@ -216,7 +233,7 @@ export default function AccountDetailsPage() {
                             aria-label={`反对 ${flag.name}，${flag.downVotes} 票`}
                             aria-pressed={flag.userVote === 'down'}
                             color="bilibiliPink"
-                            disabled={!authReady || !user || votingFlag !== null}
+                            disabled={!authReady || !user?.emailVerifiedAt || votingFlag !== null}
                             loading={
                               votingFlag?.code === flag.code && votingFlag.direction === 'down'
                             }

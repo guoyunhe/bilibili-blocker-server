@@ -20,6 +20,7 @@ export default class UserTransformer extends BaseTransformer<User> {
       name: this.resource.name,
       email: this.resource.email,
       role: this.resource.role,
+      emailVerifiedAt: this.resource.emailVerifiedAt?.toISO() ?? null,
       voteCount: Number(this.resource.$extras.votes_count),
       createdAt: this.resource.createdAt.toISO(),
     }

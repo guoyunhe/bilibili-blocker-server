@@ -22,6 +22,7 @@ router
     router
       .post('accounts/:uid/flags/:code/votes', [controllers.AccountFlagVotes, 'store'])
       .use(middleware.auth())
+      .use(middleware.verified())
 
     router
       .group(() => {
