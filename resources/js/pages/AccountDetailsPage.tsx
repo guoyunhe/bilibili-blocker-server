@@ -25,7 +25,7 @@ import {
   voteForFlag,
 } from '../services/accounts.js'
 import { errorMessage } from '../utils/error_message.js'
-import { getSafeReturnPath, saveReturnPath } from '../utils/return_path.js'
+import { createReturnPath, saveReturnPath } from '../utils/return_path.js'
 import styles from './AccountDetailsPage.module.css'
 
 export default function AccountDetailsPage() {
@@ -41,7 +41,7 @@ export default function AccountDetailsPage() {
     code: string
     direction: VoteDirection
   } | null>(null)
-  const returnTo = getSafeReturnPath(`${pathname}${search}${window.location.hash}`)
+  const returnTo = createReturnPath(pathname, search, window.location.hash)
 
   useEffect(() => {
     let active = true

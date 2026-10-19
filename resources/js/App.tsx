@@ -13,7 +13,7 @@ import RegisterPage from './pages/RegisterPage.js'
 import { useAuth } from './contexts/AuthContext.js'
 import { logout } from './services/auth.js'
 import { errorMessage } from './utils/error_message.js'
-import { getSafeReturnPath, saveReturnPath } from './utils/return_path.js'
+import { createReturnPath, saveReturnPath } from './utils/return_path.js'
 import styles from './App.module.css'
 
 const AdminPage = lazy(() => import('./pages/AdminPage.js'))
@@ -26,7 +26,7 @@ export default function App() {
   const [logoutBusy, setLogoutBusy] = useState(false)
   const [error, setError] = useState('')
   const { authReady, clearAuth, clearError, error: authError, user } = useAuth()
-  const returnTo = getSafeReturnPath(`${pathname}${search}${window.location.hash}`)
+  const returnTo = createReturnPath(pathname, search, window.location.hash)
 
   function navigateTo(path: string) {
     navigate(path)

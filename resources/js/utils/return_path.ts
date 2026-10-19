@@ -1,6 +1,12 @@
 const returnPathOrigin = 'https://return-path.invalid'
 const returnPathStorageKey = 'auth-return-path'
 
+export function createReturnPath(pathname: string, search: string, hash: string) {
+  const query = search ? `${search.startsWith('?') ? '' : '?'}${search}` : ''
+  const fragment = hash ? `${hash.startsWith('#') ? '' : '#'}${hash}` : ''
+  return getSafeReturnPath(`${pathname}${query}${fragment}`)
+}
+
 export function getSafeReturnPath(value: string | null | undefined) {
   if (
     !value ||
