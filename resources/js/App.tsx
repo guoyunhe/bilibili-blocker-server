@@ -19,7 +19,7 @@ const UserProfilePage = lazy(() => import('./components/UserProfilePage.js'))
 
 export default function App() {
   const [pathname, navigate] = useLocation()
-  const [matchesVerificationLink] = useRoute('/email/verify/:token')
+  const [matchesVerificationLink] = useRoute('/email/verification/:token')
   const [logoutBusy, setLogoutBusy] = useState(false)
   const [error, setError] = useState('')
   const { authReady, clearAuth, clearError, error: authError, user } = useAuth()
@@ -48,7 +48,7 @@ export default function App() {
     authReady &&
     user !== null &&
     !user.emailVerifiedAt &&
-    pathname !== '/verify-email' &&
+    pathname !== '/email/verification/send' &&
     !matchesVerificationLink
 
   return (
@@ -73,7 +73,11 @@ export default function App() {
           <Alert className={styles.appError} color="yellow" role="status" title="请验证您的邮箱">
             <Group justify="space-between" gap="sm">
               <span>验证邮箱后即可完整使用账户功能。</span>
-              <Button size="xs" variant="light" onClick={() => navigateTo('/verify-email')}>
+              <Button
+                size="xs"
+                variant="light"
+                onClick={() => navigateTo('/email/verification/send')}
+              >
                 前往验证
               </Button>
             </Group>
@@ -89,10 +93,10 @@ export default function App() {
           <Route path="/register">
             <AuthPage mode="register" />
           </Route>
-          <Route path="/verify-email">
+          <Route path="/email/verification/send">
             <EmailVerificationSendPage email={user?.email} />
           </Route>
-          <Route path="/email/verify/:token">
+          <Route path="/email/verification/:token">
             <EmailVerificationPage />
           </Route>
           <Route path="/admin">

@@ -7,7 +7,7 @@ const authMailConfig = defineConfig({
     expiresIn: '24h',
 
     /** URL path containing the :token placeholder. */
-    path: '/email/verify/:token',
+    path: '/email/verification/:token',
 
     /** Subject and Edge views used for the verification email. */
     template: {

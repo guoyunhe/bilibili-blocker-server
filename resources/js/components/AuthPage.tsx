@@ -50,7 +50,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
         ? await register(name.trim(), email, password, passwordConfirmation)
         : await login(email, password)
       setAuth(session)
-      navigate(isRegister ? '/verify-email' : '/')
+      navigate(isRegister ? '/email/verification/send' : '/')
     } catch (reason) {
       setError(errorMessage(reason))
     } finally {
