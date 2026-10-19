@@ -22,6 +22,7 @@ import useResendVerificationEmail, {
 import { useAuth } from '../contexts/AuthContext.js'
 import { verifyEmail } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
+import { clearSavedReturnPath, getSavedReturnPath } from '../utils/return_path.js'
 
 type VerificationStatus = 'verifying' | 'success' | 'error'
 
@@ -33,6 +34,17 @@ export default function EmailVerificationPage() {
   const [error, setError] = useState('')
   const resend = useResendVerificationEmail()
   const requestedToken = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (status !== 'success') return
+
+    const timeout = window.setTimeout(() => {
+      const returnTo = getSavedReturnPath()
+      clearSavedReturnPath()
+      navigate(returnTo ?? '/')
+    }, 2000)
+    return () => window.clearTimeout(timeout)
+  }, [status, navigate])
 
   useEffect(() => {
     if (!token) {
@@ -124,8 +136,15 @@ export default function EmailVerificationPage() {
                 重新发送验证邮件
               </Button>
             )}
-            <Button disabled={isVerifying} onClick={() => navigate('/')}>
-              返回首页
+            <Button
+              disabled={isVerifying}
+              onClick={() => {
+                const returnTo = getSavedReturnPath()
+                if (isSuccess) clearSavedReturnPath()
+                navigate(returnTo ?? '/')
+              }}
+            >
+              {isSuccess ? '返回原页面' : '返回首页'}
             </Button>
           </Group>
         </Stack>

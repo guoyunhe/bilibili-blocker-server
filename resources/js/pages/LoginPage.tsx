@@ -21,6 +21,7 @@ import { useLocation } from 'wouter'
 import { useAuth } from '../contexts/AuthContext.js'
 import { login } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
+import { clearSavedReturnPath, getSavedReturnPath } from '../utils/return_path.js'
 import styles from './AuthPage.module.css'
 
 export default function LoginPage() {
@@ -42,8 +43,15 @@ export default function LoginPage() {
     setBusy(true)
 
     try {
-      setAuth(await login(values.email, values.password))
-      navigate('/')
+      const session = await login(values.email, values.password)
+      setAuth(session)
+      if (session.user.emailVerifiedAt) {
+        const returnTo = getSavedReturnPath()
+        clearSavedReturnPath()
+        navigate(returnTo ?? '/')
+      } else {
+        navigate('/email/verification/send')
+      }
     } catch (reason) {
       setError(errorMessage(reason))
     } finally {

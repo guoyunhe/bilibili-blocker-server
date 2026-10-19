@@ -15,7 +15,7 @@ import { ThumbsDownIcon } from '@phosphor-icons/react/ThumbsDown'
 import { ThumbsUpIcon } from '@phosphor-icons/react/ThumbsUp'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
-import { useLocation, useParams } from 'wouter'
+import { useLocation, useParams, useSearch } from 'wouter'
 
 import { useAuth } from '../contexts/AuthContext.js'
 import {
@@ -25,10 +25,12 @@ import {
   voteForFlag,
 } from '../services/accounts.js'
 import { errorMessage } from '../utils/error_message.js'
+import { getSafeReturnPath, saveReturnPath } from '../utils/return_path.js'
 import styles from './AccountDetailsPage.module.css'
 
 export default function AccountDetailsPage() {
-  const [, navigate] = useLocation()
+  const [pathname, navigate] = useLocation()
+  const search = useSearch()
   const { uid = '' } = useParams<{ uid?: string }>()
   const { authReady, user } = useAuth()
   const [account, setAccount] = useState<AccountDetails | null>(null)
@@ -39,6 +41,7 @@ export default function AccountDetailsPage() {
     code: string
     direction: VoteDirection
   } | null>(null)
+  const returnTo = getSafeReturnPath(`${pathname}${search}${window.location.hash}`)
 
   useEffect(() => {
     let active = true
@@ -73,10 +76,12 @@ export default function AccountDetailsPage() {
 
   async function handleVote(code: string, direction: VoteDirection) {
     if (!user) {
+      if (returnTo) saveReturnPath(returnTo)
       navigate('/login')
       return
     }
     if (!user.emailVerifiedAt) {
+      if (returnTo) saveReturnPath(returnTo)
       navigate('/email/verification/send')
       return
     }
@@ -146,7 +151,14 @@ export default function AccountDetailsPage() {
               </div>
               {authReady && !user && (
                 <Text c="dimmed" size="sm">
-                  <Anchor component="button" type="button" onClick={() => navigate('/login')}>
+                  <Anchor
+                    component="button"
+                    type="button"
+                    onClick={() => {
+                      if (returnTo) saveReturnPath(returnTo)
+                      navigate('/login')
+                    }}
+                  >
                     登录
                   </Anchor>
                   后即可参与投票。
@@ -159,7 +171,10 @@ export default function AccountDetailsPage() {
                     component="button"
                     ml={4}
                     type="button"
-                    onClick={() => navigate('/email/verification/send')}
+                    onClick={() => {
+                      if (returnTo) saveReturnPath(returnTo)
+                      navigate('/email/verification/send')
+                    }}
                   >
                     前往验证
                   </Anchor>
@@ -218,7 +233,9 @@ export default function AccountDetailsPage() {
                             aria-label={`赞成 ${flag.name}，${flag.upVotes} 票`}
                             aria-pressed={flag.userVote === 'up'}
                             color="bilibili"
-                            disabled={!authReady || !user?.emailVerifiedAt || votingFlag !== null}
+                            disabled={
+                              !authReady || votingFlag !== null || (!!user && !user.emailVerifiedAt)
+                            }
                             loading={
                               votingFlag?.code === flag.code && votingFlag.direction === 'up'
                             }
@@ -233,7 +250,9 @@ export default function AccountDetailsPage() {
                             aria-label={`反对 ${flag.name}，${flag.downVotes} 票`}
                             aria-pressed={flag.userVote === 'down'}
                             color="bilibiliPink"
-                            disabled={!authReady || !user?.emailVerifiedAt || votingFlag !== null}
+                            disabled={
+                              !authReady || votingFlag !== null || (!!user && !user.emailVerifiedAt)
+                            }
                             loading={
                               votingFlag?.code === flag.code && votingFlag.direction === 'down'
                             }

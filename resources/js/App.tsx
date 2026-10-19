@@ -1,6 +1,6 @@
 import { Alert, AppShell, Button, Group } from '@mantine/core'
 import { lazy, Suspense, useState } from 'react'
-import { Route, Switch, useLocation, useRoute } from 'wouter'
+import { Route, Switch, useLocation, useRoute, useSearch } from 'wouter'
 
 import AppFooter from './components/AppFooter.js'
 import AppHeader from './components/AppHeader.js'
@@ -13,6 +13,7 @@ import RegisterPage from './pages/RegisterPage.js'
 import { useAuth } from './contexts/AuthContext.js'
 import { logout } from './services/auth.js'
 import { errorMessage } from './utils/error_message.js'
+import { getSafeReturnPath, saveReturnPath } from './utils/return_path.js'
 import styles from './App.module.css'
 
 const AdminPage = lazy(() => import('./pages/AdminPage.js'))
@@ -20,10 +21,12 @@ const UserProfilePage = lazy(() => import('./pages/UserProfilePage.js'))
 
 export default function App() {
   const [pathname, navigate] = useLocation()
+  const search = useSearch()
   const [matchesVerificationLink] = useRoute('/email/verification/:token')
   const [logoutBusy, setLogoutBusy] = useState(false)
   const [error, setError] = useState('')
   const { authReady, clearAuth, clearError, error: authError, user } = useAuth()
+  const returnTo = getSafeReturnPath(`${pathname}${search}${window.location.hash}`)
 
   function navigateTo(path: string) {
     navigate(path)
@@ -77,7 +80,10 @@ export default function App() {
               <Button
                 size="xs"
                 variant="light"
-                onClick={() => navigateTo('/email/verification/send')}
+                onClick={() => {
+                  if (returnTo) saveReturnPath(returnTo)
+                  navigateTo('/email/verification/send')
+                }}
               >
                 前往验证
               </Button>

@@ -6,6 +6,7 @@ import styles from './EmailVerificationPage.module.css'
 import useResendVerificationEmail, {
   ResendVerificationStatus,
 } from '../components/useResendVerificationEmail.js'
+import { getSavedReturnPath } from '../utils/return_path.js'
 
 type EmailVerificationSendPageProps = {
   email?: string
@@ -14,6 +15,7 @@ type EmailVerificationSendPageProps = {
 export default function EmailVerificationSendPage({ email }: EmailVerificationSendPageProps) {
   const [, navigate] = useLocation()
   const resend = useResendVerificationEmail()
+  const returnTo = getSavedReturnPath()
 
   return (
     <Container className={styles.verificationPage} size="xs">
@@ -43,7 +45,7 @@ export default function EmailVerificationSendPage({ email }: EmailVerificationSe
             <Button loading={resend.resending} onClick={resend.send} variant="light">
               重新发送验证邮件
             </Button>
-            <Button onClick={() => navigate('/')}>返回首页</Button>
+            <Button onClick={() => navigate(returnTo ?? '/')}>返回</Button>
           </Group>
         </Stack>
       </Paper>
