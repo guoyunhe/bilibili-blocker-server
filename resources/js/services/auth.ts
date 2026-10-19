@@ -38,22 +38,6 @@ export class ApiError extends Error {
 const authStorageKey = 'auth-state'
 const legacyTokenKey = 'auth-token'
 
-function isAuthUser(value: unknown): value is AuthUser {
-  if (typeof value !== 'object' || value === null) return false
-  if (!('id' in value) || !('name' in value) || !('email' in value) || !('role' in value)) {
-    return false
-  }
-  if (!('emailVerifiedAt' in value)) return false
-
-  return (
-    typeof value.id === 'number' &&
-    typeof value.name === 'string' &&
-    typeof value.email === 'string' &&
-    typeof value.role === 'string' &&
-    (typeof value.emailVerifiedAt === 'string' || value.emailVerifiedAt === null)
-  )
-}
-
 export function parseAuthState(serialized: string): PersistedAuthState {
   const auth: unknown = JSON.parse(serialized)
   if (typeof auth !== 'object' || auth === null || !('token' in auth) || !('user' in auth)) {
@@ -62,11 +46,7 @@ export function parseAuthState(serialized: string): PersistedAuthState {
   if (auth.token !== null && typeof auth.token !== 'string') {
     throw new Error('Invalid authentication token')
   }
-  if (auth.user !== null && !isAuthUser(auth.user)) {
-    throw new Error('Invalid authenticated user')
-  }
-
-  return { token: auth.token, user: auth.user }
+  return { token: auth.token, user: auth.user as AuthUser | null }
 }
 
 export function getAuthToken() {

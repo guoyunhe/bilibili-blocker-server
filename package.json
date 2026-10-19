@@ -75,6 +75,7 @@
     "@guoyunhe/react-storage": "^2.0.3",
     "@japa/api-client": "^3.2.1",
     "@mantine/core": "^9.7.2",
+    "@mantine/form": "^9.7.3",
     "@mantine/hooks": "^9.7.2",
     "@phosphor-icons/react": "^2.1.10",
     "@tuyau/core": "^1.2.2",

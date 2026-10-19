@@ -5,10 +5,11 @@ import { Route, Switch, useLocation, useRoute } from 'wouter'
 import AppFooter from './components/AppFooter.js'
 import AppHeader from './components/AppHeader.js'
 import AccountDetailsPage from './pages/AccountDetailsPage.js'
-import AuthPage from './pages/AuthPage.js'
 import EmailVerificationPage from './pages/EmailVerificationPage.js'
 import EmailVerificationSendPage from './pages/EmailVerificationSendPage.js'
 import HomePage from './pages/HomePage.js'
+import LoginPage from './pages/LoginPage.js'
+import RegisterPage from './pages/RegisterPage.js'
 import { useAuth } from './contexts/AuthContext.js'
 import { logout } from './services/auth.js'
 import { errorMessage } from './utils/error_message.js'
@@ -88,10 +89,10 @@ export default function App() {
             <AccountDetailsPage />
           </Route>
           <Route path="/login">
-            <AuthPage mode="login" />
+            <LoginPage />
           </Route>
           <Route path="/register">
-            <AuthPage mode="register" />
+            <RegisterPage />
           </Route>
           <Route path="/email/verification/send">
             <EmailVerificationSendPage email={user?.email} />
