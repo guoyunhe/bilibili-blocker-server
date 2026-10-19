@@ -21,6 +21,7 @@ import styles from './EmailVerificationPage.module.css'
 
 type EmailVerificationPageProps = {
   email?: string
+  onEmailVerified: (email: string) => void
   onNavigate: (path: string) => void
   token?: string
 }
@@ -29,6 +30,7 @@ type VerificationStatus = 'pending' | 'verifying' | 'success' | 'error'
 
 export default function EmailVerificationPage({
   email,
+  onEmailVerified,
   onNavigate,
   token,
 }: EmailVerificationPageProps) {
@@ -54,7 +56,10 @@ export default function EmailVerificationPage({
     }
 
     verifyEmail(decodedToken)
-      .then(() => setStatus('success'))
+      .then((response) => {
+        onEmailVerified(response.email)
+        setStatus('success')
+      })
       .catch((reason: unknown) => {
         setError(errorMessage(reason))
         setStatus('error')

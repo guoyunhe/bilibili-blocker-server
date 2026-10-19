@@ -1,4 +1,4 @@
-import { Alert, AppShell } from '@mantine/core'
+import { Alert, AppShell, Button, Group } from '@mantine/core'
 import { lazy, Suspense, useEffect, useState } from 'react'
 
 import AccountDetailsPage from './components/AccountDetailsPage.js'
@@ -75,6 +75,12 @@ export default function App() {
   const emailVerificationRoute = pathname.match(/^\/email\/verify\/([^/]+)$/)
   const authMode = pathname === '/login' ? 'login' : pathname === '/register' ? 'register' : null
   const isAdminRoute = pathname === '/admin'
+  const showEmailVerificationNotice =
+    authReady &&
+    user !== null &&
+    !user.emailVerifiedAt &&
+    pathname !== '/verify-email' &&
+    !emailVerificationRoute
 
   function renderPage() {
     if (accountRoute) {
@@ -94,6 +100,13 @@ export default function App() {
       return (
         <EmailVerificationPage
           email={user?.email}
+          onEmailVerified={(email) => {
+            setUser((currentUser) =>
+              currentUser?.email === email
+                ? { ...currentUser, emailVerifiedAt: new Date().toISOString() }
+                : currentUser
+            )
+          }}
           onNavigate={navigateTo}
           token={emailVerificationRoute?.[1]}
         />
@@ -130,6 +143,16 @@ export default function App() {
         {error && (
           <Alert className={styles.appError} color="red" role="alert" title="请求失败">
             {error}
+          </Alert>
+        )}
+        {showEmailVerificationNotice && (
+          <Alert className={styles.appError} color="yellow" role="status" title="请验证您的邮箱">
+            <Group justify="space-between" gap="sm">
+              <span>验证邮箱后即可完整使用账户功能。</span>
+              <Button size="xs" variant="light" onClick={() => navigateTo('/verify-email')}>
+                前往验证
+              </Button>
+            </Group>
           </Alert>
         )}
         {renderPage()}

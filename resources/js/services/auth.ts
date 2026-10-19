@@ -3,6 +3,7 @@ export type AuthUser = {
   name: string
   email: string
   role: string
+  emailVerifiedAt: string | null
 }
 
 type AuthResponse = {
@@ -86,7 +87,7 @@ export async function register(
 }
 
 export function verifyEmail(token: string) {
-  return request<{ message: string }>('verify', { token }, '/api/email')
+  return request<{ message: string; email: string }>('verify', { token }, '/api/email')
 }
 
 export function resendVerificationEmail() {
