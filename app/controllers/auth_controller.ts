@@ -1,4 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import logger from '@adonisjs/core/services/logger'
+import emailVerificationService from 'adonisjs-auth-mail/services/email_verification'
 
 import User from '#models/user'
 import UserTransformer from '#transformers/user_transformer'
@@ -10,6 +12,10 @@ export default class AuthController {
 
     const user = await User.create({ name, email, password })
     const token = await User.accessTokens.create(user)
+
+    void emailVerificationService.sendVerificationLink(user).catch((error) => {
+      logger.error({ err: error }, 'Failed to send email verification link')
+    })
 
     return serialize({
       user: UserTransformer.transform(user),

@@ -56,6 +56,9 @@ importers:
       '@vinejs/vine':
         specifier: ^4.4.0
         version: 4.4.0
+      adonisjs-auth-mail:
+        specifier: ^0.1.1
+        version: 0.1.1(@adonisjs/auth@10.1.0(328ce7bbcba32e51737ba535efc002f5))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@adonisjs/lucid@22.4.2(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@vinejs/vine@4.4.0)(better-sqlite3@13.0.3)(luxon@3.7.2)(mysql2@3.24.6(@types/node@26.6.5))(supports-color@10.2.2))(@adonisjs/mail@10.4.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@types/luxon@3.7.6)(@types/node@26.6.5)(dayjs@1.11.23)(edge.js@6.5.1)(luxon@3.7.2))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(luxon@3.7.2)
       chalk:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1268,6 +1271,18 @@ packages:
     resolution: {integrity: sha512-oJlA3XiRm7Cyk6qFD2Jn8ak9B7jSy0qy00ADO3+8dpT0LSjFihQYv4C02LFCSYJV3Q37xYwwRy5m+IpIiUzqWw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  adonisjs-auth-mail@0.1.1:
+    resolution: {integrity: sha512-eCLcyLplDJm8SOXqFFT4UjjGSIkJ8pRB/5KcQoSE9OjdITPwbtYxm9JXA3qLNtQAqbrYD9dzQc5y1CJxho/2rg==}
+    engines: {node: '>=24.0.0'}
+    peerDependencies:
+      '@adonisjs/auth': ^10.0.0
+      '@adonisjs/core': ^7.0.0
+      '@adonisjs/lucid': ^22.0.0
+      '@adonisjs/mail': ^10.0.0
+      '@vinejs/vine': ^4.0.0
+      edge.js: ^6.0.1
+      luxon: ^3.7.0
 
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
@@ -4199,6 +4214,16 @@ snapshots:
       acorn: 8.19.0
 
   acorn@8.19.0: {}
+
+  adonisjs-auth-mail@0.1.1(@adonisjs/auth@10.1.0(328ce7bbcba32e51737ba535efc002f5))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@adonisjs/lucid@22.4.2(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@vinejs/vine@4.4.0)(better-sqlite3@13.0.3)(luxon@3.7.2)(mysql2@3.24.6(@types/node@26.6.5))(supports-color@10.2.2))(@adonisjs/mail@10.4.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@types/luxon@3.7.6)(@types/node@26.6.5)(dayjs@1.11.23)(edge.js@6.5.1)(luxon@3.7.2))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(luxon@3.7.2):
+    dependencies:
+      '@adonisjs/auth': 10.1.0(328ce7bbcba32e51737ba535efc002f5)
+      '@adonisjs/core': 7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1)
+      '@adonisjs/lucid': 22.4.2(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@vinejs/vine@4.4.0)(better-sqlite3@13.0.3)(luxon@3.7.2)(mysql2@3.24.6(@types/node@26.6.5))(supports-color@10.2.2)
+      '@adonisjs/mail': 10.4.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@types/luxon@3.7.6)(@types/node@26.6.5)(dayjs@1.11.23)(edge.js@6.5.1)(luxon@3.7.2)
+      '@vinejs/vine': 4.4.0
+      edge.js: 6.5.1
+      luxon: 3.7.2
 
   ajv@6.15.0:
     dependencies:

@@ -1,0 +1,15 @@
+import vine from '@vinejs/vine'
+
+export const forgotPasswordValidator = vine.compile(
+  vine.object({
+    email: vine.string().email(),
+  })
+)
+
+export const resetPasswordValidator = vine.compile(
+  vine.object({
+    email: vine.string().email(),
+    token: vine.string().minLength(1).maxLength(128),
+    password: vine.string().minLength(8).maxLength(128),
+  })
+)

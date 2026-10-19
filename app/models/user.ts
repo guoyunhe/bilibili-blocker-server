@@ -7,8 +7,9 @@ import { hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 
 import AccountFlagVote from '#models/account_flag_vote'
+import { withEmailVerification } from 'adonisjs-auth-mail'
 
-export default class User extends compose(UserSchema, withAuthFinder(hash)) {
+export default class User extends compose(UserSchema, withAuthFinder(hash), withEmailVerification) {
   static accessTokens = DbAccessTokensProvider.forModel(User)
   declare currentAccessToken?: AccessToken
 

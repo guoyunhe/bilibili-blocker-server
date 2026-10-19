@@ -9,6 +9,8 @@ export const controllers = {
   AdminUsers: () => import('#controllers/admin_users_controller'),
   AdminVotes: () => import('#controllers/admin_votes_controller'),
   Auth: () => import('#controllers/auth_controller'),
+  EmailVerification: () => import('#controllers/email_verification_controller'),
   Flags: () => import('#controllers/flags_controller'),
+  PasswordReset: () => import('#controllers/password_reset_controller'),
   Users: () => import('#controllers/users_controller'),
 }

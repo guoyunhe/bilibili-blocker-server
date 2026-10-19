@@ -46,6 +46,7 @@ router.use([
  * the routes or the routes group.
  */
 export const middleware = router.named({
+  verified: () => import('adonisjs-auth-mail/verified_middleware'),
   auth: () => import('#middleware/auth_middleware'),
   admin: () => import('#middleware/admin_middleware'),
 })

@@ -2,3 +2,5 @@ allowBuilds:
   '@swc/core': true
   better-sqlite3: false
   esbuild: true
+minimumReleaseAgeExclude:
+  - adonisjs-auth-mail@0.1.1

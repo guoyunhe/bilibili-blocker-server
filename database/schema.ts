@@ -107,6 +107,19 @@ export class FlagSchema extends BaseModel {
   declare updatedAt: DateTime
 }
 
+export class PasswordResetSchema extends BaseModel {
+  static $columns = ['createdAt', 'email', 'id', 'token'] as const
+  $columns = PasswordResetSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare email: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare token: string
+}
+
 export class QueueJobSchema extends BaseModel {
   static $columns = [
     'acquiredAt',
@@ -201,12 +214,23 @@ export class QueueScheduleSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'id', 'name', 'password', 'role', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'email',
+    'emailVerifiedAt',
+    'id',
+    'name',
+    'password',
+    'role',
+    'updatedAt',
+  ] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
   declare email: string
+  @column.dateTime()
+  declare emailVerifiedAt: DateTime | null
   @column({ isPrimary: true })
   declare id: number
   @column()

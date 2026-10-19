@@ -1,0 +1,19 @@
+import type { HttpContext } from '@adonisjs/core/http'
+import emailVerificationService from 'adonisjs-auth-mail/services/email_verification'
+
+export default class EmailVerificationController {
+  /** POST /email/verify/send (authenticated) */
+  async send({ auth, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    if (user.emailVerifiedAt) return response.badRequest({ message: 'Already verified' })
+    await emailVerificationService.sendVerificationLink(user)
+    return response.accepted({ message: 'Verification email sent' })
+  }
+
+  /** GET /email/verify/:token */
+  async verify({ params, response }: HttpContext) {
+    const user = await emailVerificationService.verify(params.token)
+    if (!user) return response.badRequest({ message: 'Invalid or expired token' })
+    return { message: 'Email verified' }
+  }
+}

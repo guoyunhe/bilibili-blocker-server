@@ -1,0 +1,50 @@
+import { defineConfig } from 'adonisjs-auth-mail'
+
+const authMailConfig = defineConfig({
+  /** Settings for email verification links and messages. */
+  emailVerification: {
+    /** Same duration value accepted by AdonisJS encryption, such as '1d', '12h', or '5m'. */
+    expiresIn: '24h',
+
+    /** URL path containing the :token placeholder. */
+    path: '/email/verify/:token',
+
+    /** Subject and Edge views used for the verification email. */
+    template: {
+      /** Email subject line. */
+      subject: 'Verify your email address',
+
+      /** Edge template for the HTML email body. */
+      htmlView: 'mails/email_verification',
+
+      /** Edge template for the plain-text email body. */
+      textView: 'mails/email_verification_text',
+    },
+  },
+
+  /** Settings and model for password reset links and messages. */
+  passwordReset: {
+    /** Same duration value accepted by AdonisJS encryption, such as '1d', '12h', or '5m'. */
+    expiresIn: '1h',
+
+    /** Minimum seconds between reset emails to the same address. Defaults to 60. */
+    throttle: 60,
+
+    /** URL path containing the :token placeholder; email is added as a query parameter. */
+    path: '/password/reset/:token',
+
+    /** Subject and Edge views used for the password reset email. */
+    template: {
+      /** Email subject line. */
+      subject: 'Reset your password',
+
+      /** Edge template for the HTML email body. */
+      htmlView: 'mails/password_reset',
+
+      /** Edge template for the plain-text email body. */
+      textView: 'mails/password_reset_text',
+    },
+  },
+})
+
+export default authMailConfig
