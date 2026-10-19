@@ -17,6 +17,7 @@ type AuthContextValue = PersistedAuthState & {
   error: string
   setAuth: (session: AuthSession) => void
   setUser: (user: AuthUser) => void
+  refreshUser: () => Promise<void>
   clearAuth: () => void
   clearError: () => void
 }
@@ -63,6 +64,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError('')
   }, [setStoredAuth])
 
+  const refreshUser = useCallback(async () => {
+    if (!auth.token) return
+
+    try {
+      setUser(await getCurrentUser())
+      setError('')
+    } catch (reason: unknown) {
+      if (reason instanceof ApiError && (reason.status === 401 || reason.status === 403)) {
+        clearAuth()
+      } else {
+        setError(errorMessage(reason))
+      }
+    }
+  }, [auth.token, clearAuth, setUser])
+
   const clearError = useCallback(() => setError(''), [])
 
   useEffect(() => {
@@ -102,7 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ ...auth, authReady, error, setAuth, setUser, clearAuth, clearError }}
+      value={{ ...auth, authReady, error, setAuth, setUser, refreshUser, clearAuth, clearError }}
     >
       {children}
     </AuthContext.Provider>

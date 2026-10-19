@@ -5,7 +5,7 @@ import { useLocation } from 'wouter'
 import styles from './EmailVerificationPage.module.css'
 import useResendVerificationEmail, {
   ResendVerificationStatus,
-} from './useResendVerificationEmail.js'
+} from '../components/useResendVerificationEmail.js'
 
 type EmailVerificationSendPageProps = {
   email?: string

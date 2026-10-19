@@ -18,7 +18,8 @@ import { useLocation, useParams } from 'wouter'
 import styles from './EmailVerificationPage.module.css'
 import useResendVerificationEmail, {
   ResendVerificationStatus,
-} from './useResendVerificationEmail.js'
+} from '../components/useResendVerificationEmail.js'
+import { useAuth } from '../contexts/AuthContext.js'
 import { verifyEmail } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
 
@@ -27,6 +28,7 @@ type VerificationStatus = 'verifying' | 'success' | 'error'
 export default function EmailVerificationPage() {
   const [, navigate] = useLocation()
   const { token } = useParams<{ token?: string }>()
+  const { refreshUser } = useAuth()
   const [status, setStatus] = useState<VerificationStatus>(token ? 'verifying' : 'error')
   const [error, setError] = useState('')
   const resend = useResendVerificationEmail()
@@ -52,12 +54,15 @@ export default function EmailVerificationPage() {
     }
 
     verifyEmail(decodedToken)
-      .then(() => setStatus('success'))
+      .then(async () => {
+        setStatus('success')
+        await refreshUser()
+      })
       .catch((reason: unknown) => {
         setError(errorMessage(reason))
         setStatus('error')
       })
-  }, [token])
+  }, [token, refreshUser])
 
   const isVerifying = status === 'verifying'
   const isSuccess = status === 'success'

@@ -2,20 +2,20 @@ import { Alert, AppShell, Button, Group } from '@mantine/core'
 import { lazy, Suspense, useState } from 'react'
 import { Route, Switch, useLocation, useRoute } from 'wouter'
 
-import AccountDetailsPage from './components/AccountDetailsPage.js'
 import AppFooter from './components/AppFooter.js'
 import AppHeader from './components/AppHeader.js'
-import AuthPage from './components/AuthPage.js'
-import EmailVerificationPage from './components/EmailVerificationPage.js'
-import EmailVerificationSendPage from './components/EmailVerificationSendPage.js'
-import HomePage from './components/HomePage.js'
+import AccountDetailsPage from './pages/AccountDetailsPage.js'
+import AuthPage from './pages/AuthPage.js'
+import EmailVerificationPage from './pages/EmailVerificationPage.js'
+import EmailVerificationSendPage from './pages/EmailVerificationSendPage.js'
+import HomePage from './pages/HomePage.js'
 import { useAuth } from './contexts/AuthContext.js'
 import { logout } from './services/auth.js'
 import { errorMessage } from './utils/error_message.js'
 import styles from './App.module.css'
 
-const AdminPage = lazy(() => import('./components/AdminPage.js'))
-const UserProfilePage = lazy(() => import('./components/UserProfilePage.js'))
+const AdminPage = lazy(() => import('./pages/AdminPage.js'))
+const UserProfilePage = lazy(() => import('./pages/UserProfilePage.js'))
 
 export default function App() {
   const [pathname, navigate] = useLocation()

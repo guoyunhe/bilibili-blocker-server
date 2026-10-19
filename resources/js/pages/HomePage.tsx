@@ -14,7 +14,7 @@ import { LockKeyOpenIcon } from '@phosphor-icons/react/LockKeyOpen'
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/MagnifyingGlass'
 import { ShieldCheckIcon } from '@phosphor-icons/react/ShieldCheck'
 
-import AccountSearchForm from './AccountSearchForm.js'
+import AccountSearchForm from '../components/AccountSearchForm.js'
 import styles from './HomePage.module.css'
 
 const extensionDownloads = [
