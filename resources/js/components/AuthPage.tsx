@@ -16,6 +16,7 @@ import { SignInIcon } from '@phosphor-icons/react/SignIn'
 import { UserPlusIcon } from '@phosphor-icons/react/UserPlus'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useState, type FormEvent } from 'react'
+import { useLocation } from 'wouter'
 
 import { login, register, type AuthUser } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
@@ -26,10 +27,10 @@ type AuthMode = 'login' | 'register'
 type AuthPageProps = {
   mode: AuthMode
   onAuthenticated: (user: AuthUser) => void
-  onNavigate: (path: string) => void
 }
 
-export default function AuthPage({ mode, onAuthenticated, onNavigate }: AuthPageProps) {
+export default function AuthPage({ mode, onAuthenticated }: AuthPageProps) {
+  const [, navigate] = useLocation()
   const isRegister = mode === 'register'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -48,7 +49,7 @@ export default function AuthPage({ mode, onAuthenticated, onNavigate }: AuthPage
         ? await register(name.trim(), email, password, passwordConfirmation)
         : await login(email, password)
       onAuthenticated(user)
-      onNavigate(isRegister ? '/verify-email' : '/')
+      navigate(isRegister ? '/verify-email' : '/')
     } catch (reason) {
       setError(errorMessage(reason))
     } finally {
@@ -136,7 +137,7 @@ export default function AuthPage({ mode, onAuthenticated, onNavigate }: AuthPage
             <Anchor
               component="button"
               type="button"
-              onClick={() => onNavigate(isRegister ? '/login' : '/register')}
+              onClick={() => navigate(isRegister ? '/login' : '/register')}
             >
               {isRegister ? '登录' : '立即注册'}
             </Anchor>

@@ -15,6 +15,7 @@ import { ThumbsDownIcon } from '@phosphor-icons/react/ThumbsDown'
 import { ThumbsUpIcon } from '@phosphor-icons/react/ThumbsUp'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
+import { useLocation } from 'wouter'
 
 import {
   getAccount,
@@ -28,17 +29,12 @@ import styles from './AccountDetailsPage.module.css'
 
 type AccountDetailsPageProps = {
   authReady: boolean
-  onNavigate: (path: string) => void
   uid: string
   user: AuthUser | null
 }
 
-export default function AccountDetailsPage({
-  authReady,
-  onNavigate,
-  uid,
-  user,
-}: AccountDetailsPageProps) {
+export default function AccountDetailsPage({ authReady, uid, user }: AccountDetailsPageProps) {
+  const [, navigate] = useLocation()
   const [account, setAccount] = useState<AccountDetails | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
@@ -81,7 +77,7 @@ export default function AccountDetailsPage({
 
   async function handleVote(code: string, direction: VoteDirection) {
     if (!user) {
-      onNavigate('/login')
+      navigate('/login')
       return
     }
 
@@ -150,7 +146,7 @@ export default function AccountDetailsPage({
               </div>
               {authReady && !user && (
                 <Text c="dimmed" size="sm">
-                  <Anchor component="button" type="button" onClick={() => onNavigate('/login')}>
+                  <Anchor component="button" type="button" onClick={() => navigate('/login')}>
                     登录
                   </Anchor>
                   后即可参与投票。

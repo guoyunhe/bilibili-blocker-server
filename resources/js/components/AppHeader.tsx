@@ -5,6 +5,7 @@ import { ShieldCheckIcon } from '@phosphor-icons/react/ShieldCheck'
 import { UserCircleIcon } from '@phosphor-icons/react/UserCircle'
 import { UserPlusIcon } from '@phosphor-icons/react/UserPlus'
 import type { MouseEvent } from 'react'
+import { useLocation } from 'wouter'
 
 import AccountSearchForm from './AccountSearchForm.js'
 import type { AuthUser } from '../services/auth.js'
@@ -15,7 +16,6 @@ type AppHeaderProps = {
   logoutBusy: boolean
   user: AuthUser | null
   onLogout: () => void
-  onNavigate: (path: string) => void
   onSearch: (uid: string) => void
 }
 
@@ -24,12 +24,13 @@ export default function AppHeader({
   logoutBusy,
   user,
   onLogout,
-  onNavigate,
   onSearch,
 }: AppHeaderProps) {
+  const [, navigate] = useLocation()
+
   function handleNavigate(event: MouseEvent<HTMLAnchorElement>, path: string) {
     event.preventDefault()
-    onNavigate(path)
+    navigate(path)
   }
 
   return (
@@ -65,7 +66,7 @@ export default function AppHeader({
                     </Text>
                   </Menu.Label>
                   {user.role === 'admin' && (
-                    <Menu.Item onClick={() => onNavigate('/admin')}>管理员后台</Menu.Item>
+                    <Menu.Item onClick={() => navigate('/admin')}>管理员后台</Menu.Item>
                   )}
                   <Menu.Item
                     color="red"

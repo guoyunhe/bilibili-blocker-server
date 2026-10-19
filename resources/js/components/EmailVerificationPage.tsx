@@ -14,6 +14,7 @@ import { CheckCircleIcon } from '@phosphor-icons/react/CheckCircle'
 import { EnvelopeSimpleIcon } from '@phosphor-icons/react/EnvelopeSimple'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'wouter'
 
 import { resendVerificationEmail, verifyEmail } from '../services/auth.js'
 import { errorMessage } from '../utils/error_message.js'
@@ -22,7 +23,6 @@ import styles from './EmailVerificationPage.module.css'
 type EmailVerificationPageProps = {
   email?: string
   onEmailVerified: (email: string) => void
-  onNavigate: (path: string) => void
   token?: string
 }
 
@@ -31,9 +31,9 @@ type VerificationStatus = 'pending' | 'verifying' | 'success' | 'error'
 export default function EmailVerificationPage({
   email,
   onEmailVerified,
-  onNavigate,
   token,
 }: EmailVerificationPageProps) {
+  const [, navigate] = useLocation()
   const [status, setStatus] = useState<VerificationStatus>(token ? 'verifying' : 'pending')
   const [error, setError] = useState('')
   const [resendError, setResendError] = useState('')
@@ -154,7 +154,7 @@ export default function EmailVerificationPage({
                 重新发送验证邮件
               </Button>
             )}
-            <Button disabled={isVerifying} onClick={() => onNavigate('/')}>
+            <Button disabled={isVerifying} onClick={() => navigate('/')}>
               返回首页
             </Button>
           </Group>

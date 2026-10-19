@@ -1,6 +1,7 @@
 import '@mantine/core/styles.css'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import { Router } from 'wouter'
 
 import { MantineProvider } from '@mantine/core'
 
@@ -17,7 +18,9 @@ if (!root) {
 createRoot(root).render(
   <React.StrictMode>
     <MantineProvider defaultColorScheme="light" theme={theme}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </MantineProvider>
   </React.StrictMode>
 )

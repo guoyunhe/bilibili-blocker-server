@@ -14,6 +14,7 @@ import {
 } from '@mantine/core'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
+import { useLocation } from 'wouter'
 
 import {
   getUserProfile,
@@ -25,7 +26,6 @@ import { errorMessage } from '../utils/error_message.js'
 import styles from './UserProfilePage.module.css'
 
 type UserProfilePageProps = {
-  onNavigate: (path: string) => void
   userId: string
 }
 
@@ -33,7 +33,8 @@ function formatDate(value: string) {
   return new Date(value).toLocaleString()
 }
 
-export default function UserProfilePage({ onNavigate, userId }: UserProfilePageProps) {
+export default function UserProfilePage({ userId }: UserProfilePageProps) {
+  const [, navigate] = useLocation()
   const [profile, setProfile] = useState<PublicUserProfile | null>(null)
   const [votes, setVotes] = useState<PublicUserVote[]>([])
   const [pagination, setPagination] = useState<UserProfilePagination | null>(null)
@@ -130,7 +131,7 @@ export default function UserProfilePage({ onNavigate, userId }: UserProfilePageP
                             <Anchor
                               component="button"
                               type="button"
-                              onClick={() => onNavigate(`/accounts/${vote.uid}`)}
+                              onClick={() => navigate(`/accounts/${vote.uid}`)}
                             >
                               {vote.uid}
                             </Anchor>

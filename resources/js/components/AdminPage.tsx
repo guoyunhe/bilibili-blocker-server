@@ -17,6 +17,7 @@ import { ArrowClockwiseIcon } from '@phosphor-icons/react/ArrowClockwise'
 import { TrashIcon } from '@phosphor-icons/react/Trash'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
+import { useLocation } from 'wouter'
 
 import {
   deleteAdminUser,
@@ -32,7 +33,6 @@ import styles from './AdminPage.module.css'
 
 type AdminPageProps = {
   authReady: boolean
-  onNavigate: (path: string) => void
   user: AuthUser | null
 }
 
@@ -40,7 +40,8 @@ function formatDate(value: string) {
   return new Date(value).toLocaleString()
 }
 
-export default function AdminPage({ authReady, onNavigate, user }: AdminPageProps) {
+export default function AdminPage({ authReady, user }: AdminPageProps) {
+  const [, navigate] = useLocation()
   const [users, setUsers] = useState<AdminUser[]>([])
   const [votes, setVotes] = useState<RecentVote[]>([])
   const [userPagination, setUserPagination] = useState<UserPagination | null>(null)
@@ -149,7 +150,7 @@ export default function AdminPage({ authReady, onNavigate, user }: AdminPageProp
             <Text c="dimmed" ta="center">
               {!user ? '请先登录管理员账户。' : '当前账户没有管理员权限。'}
             </Text>
-            {!user && <Button onClick={() => onNavigate('/login')}>登录</Button>}
+            {!user && <Button onClick={() => navigate('/login')}>登录</Button>}
           </Stack>
         </Paper>
       </Container>
@@ -216,7 +217,7 @@ export default function AdminPage({ authReady, onNavigate, user }: AdminPageProp
                           component="button"
                           fw={600}
                           type="button"
-                          onClick={() => onNavigate(`/users/${item.id}`)}
+                          onClick={() => navigate(`/users/${item.id}`)}
                         >
                           {item.name}
                         </Anchor>
@@ -302,7 +303,7 @@ export default function AdminPage({ authReady, onNavigate, user }: AdminPageProp
                           component="button"
                           fw={600}
                           type="button"
-                          onClick={() => onNavigate(`/users/${vote.userId}`)}
+                          onClick={() => navigate(`/users/${vote.userId}`)}
                         >
                           {vote.userName}
                         </Anchor>
@@ -314,7 +315,7 @@ export default function AdminPage({ authReady, onNavigate, user }: AdminPageProp
                         <Anchor
                           component="button"
                           type="button"
-                          onClick={() => onNavigate(`/accounts/${vote.uid}`)}
+                          onClick={() => navigate(`/accounts/${vote.uid}`)}
                         >
                           {vote.uid}
                         </Anchor>

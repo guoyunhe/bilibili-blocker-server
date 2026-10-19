@@ -1,5 +1,6 @@
 import { Alert, AppShell, Button, Group } from '@mantine/core'
 import { lazy, Suspense, useEffect, useState } from 'react'
+import { Route, Switch, useLocation, useRoute } from 'wouter'
 
 import AccountDetailsPage from './components/AccountDetailsPage.js'
 import AppFooter from './components/AppFooter.js'
@@ -22,19 +23,12 @@ const AdminPage = lazy(() => import('./components/AdminPage.js'))
 const UserProfilePage = lazy(() => import('./components/UserProfilePage.js'))
 
 export default function App() {
-  const [pathname, setPathname] = useState(window.location.pathname)
+  const [pathname, navigate] = useLocation()
+  const [matchesVerificationLink] = useRoute('/email/verify/:token')
   const [user, setUser] = useState<AuthUser | null>(null)
   const [authReady, setAuthReady] = useState(!getAuthToken())
   const [logoutBusy, setLogoutBusy] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    function handlePopState() {
-      setPathname(window.location.pathname)
-    }
-    window.addEventListener('popstate', handlePopState)
-    return () => window.removeEventListener('popstate', handlePopState)
-  }, [])
 
   useEffect(() => {
     if (!getAuthToken()) return
@@ -51,8 +45,7 @@ export default function App() {
   }, [])
 
   function navigateTo(path: string) {
-    window.history.pushState({}, '', path)
-    setPathname(path)
+    navigate(path)
     setError('')
   }
 
@@ -70,63 +63,27 @@ export default function App() {
     }
   }
 
-  const accountRoute = pathname.match(/^\/accounts\/([^/]+)$/)
-  const userRoute = pathname.match(/^\/users\/([^/]+)$/)
-  const emailVerificationRoute = pathname.match(/^\/email\/verify\/([^/]+)$/)
-  const authMode = pathname === '/login' ? 'login' : pathname === '/register' ? 'register' : null
-  const isAdminRoute = pathname === '/admin'
   const showEmailVerificationNotice =
     authReady &&
     user !== null &&
     !user.emailVerifiedAt &&
     pathname !== '/verify-email' &&
-    !emailVerificationRoute
+    !matchesVerificationLink
 
-  function renderPage() {
-    if (accountRoute) {
-      return (
-        <AccountDetailsPage
-          authReady={authReady}
-          onNavigate={navigateTo}
-          uid={accountRoute[1]}
-          user={user}
-        />
-      )
-    }
-    if (authMode) {
-      return <AuthPage mode={authMode} onAuthenticated={setUser} onNavigate={navigateTo} />
-    }
-    if (pathname === '/verify-email' || emailVerificationRoute) {
-      return (
-        <EmailVerificationPage
-          email={user?.email}
-          onEmailVerified={(email) => {
-            setUser((currentUser) =>
-              currentUser?.email === email
-                ? { ...currentUser, emailVerifiedAt: new Date().toISOString() }
-                : currentUser
-            )
-          }}
-          onNavigate={navigateTo}
-          token={emailVerificationRoute?.[1]}
-        />
-      )
-    }
-    if (isAdminRoute) {
-      return (
-        <Suspense fallback={null}>
-          <AdminPage authReady={authReady} onNavigate={navigateTo} user={user} />
-        </Suspense>
-      )
-    }
-    if (userRoute) {
-      return (
-        <Suspense fallback={null}>
-          <UserProfilePage onNavigate={navigateTo} userId={userRoute[1]} />
-        </Suspense>
-      )
-    }
-    return <HomePage onSearch={(uid) => navigateTo(`/accounts/${uid}`)} />
+  function renderEmailVerification(token?: string) {
+    return (
+      <EmailVerificationPage
+        email={user?.email}
+        onEmailVerified={(email) => {
+          setUser((currentUser) =>
+            currentUser?.email === email
+              ? { ...currentUser, emailVerifiedAt: new Date().toISOString() }
+              : currentUser
+          )
+        }}
+        token={token}
+      />
+    )
   }
 
   return (
@@ -136,7 +93,6 @@ export default function App() {
         logoutBusy={logoutBusy}
         user={user}
         onLogout={handleLogout}
-        onNavigate={navigateTo}
         onSearch={(uid) => navigateTo(`/accounts/${uid}`)}
       />
       <AppShell.Main className={styles.appMain}>
@@ -155,7 +111,36 @@ export default function App() {
             </Group>
           </Alert>
         )}
-        {renderPage()}
+        <Switch>
+          <Route path="/accounts/:uid">
+            {(params) => <AccountDetailsPage authReady={authReady} uid={params.uid} user={user} />}
+          </Route>
+          <Route path="/login">
+            <AuthPage mode="login" onAuthenticated={setUser} />
+          </Route>
+          <Route path="/register">
+            <AuthPage mode="register" onAuthenticated={setUser} />
+          </Route>
+          <Route path="/verify-email">{renderEmailVerification()}</Route>
+          <Route path="/email/verify/:token">
+            {(params) => renderEmailVerification(params.token)}
+          </Route>
+          <Route path="/admin">
+            <Suspense fallback={null}>
+              <AdminPage authReady={authReady} user={user} />
+            </Suspense>
+          </Route>
+          <Route path="/users/:userId">
+            {(params) => (
+              <Suspense fallback={null}>
+                <UserProfilePage userId={params.userId} />
+              </Suspense>
+            )}
+          </Route>
+          <Route>
+            <HomePage onSearch={(uid) => navigateTo(`/accounts/${uid}`)} />
+          </Route>
+        </Switch>
       </AppShell.Main>
       <AppFooter />
     </AppShell>
