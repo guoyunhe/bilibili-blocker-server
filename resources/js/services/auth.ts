@@ -39,9 +39,9 @@ export function clearAuthToken() {
   localStorage.removeItem(tokenKey)
 }
 
-async function request<T>(path: string, payload?: object): Promise<T> {
+async function request<T>(path: string, payload?: object, routePrefix = '/api/auth'): Promise<T> {
   const token = getAuthToken()
-  const response = await fetch(`/api/auth/${path}`, {
+  const response = await fetch(`${routePrefix}/${path}`, {
     method: payload ? 'POST' : 'GET',
     headers: {
       Accept: 'application/json',
@@ -83,6 +83,14 @@ export async function register(
   })
   localStorage.setItem(tokenKey, response.token)
   return response.user
+}
+
+export function verifyEmail(token: string) {
+  return request<{ message: string }>('verify', { token }, '/api/email')
+}
+
+export function resendVerificationEmail() {
+  return request<{ message: string }>('verify/send', {}, '/api/email')
 }
 
 export function getCurrentUser() {

@@ -5,6 +5,7 @@ import AccountDetailsPage from './components/AccountDetailsPage.js'
 import AppFooter from './components/AppFooter.js'
 import AppHeader from './components/AppHeader.js'
 import AuthPage from './components/AuthPage.js'
+import EmailVerificationPage from './components/EmailVerificationPage.js'
 import HomePage from './components/HomePage.js'
 import {
   ApiError,
@@ -71,6 +72,7 @@ export default function App() {
 
   const accountRoute = pathname.match(/^\/accounts\/([^/]+)$/)
   const userRoute = pathname.match(/^\/users\/([^/]+)$/)
+  const emailVerificationRoute = pathname.match(/^\/email\/verify\/([^/]+)$/)
   const authMode = pathname === '/login' ? 'login' : pathname === '/register' ? 'register' : null
   const isAdminRoute = pathname === '/admin'
 
@@ -87,6 +89,15 @@ export default function App() {
     }
     if (authMode) {
       return <AuthPage mode={authMode} onAuthenticated={setUser} onNavigate={navigateTo} />
+    }
+    if (pathname === '/verify-email' || emailVerificationRoute) {
+      return (
+        <EmailVerificationPage
+          email={user?.email}
+          onNavigate={navigateTo}
+          token={emailVerificationRoute?.[1]}
+        />
+      )
     }
     if (isAdminRoute) {
       return (

@@ -8,6 +8,8 @@ export type ScannedRoutes = {
     'flags.index': { paramsTuple?: []; params?: {} }
     'accounts.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'email_verification.send': { paramsTuple?: []; params?: {} }
+    'email_verification.verify': { paramsTuple?: []; params?: {} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
     'users.index': { paramsTuple?: []; params?: {} }
     'users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -36,6 +38,8 @@ export type ScannedRoutes = {
     'auth.auth.user': { paramsTuple?: []; params?: {} }
   }
   POST: {
+    'email_verification.send': { paramsTuple?: []; params?: {} }
+    'email_verification.verify': { paramsTuple?: []; params?: {} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
     'auth.auth.register': { paramsTuple?: []; params?: {} }
     'auth.auth.login': { paramsTuple?: []; params?: {} }

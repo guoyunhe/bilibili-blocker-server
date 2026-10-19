@@ -18,6 +18,10 @@ export interface ApiDefinition {
     index: typeof routes['users.index']
     destroy: typeof routes['users.destroy']
   }
+  emailVerification: {
+    send: typeof routes['email_verification.send']
+    verify: typeof routes['email_verification.verify']
+  }
   accountFlagVotes: {
     store: typeof routes['account_flag_votes.store']
   }

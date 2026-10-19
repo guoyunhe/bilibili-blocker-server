@@ -30,6 +30,18 @@ const routes = {
     tokens: [{"old":"/api/users/:id","type":0,"val":"api","end":""},{"old":"/api/users/:id","type":0,"val":"users","end":""},{"old":"/api/users/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['users.show']['types'],
   },
+  'email_verification.send': {
+    methods: ["POST"],
+    pattern: '/api/email/verify/send',
+    tokens: [{"old":"/api/email/verify/send","type":0,"val":"api","end":""},{"old":"/api/email/verify/send","type":0,"val":"email","end":""},{"old":"/api/email/verify/send","type":0,"val":"verify","end":""},{"old":"/api/email/verify/send","type":0,"val":"send","end":""}],
+    types: placeholder as Registry['email_verification.send']['types'],
+  },
+  'email_verification.verify': {
+    methods: ["POST"],
+    pattern: '/api/email/verify',
+    tokens: [{"old":"/api/email/verify","type":0,"val":"api","end":""},{"old":"/api/email/verify","type":0,"val":"email","end":""},{"old":"/api/email/verify","type":0,"val":"verify","end":""}],
+    types: placeholder as Registry['email_verification.verify']['types'],
+  },
   'account_flag_votes.store': {
     methods: ["POST"],
     pattern: '/api/accounts/:uid/flags/:code/votes',

@@ -12,7 +12,7 @@ const authMailConfig = defineConfig({
     /** Subject and Edge views used for the verification email. */
     template: {
       /** Email subject line. */
-      subject: 'Verify your email address',
+      subject: '验证您的邮箱地址',
 
       /** Edge template for the HTML email body. */
       htmlView: 'mails/email_verification',
@@ -36,7 +36,7 @@ const authMailConfig = defineConfig({
     /** Subject and Edge views used for the password reset email. */
     template: {
       /** Email subject line. */
-      subject: 'Reset your password',
+      subject: '重置您的密码',
 
       /** Edge template for the HTML email body. */
       htmlView: 'mails/password_reset',

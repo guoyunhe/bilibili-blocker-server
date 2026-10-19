@@ -17,6 +17,8 @@ router
     router.get('flags', [controllers.Flags, 'index'])
     router.get('accounts/:uid', [controllers.Accounts, 'show'])
     router.get('users/:id', [controllers.Users, 'show'])
+    router.post('email/verify/send', [controllers.EmailVerification, 'send']).use(middleware.auth())
+    router.post('email/verify', [controllers.EmailVerification, 'verify'])
     router
       .post('accounts/:uid/flags/:code/votes', [controllers.AccountFlagVotes, 'store'])
       .use(middleware.auth())

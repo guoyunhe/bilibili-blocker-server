@@ -48,7 +48,7 @@ export default function AuthPage({ mode, onAuthenticated, onNavigate }: AuthPage
         ? await register(name.trim(), email, password, passwordConfirmation)
         : await login(email, password)
       onAuthenticated(user)
-      onNavigate('/')
+      onNavigate(isRegister ? '/verify-email' : '/')
     } catch (reason) {
       setError(errorMessage(reason))
     } finally {
