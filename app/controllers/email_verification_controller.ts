@@ -17,6 +17,6 @@ export default class EmailVerificationController {
 
     const user = await emailVerificationService.verify(token)
     if (!user) return response.badRequest({ message: '验证链接无效或已过期' })
-    return response.ok({ message: '邮箱验证成功', email: user.email })
+    return response.ok({ message: '邮箱验证成功' })
   }
 }

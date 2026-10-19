@@ -7,6 +7,7 @@ import AppFooter from './components/AppFooter.js'
 import AppHeader from './components/AppHeader.js'
 import AuthPage from './components/AuthPage.js'
 import EmailVerificationPage from './components/EmailVerificationPage.js'
+import EmailVerificationSendPage from './components/EmailVerificationSendPage.js'
 import HomePage from './components/HomePage.js'
 import {
   ApiError,
@@ -106,10 +107,10 @@ export default function App() {
             <AuthPage mode="register" onAuthenticated={setUser} />
           </Route>
           <Route path="/verify-email">
-            <EmailVerificationPage email={user?.email} />
+            <EmailVerificationSendPage email={user?.email} />
           </Route>
           <Route path="/email/verify/:token">
-            <EmailVerificationPage email={user?.email} />
+            <EmailVerificationPage />
           </Route>
           <Route path="/admin">
             <Suspense fallback={null}>
