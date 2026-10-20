@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 
 import Flag from '#models/flag'
+import FlagTransformer from '#transformers/flag_transformer'
 import { adminFlagValidator } from '#validators/admin_flag'
 
 export default class AdminFlagsController {
@@ -9,7 +10,9 @@ export default class AdminFlagsController {
       .select('id', 'code', 'name', 'description', 'recommended')
       .orderBy('code')
 
-    return serialize({ flags })
+    return serialize({
+      flags: FlagTransformer.transform(flags),
+    })
   }
 
   async show({ params, response, serialize }: HttpContext) {
@@ -22,7 +25,9 @@ export default class AdminFlagsController {
       .select('id', 'code', 'name', 'description', 'recommended')
       .where('id', id)
       .firstOrFail()
-    return serialize({ flag })
+    return serialize({
+      flag: FlagTransformer.transform(flag),
+    })
   }
 
   async store({ request, response, serialize }: HttpContext) {
@@ -33,7 +38,9 @@ export default class AdminFlagsController {
     }
 
     const flag = await Flag.create(data)
-    return serialize({ flag })
+    return serialize({
+      flag: FlagTransformer.transform(flag),
+    })
   }
 
   async update({ params, request, response, serialize }: HttpContext) {
@@ -51,7 +58,9 @@ export default class AdminFlagsController {
 
     flag.merge(data)
     await flag.save()
-    return serialize({ flag })
+    return serialize({
+      flag: FlagTransformer.transform(flag),
+    })
   }
 
   async destroy({ params, response, serialize }: HttpContext) {
