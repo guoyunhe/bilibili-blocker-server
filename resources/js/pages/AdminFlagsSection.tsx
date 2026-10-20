@@ -4,6 +4,7 @@ import {
   Group,
   Modal,
   Paper,
+  Select,
   Stack,
   Table,
   Text,
@@ -18,6 +19,7 @@ import { TrashIcon } from '@phosphor-icons/react/Trash'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
 
+import { voteForFlag } from '../services/accounts.js'
 import {
   createAdminFlag,
   deleteAdminFlag,
@@ -39,6 +41,15 @@ export default function AdminFlagsSection() {
   const [deletingFlagId, setDeletingFlagId] = useState<number | null>(null)
   const [editingFlag, setEditingFlag] = useState<AdminFlag | null>(null)
   const [modalOpened, setModalOpened] = useState(false)
+  const [importModalOpened, setImportModalOpened] = useState(false)
+  const [importFlagCode, setImportFlagCode] = useState<string | null>(null)
+  const [importUids, setImportUids] = useState('')
+  const [importing, setImporting] = useState(false)
+  const [importError, setImportError] = useState('')
+  const [importResult, setImportResult] = useState<{
+    succeeded: string[]
+    failed: Array<{ uid: string; message: string }>
+  } | null>(null)
   const [error, setError] = useState('')
   const form = useForm<AdminFlagValues>({
     initialValues: emptyValues,
@@ -130,6 +141,57 @@ export default function AdminFlagsSection() {
     }
   }
 
+  function openImportModal() {
+    setImportFlagCode(null)
+    setImportUids('')
+    setImportError('')
+    setImportResult(null)
+    setImportModalOpened(true)
+  }
+
+  async function handleImportVotes() {
+    setImportError('')
+    setImportResult(null)
+
+    if (!importFlagCode) {
+      setImportError('请选择 Flag')
+      return
+    }
+
+    const pastedUids = importUids.split(/[\s,，;；]+/).filter(Boolean)
+    if (pastedUids.length === 0) {
+      setImportError('请粘贴至少一个 UID')
+      return
+    }
+
+    const invalidUids = pastedUids.filter((uid) => !/^\d+$/.test(uid))
+    if (invalidUids.length > 0) {
+      setImportError(`以下内容不是纯数字 UID：${[...new Set(invalidUids)].join('、')}`)
+      return
+    }
+
+    const uniqueUids = [...new Set(pastedUids)]
+    const succeeded: string[] = []
+    const failed: Array<{ uid: string; message: string }> = []
+    setImporting(true)
+
+    try {
+      for (const uid of uniqueUids) {
+        try {
+          await voteForFlag(uid, importFlagCode, 'up')
+          succeeded.push(uid)
+        } catch (reason) {
+          failed.push({ uid, message: errorMessage(reason) })
+        }
+      }
+
+      setImportResult({ succeeded, failed })
+      setImportUids(failed.map(({ uid }) => uid).join('\n'))
+    } finally {
+      setImporting(false)
+    }
+  }
+
   return (
     <>
       <Paper className={styles.section} p="lg" radius="lg" withBorder>
@@ -144,9 +206,14 @@ export default function AdminFlagsSection() {
                 个。
               </Text>
             </div>
-            <Button leftSection={<PlusIcon size={18} />} onClick={openCreateModal}>
-              新增 Flag
-            </Button>
+            <Group gap="xs">
+              <Button variant="default" onClick={openImportModal}>
+                批量导入 UID
+              </Button>
+              <Button leftSection={<PlusIcon size={18} />} onClick={openCreateModal}>
+                新增 Flag
+              </Button>
+            </Group>
           </Group>
 
           {error && !modalOpened && (
@@ -250,6 +317,78 @@ export default function AdminFlagsSection() {
             </Group>
           </Stack>
         </form>
+      </Modal>
+
+      <Modal
+        opened={importModalOpened}
+        size="lg"
+        title="批量导入 UID"
+        onClose={() => setImportModalOpened(false)}
+      >
+        <Stack>
+          <Text c="dimmed" size="sm">
+            为每个 UID 提交 up vote。支持换行、空格或逗号分隔；重复 UID 会自动去重。
+          </Text>
+          {importError && (
+            <Alert color="red" icon={<WarningCircleIcon size={20} />} title="无法导入">
+              {importError}
+            </Alert>
+          )}
+          {importResult && (
+            <Alert
+              color={importResult.failed.length > 0 ? 'yellow' : 'green'}
+              title={`导入完成：成功 ${importResult.succeeded.length} 个，失败 ${importResult.failed.length} 个`}
+            >
+              {importResult.failed.length > 0 && (
+                <Stack gap="xs" mt="xs">
+                  {importResult.failed.map(({ uid, message }) => (
+                    <Text key={uid} size="sm">
+                      UID {uid}：{message}
+                    </Text>
+                  ))}
+                  <Text size="sm">输入框中已保留失败的 UID，可修正后重试。</Text>
+                </Stack>
+              )}
+            </Alert>
+          )}
+          <Select
+            data={flags.map((flag) => ({
+              value: flag.code,
+              label: `${flag.name} (${flag.code})`,
+            }))}
+            label="Flag"
+            placeholder="选择要投票的 Flag"
+            searchable
+            value={importFlagCode}
+            onChange={(value) => {
+              setImportFlagCode(value)
+              setImportResult(null)
+            }}
+          />
+          <Textarea
+            autosize
+            label="UID 列表"
+            minRows={6}
+            placeholder={'例如：\n123456\n234567'}
+            value={importUids}
+            onChange={(event) => {
+              setImportUids(event.currentTarget.value)
+              setImportResult(null)
+            }}
+          />
+          <Group justify="flex-end">
+            <Button variant="default" onClick={() => setImportModalOpened(false)}>
+              关闭
+            </Button>
+            <Button
+              disabled={flags.length === 0}
+              loading={importing}
+              onClick={() => void handleImportVotes()}
+            >
+              导入并投票
+            </Button>
+          </Group>
+        </Stack>
       </Modal>
     </>
   )
