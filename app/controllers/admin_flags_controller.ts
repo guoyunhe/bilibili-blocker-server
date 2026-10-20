@@ -6,51 +6,35 @@ import { adminFlagValidator } from '#validators/admin_flag'
 
 export default class AdminFlagsController {
   async index({ serialize }: HttpContext) {
-    const flags = await Flag.query()
-      .select('id', 'code', 'name', 'description', 'recommended')
-      .orderBy('code')
+    const flags = await Flag.query().orderBy('code')
 
-    return serialize({
-      flags: FlagTransformer.transform(flags),
-    })
+    return serialize(FlagTransformer.transform(flags))
   }
 
-  async show({ params, response, serialize }: HttpContext) {
-    const id = Number(params.id)
-    if (!Number.isSafeInteger(id) || id < 1) {
-      return response.badRequest({ message: 'Flag ID 无效' })
-    }
+  async show({ params, serialize }: HttpContext) {
+    const flag = await Flag.findOrFail(params.id)
 
-    const flag = await Flag.query()
-      .select('id', 'code', 'name', 'description', 'recommended')
-      .where('id', id)
-      .firstOrFail()
-    return serialize({
-      flag: FlagTransformer.transform(flag),
-    })
+    return serialize(FlagTransformer.transform(flag))
   }
 
   async store({ request, response, serialize }: HttpContext) {
     const data = await request.validateUsing(adminFlagValidator)
+
     const existingFlag = await Flag.findBy('code', data.code)
     if (existingFlag) {
       return response.conflict({ message: 'Flag 代码已存在' })
     }
 
     const flag = await Flag.create(data)
-    return serialize({
-      flag: FlagTransformer.transform(flag),
-    })
+
+    await flag.refresh()
+
+    return serialize(FlagTransformer.transform(flag))
   }
 
   async update({ params, request, response, serialize }: HttpContext) {
-    const id = Number(params.id)
-    if (!Number.isSafeInteger(id) || id < 1) {
-      return response.badRequest({ message: 'Flag ID 无效' })
-    }
-
     const data = await request.validateUsing(adminFlagValidator)
-    const flag = await Flag.findOrFail(id)
+    const flag = await Flag.findOrFail(params.id)
     const existingFlag = await Flag.query().where('code', data.code).whereNot('id', flag.id).first()
     if (existingFlag) {
       return response.conflict({ message: 'Flag 代码已存在' })
@@ -58,20 +42,15 @@ export default class AdminFlagsController {
 
     flag.merge(data)
     await flag.save()
-    return serialize({
-      flag: FlagTransformer.transform(flag),
-    })
+    await flag.refresh()
+
+    return serialize(FlagTransformer.transform(flag))
   }
 
-  async destroy({ params, response, serialize }: HttpContext) {
-    const id = Number(params.id)
-    if (!Number.isSafeInteger(id) || id < 1) {
-      return response.badRequest({ message: 'Flag ID 无效' })
-    }
-
-    const flag = await Flag.findOrFail(id)
+  async destroy({ params, response }: HttpContext) {
+    const flag = await Flag.findOrFail(params.id)
     await flag.delete()
 
-    return serialize({ message: 'Flag 已删除' })
+    return response.ok({ message: 'Flag 已删除' })
   }
 }

@@ -62,6 +62,16 @@ async function readResponse<T>(response: Response): Promise<T> {
   return (body as ApiEnvelope<T>).data
 }
 
+async function readUnwrappedResponse<T>(response: Response): Promise<T> {
+  const body = (await response.json()) as T | ApiErrorBody
+  if (!response.ok) {
+    const errorBody = body as ApiErrorBody
+    throw new Error(errorBody.message ?? errorBody.errors?.[0]?.message ?? '请求失败')
+  }
+
+  return body as T
+}
+
 export async function getAdminUsers(page: number) {
   const response = await fetch(`/api/admin/users?page=${page}`, {
     headers: {
@@ -79,7 +89,7 @@ export async function getAdminFlags() {
       ...authorizationHeader(),
     },
   })
-  return readResponse<{ flags: AdminFlag[] }>(response)
+  return readResponse<AdminFlag[]>(response)
 }
 
 export async function createAdminFlag(data: Omit<AdminFlag, 'id'>) {
@@ -92,7 +102,7 @@ export async function createAdminFlag(data: Omit<AdminFlag, 'id'>) {
     },
     body: JSON.stringify(data),
   })
-  return readResponse<{ flag: AdminFlag }>(response)
+  return readResponse<AdminFlag>(response)
 }
 
 export async function updateAdminFlag(id: number, data: Omit<AdminFlag, 'id'>) {
@@ -105,7 +115,7 @@ export async function updateAdminFlag(id: number, data: Omit<AdminFlag, 'id'>) {
     },
     body: JSON.stringify(data),
   })
-  return readResponse<{ flag: AdminFlag }>(response)
+  return readResponse<AdminFlag>(response)
 }
 
 export async function deleteAdminFlag(id: number) {
@@ -116,7 +126,7 @@ export async function deleteAdminFlag(id: number) {
       ...authorizationHeader(),
     },
   })
-  return readResponse<{ message: string }>(response)
+  return readUnwrappedResponse<{ message: string }>(response)
 }
 
 export async function getRecentVotes(page: number) {

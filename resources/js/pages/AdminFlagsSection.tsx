@@ -74,7 +74,7 @@ export default function AdminFlagsSection() {
     setError('')
     setLoading(true)
     try {
-      setFlags((await getAdminFlags()).flags)
+      setFlags(await getAdminFlags())
     } catch (reason) {
       setError(errorMessage(reason))
     } finally {

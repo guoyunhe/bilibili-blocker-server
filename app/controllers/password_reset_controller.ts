@@ -1,7 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { forgotPasswordValidator, resetPasswordValidator } from '#validators/password_reset'
 import passwordResetService from 'adonisjs-auth-mail/services/password_reset'
 import { PasswordBrokerStatus } from 'adonisjs-auth-mail'
+
+import { forgotPasswordValidator, resetPasswordValidator } from '#validators/password_reset'
 
 export default class PasswordResetController {
   async forgot({ request, response }: HttpContext) {
