@@ -61,7 +61,12 @@ export function getAuthToken() {
   }
 }
 
-async function request<T>(path: string, payload?: object, routePrefix = '/api/auth'): Promise<T> {
+async function request<T>(
+  path: string,
+  payload?: object,
+  routePrefix = '/api/auth',
+  responseFormat: 'envelope' | 'raw' = 'envelope'
+): Promise<T> {
   const token = getAuthToken()
   const response = await fetch(`${routePrefix}/${path}`, {
     method: payload ? 'POST' : 'GET',
@@ -72,7 +77,7 @@ async function request<T>(path: string, payload?: object, routePrefix = '/api/au
     },
     ...(payload ? { body: JSON.stringify(payload) } : {}),
   })
-  const body = (await response.json()) as ApiEnvelope<T> | ApiErrorBody
+  const body = (await response.json()) as ApiEnvelope<T> | ApiErrorBody | T
 
   if (!response.ok) {
     const errorBody = body as ApiErrorBody
@@ -82,7 +87,7 @@ async function request<T>(path: string, payload?: object, routePrefix = '/api/au
     )
   }
 
-  return (body as ApiEnvelope<T>).data
+  return responseFormat === 'envelope' ? (body as ApiEnvelope<T>).data : (body as T)
 }
 
 export function login(email: string, password: string) {
@@ -104,17 +109,17 @@ export async function register(
 }
 
 export function verifyEmail(token: string) {
-  return request<{ message: string }>('verify', { token }, '/api/email')
+  return request<{ message: string }>('verify', { token }, '/api/email', 'raw')
 }
 
 export function resendVerificationEmail() {
-  return request<{ message: string }>('verify/send', {}, '/api/email')
+  return request<{ message: string }>('verify/send', {}, '/api/email', 'raw')
 }
 
 export function getCurrentUser() {
   return request<AuthUser>('user')
 }
 
-export function logout() {
-  return request<void>('logout', {})
+export async function logout() {
+  await request<{ message: string }>('logout', {}, '/api/auth', 'raw')
 }

@@ -23,7 +23,7 @@ export default class AdminUsersController {
     })
   }
 
-  async destroy({ auth, params, response, serialize }: HttpContext) {
+  async destroy({ auth, params, response }: HttpContext) {
     const user = await User.findOrFail(params.id)
     if (user.id === auth.getUserOrFail().id) {
       return response.badRequest({ message: '不能删除当前登录的管理员账户' })
@@ -31,6 +31,6 @@ export default class AdminUsersController {
 
     await user.delete()
 
-    return serialize({ message: '用户已删除' })
+    return response.ok({ message: '用户已删除' })
   }
 }

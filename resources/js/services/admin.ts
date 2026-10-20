@@ -147,5 +147,5 @@ export async function deleteAdminUser(id: number) {
       ...authorizationHeader(),
     },
   })
-  return readResponse<{ message: string }>(response)
+  return readUnwrappedResponse<{ message: string }>(response)
 }

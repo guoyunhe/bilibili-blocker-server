@@ -22,6 +22,6 @@ export default class PasswordResetController {
       return response.badRequest({ message: 'Invalid or expired reset token' })
     }
 
-    return { message: 'Password updated' }
+    return response.ok({ message: 'Password updated' })
   }
 }
