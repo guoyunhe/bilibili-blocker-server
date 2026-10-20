@@ -55,18 +55,7 @@ export class AccountFlagVoteSchema extends BaseModel {
 }
 
 export class AuthAccessTokenSchema extends BaseModel {
-  static $columns = [
-    'abilities',
-    'createdAt',
-    'expiresAt',
-    'hash',
-    'id',
-    'lastUsedAt',
-    'name',
-    'tokenableId',
-    'type',
-    'updatedAt',
-  ] as const
+  static $columns = ['abilities', 'createdAt', 'expiresAt', 'hash', 'id', 'lastUsedAt', 'name', 'tokenableId', 'type', 'updatedAt'] as const
   $columns = AuthAccessTokenSchema.$columns
   @column()
   declare abilities: string
@@ -91,15 +80,7 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class FlagSchema extends BaseModel {
-  static $columns = [
-    'code',
-    'createdAt',
-    'description',
-    'recommended',
-    'id',
-    'name',
-    'updatedAt',
-  ] as const
+  static $columns = ['code', 'createdAt', 'description', 'id', 'name', 'recommended', 'updatedAt'] as const
   $columns = FlagSchema.$columns
   @column()
   declare code: string
@@ -107,12 +88,12 @@ export class FlagSchema extends BaseModel {
   declare createdAt: DateTime
   @column()
   declare description: string
-  @column()
-  declare recommended: boolean
   @column({ isPrimary: true })
   declare id: number
   @column()
   declare name: string
+  @column()
+  declare recommended: boolean
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 }
@@ -131,21 +112,7 @@ export class PasswordResetSchema extends BaseModel {
 }
 
 export class QueueJobSchema extends BaseModel {
-  static $columns = [
-    'acquiredAt',
-    'data',
-    'dedupAt',
-    'dedupId',
-    'dedupTtl',
-    'error',
-    'executeAt',
-    'finishedAt',
-    'id',
-    'queue',
-    'score',
-    'status',
-    'workerId',
-  ] as const
+  static $columns = ['acquiredAt', 'data', 'dedupAt', 'dedupId', 'dedupTtl', 'error', 'executeAt', 'finishedAt', 'id', 'queue', 'score', 'status', 'workerId'] as const
   $columns = QueueJobSchema.$columns
   @column()
   declare acquiredAt: bigint | number | null
@@ -176,22 +143,7 @@ export class QueueJobSchema extends BaseModel {
 }
 
 export class QueueScheduleSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'cronExpression',
-    'everyMs',
-    'fromDate',
-    'id',
-    'lastRunAt',
-    'name',
-    'nextRunAt',
-    'payload',
-    'runCount',
-    'runLimit',
-    'status',
-    'timezone',
-    'toDate',
-  ] as const
+  static $columns = ['createdAt', 'cronExpression', 'everyMs', 'fromDate', 'id', 'lastRunAt', 'name', 'nextRunAt', 'payload', 'runCount', 'runLimit', 'status', 'timezone', 'toDate'] as const
   $columns = QueueScheduleSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -224,16 +176,7 @@ export class QueueScheduleSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'email',
-    'emailVerifiedAt',
-    'id',
-    'name',
-    'password',
-    'role',
-    'updatedAt',
-  ] as const
+  static $columns = ['createdAt', 'email', 'emailVerifiedAt', 'id', 'name', 'password', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
