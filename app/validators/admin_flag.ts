@@ -9,4 +9,5 @@ export const adminFlagValidator = vine.create({
     .maxLength(32),
   name: vine.string().trim().minLength(1).maxLength(128),
   description: vine.string().trim().minLength(1),
+  recommended: vine.boolean(),
 })

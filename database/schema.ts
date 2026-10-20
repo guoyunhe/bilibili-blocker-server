@@ -91,7 +91,15 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class FlagSchema extends BaseModel {
-  static $columns = ['code', 'createdAt', 'description', 'id', 'name', 'updatedAt'] as const
+  static $columns = [
+    'code',
+    'createdAt',
+    'description',
+    'recommended',
+    'id',
+    'name',
+    'updatedAt',
+  ] as const
   $columns = FlagSchema.$columns
   @column()
   declare code: string
@@ -99,6 +107,8 @@ export class FlagSchema extends BaseModel {
   declare createdAt: DateTime
   @column()
   declare description: string
+  @column()
+  declare recommended: boolean
   @column({ isPrimary: true })
   declare id: number
   @column()

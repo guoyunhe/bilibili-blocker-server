@@ -7,6 +7,7 @@ export type AccountFlag = {
   code: string
   name: string
   description: string
+  recommended: boolean
   status: FlagStatus
   upVotes: number
   downVotes: number

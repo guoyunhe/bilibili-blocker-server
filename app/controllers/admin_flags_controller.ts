@@ -5,7 +5,9 @@ import { adminFlagValidator } from '#validators/admin_flag'
 
 export default class AdminFlagsController {
   async index({ serialize }: HttpContext) {
-    const flags = await Flag.query().select('id', 'code', 'name', 'description').orderBy('code')
+    const flags = await Flag.query()
+      .select('id', 'code', 'name', 'description', 'recommended')
+      .orderBy('code')
 
     return serialize({ flags })
   }
@@ -17,7 +19,7 @@ export default class AdminFlagsController {
     }
 
     const flag = await Flag.query()
-      .select('id', 'code', 'name', 'description')
+      .select('id', 'code', 'name', 'description', 'recommended')
       .where('id', id)
       .firstOrFail()
     return serialize({ flag })

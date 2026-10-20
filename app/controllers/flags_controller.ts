@@ -4,7 +4,9 @@ import Flag from '#models/flag'
 
 export default class FlagsController {
   async index({ serialize }: HttpContext) {
-    const flags = await Flag.query().select('code', 'name', 'description').orderBy('code')
+    const flags = await Flag.query()
+      .select('code', 'name', 'description', 'recommended')
+      .orderBy('code')
 
     return serialize(flags)
   }

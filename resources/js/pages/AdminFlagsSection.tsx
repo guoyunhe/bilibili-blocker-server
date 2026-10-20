@@ -6,6 +6,7 @@ import {
   Paper,
   Select,
   Stack,
+  Switch,
   Table,
   Text,
   Textarea,
@@ -32,7 +33,12 @@ import styles from './AdminPage.module.css'
 
 type AdminFlagValues = Omit<AdminFlag, 'id'>
 
-const emptyValues: AdminFlagValues = { code: '', name: '', description: '' }
+const emptyValues: AdminFlagValues = {
+  code: '',
+  name: '',
+  description: '',
+  recommended: true,
+}
 
 export default function AdminFlagsSection() {
   const [flags, setFlags] = useState<AdminFlag[]>([])
@@ -90,7 +96,12 @@ export default function AdminFlagsSection() {
 
   function openEditModal(flag: AdminFlag) {
     setEditingFlag(flag)
-    form.setValues({ code: flag.code, name: flag.name, description: flag.description })
+    form.setValues({
+      code: flag.code,
+      name: flag.name,
+      description: flag.description,
+      recommended: flag.recommended,
+    })
     form.clearErrors()
     setError('')
     setModalOpened(true)
@@ -103,6 +114,7 @@ export default function AdminFlagsSection() {
       code: values.code.trim(),
       name: values.name.trim(),
       description: values.description.trim(),
+      recommended: values.recommended,
     }
 
     try {
@@ -229,6 +241,7 @@ export default function AdminFlagsSection() {
                   <Table.Th>代码</Table.Th>
                   <Table.Th>名称</Table.Th>
                   <Table.Th>描述</Table.Th>
+                  <Table.Th>推荐屏蔽</Table.Th>
                   <Table.Th />
                 </Table.Tr>
               </Table.Thead>
@@ -238,6 +251,7 @@ export default function AdminFlagsSection() {
                     <Table.Td>{flag.code}</Table.Td>
                     <Table.Td>{flag.name}</Table.Td>
                     <Table.Td>{flag.description}</Table.Td>
+                    <Table.Td>{flag.recommended ? '是' : '否'}</Table.Td>
                     <Table.Td>
                       <Group gap="xs" wrap="nowrap">
                         <Button
@@ -265,7 +279,7 @@ export default function AdminFlagsSection() {
                 ))}
                 {!loading && flags.length === 0 && (
                   <Table.Tr>
-                    <Table.Td colSpan={4}>
+                    <Table.Td colSpan={5}>
                       <Text c="dimmed" py="md" ta="center">
                         暂无 Flag
                       </Text>
@@ -274,7 +288,7 @@ export default function AdminFlagsSection() {
                 )}
                 {loading && (
                   <Table.Tr>
-                    <Table.Td colSpan={4}>
+                    <Table.Td colSpan={5}>
                       <Text c="dimmed" py="md" ta="center">
                         正在加载 Flag…
                       </Text>
@@ -307,6 +321,10 @@ export default function AdminFlagsSection() {
             />
             <TextInput label="名称" maxLength={128} {...form.getInputProps('name')} />
             <Textarea autosize label="描述" minRows={3} {...form.getInputProps('description')} />
+            <Switch
+              label="浏览器插件中推荐屏蔽此规则"
+              {...form.getInputProps('recommended', { type: 'checkbox' })}
+            />
             <Group justify="flex-end">
               <Button variant="default" onClick={() => setModalOpened(false)}>
                 取消

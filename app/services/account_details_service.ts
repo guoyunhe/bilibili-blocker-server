@@ -61,7 +61,7 @@ export async function getAccountDetails(
   return {
     uid,
     flags: flags
-      .map(({ id, code, name, description }) => {
+      .map(({ id, code, name, description, recommended }) => {
         const accountFlagId = accountFlagIdByFlagId.get(id)
         const counts =
           accountFlagId === undefined
@@ -71,6 +71,7 @@ export async function getAccountDetails(
           code,
           name,
           description,
+          recommended,
           status: statusByFlagId.get(id) ?? null,
           upVotes: counts.up,
           downVotes: counts.down,
@@ -81,6 +82,7 @@ export async function getAccountDetails(
       })
       .sort(
         (left, right) =>
+          Number(right.recommended) - Number(left.recommended) ||
           Number(right.status === 'approved') - Number(left.status === 'approved') ||
           right.score - left.score ||
           left.code.localeCompare(right.code)

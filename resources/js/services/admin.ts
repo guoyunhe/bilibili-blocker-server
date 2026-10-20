@@ -15,6 +15,7 @@ export type AdminFlag = {
   code: string
   name: string
   description: string
+  recommended: boolean
 }
 
 export type RecentVote = {
