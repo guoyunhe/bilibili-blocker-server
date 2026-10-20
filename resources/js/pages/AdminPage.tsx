@@ -51,9 +51,9 @@ export default function AdminPage() {
 
   async function loadUsers(nextPage: number) {
     const result = await getAdminUsers(nextPage)
-    setUsers(result.users)
-    setUserPagination(result.pagination)
-    setUserPage(result.pagination.currentPage)
+    setUsers(result.data)
+    setUserPagination(result.meta)
+    setUserPage(result.meta.currentPage)
   }
 
   async function loadDashboard(nextUserPage = userPage, nextVotePage = votePage) {
@@ -64,11 +64,11 @@ export default function AdminPage() {
         getAdminUsers(nextUserPage),
         getRecentVotes(nextVotePage),
       ])
-      setUsers(userResult.users)
-      setUserPagination(userResult.pagination)
+      setUsers(userResult.data)
+      setUserPagination(userResult.meta)
       setVotes(voteResult.votes)
       setVotePagination(voteResult.pagination)
-      setUserPage(userResult.pagination.currentPage)
+      setUserPage(userResult.meta.currentPage)
       setVotePage(voteResult.pagination.currentPage)
     } catch (reason) {
       setError(errorMessage(reason))

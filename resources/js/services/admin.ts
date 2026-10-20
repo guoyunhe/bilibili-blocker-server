@@ -79,7 +79,7 @@ export async function getAdminUsers(page: number) {
       ...authorizationHeader(),
     },
   })
-  return readResponse<{ users: AdminUser[]; pagination: UserPagination }>(response)
+  return readResponse<{ data: AdminUser[]; meta: UserPagination }>(response)
 }
 
 export async function getAdminFlags() {

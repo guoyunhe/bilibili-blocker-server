@@ -13,27 +13,22 @@ export default class AdminUsersController {
     }
 
     const paginator = await User.query()
-      .select('id', 'name', 'email', 'role', 'emailVerifiedAt', 'createdAt')
       .withCount('votes', (query) => query.whereNot('vote', 0))
       .orderBy('id', 'desc')
       .paginate(page, usersPerPage)
 
     return serialize({
-      users: UserTransformer.transform(paginator.all()).useVariant('toAdmin'),
-      pagination: paginator.getMeta(),
+      data: UserTransformer.transform(paginator.all()).useVariant('toAdmin'),
+      meta: paginator.getMeta(),
     })
   }
 
   async destroy({ auth, params, response, serialize }: HttpContext) {
-    const id = Number(params.id)
-    if (!Number.isInteger(id) || id < 1) {
-      return response.badRequest({ message: '用户 ID 无效' })
-    }
-    if (id === auth.getUserOrFail().id) {
+    const user = await User.findOrFail(params.id)
+    if (user.id === auth.getUserOrFail().id) {
       return response.badRequest({ message: '不能删除当前登录的管理员账户' })
     }
 
-    const user = await User.findOrFail(id)
     await user.delete()
 
     return serialize({ message: '用户已删除' })
