@@ -4,20 +4,19 @@ import {
   Button,
   Container,
   Group,
-  Paper,
   SimpleGrid,
   Stack,
   Text,
   ThemeIcon,
   Title,
 } from '@mantine/core'
-import { LockKeyOpenIcon } from '@phosphor-icons/react/LockKeyOpen'
-import { MagnifyingGlassIcon } from '@phosphor-icons/react/MagnifyingGlass'
-import { ShieldCheckIcon } from '@phosphor-icons/react/ShieldCheck'
+import { GithubLogoIcon } from '@phosphor-icons/react/GithubLogo'
+import { TelegramLogoIcon } from '@phosphor-icons/react/TelegramLogo'
 import { TagIcon } from '@phosphor-icons/react/Tag'
 import { ThumbsUpIcon } from '@phosphor-icons/react/ThumbsUp'
 import { UsersIcon } from '@phosphor-icons/react/Users'
-import { useEffect, useState } from 'react'
+import { CountUp } from 'countup.js'
+import { useEffect, useRef, useState } from 'react'
 
 import AccountSearchForm from '../components/AccountSearchForm.js'
 import {
@@ -53,6 +52,27 @@ const extensionDownloads = [
   },
 ] as const
 
+function AnimatedCount({ value }: { value: number }) {
+  const countRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const element = countRef.current
+    if (!element) return
+
+    const counter = new CountUp(element, value, { duration: 2, separator: ',' })
+    if (counter.error) {
+      console.error('Failed to animate homepage statistic:', counter.error)
+      element.textContent = value.toLocaleString()
+      return
+    }
+
+    counter.start()
+    return () => counter.onDestroy()
+  }, [value])
+
+  return <span ref={countRef}>{value.toLocaleString()}</span>
+}
+
 export default function HomePage() {
   const [storeStats, setStoreStats] = useState<ExtensionStoreStats | null>(null)
   const [communityStats, setCommunityStats] = useState<CommunityStats | null>(null)
@@ -86,120 +106,86 @@ export default function HomePage() {
   return (
     <Container className={styles.homePage} size="lg">
       <Stack align="center" gap="xl">
+        <SimpleGrid
+          className={styles.communityStats}
+          cols={{ base: 1, xs: 3 }}
+          spacing="md"
+          w="100%"
+        >
+          <div className={styles.statItem}>
+            <ThemeIcon
+              className={styles.statIcon}
+              color="bilibili"
+              radius="md"
+              size={42}
+              variant="light"
+            >
+              <UsersIcon size={22} />
+            </ThemeIcon>
+            <div className={styles.statContent}>
+              <Text className={styles.statValue} c="bilibili" fw={800}>
+                {communityStats ? <AnimatedCount value={communityStats.contributors} /> : '—'}
+                <span className={styles.statSuffix}>人</span>
+              </Text>
+              <Text c="dimmed" fw={600} size="sm">
+                贡献用户
+              </Text>
+            </div>
+          </div>
+          <div className={styles.statItem}>
+            <ThemeIcon
+              className={styles.statIcon}
+              color="bilibiliPink"
+              radius="md"
+              size={42}
+              variant="light"
+            >
+              <TagIcon size={22} />
+            </ThemeIcon>
+            <div className={styles.statContent}>
+              <Text className={styles.statValue} c="bilibiliPink" fw={800}>
+                {communityStats ? <AnimatedCount value={communityStats.markedAccounts} /> : '—'}
+                <span className={styles.statSuffix}>个</span>
+              </Text>
+              <Text c="dimmed" fw={600} size="sm">
+                标记账号
+              </Text>
+            </div>
+          </div>
+          <div className={styles.statItem}>
+            <ThemeIcon
+              className={styles.statIcon}
+              color="bilibili"
+              radius="md"
+              size={42}
+              variant="light"
+            >
+              <ThumbsUpIcon size={22} />
+            </ThemeIcon>
+            <div className={styles.statContent}>
+              <Text className={styles.statValue} c="bilibili" fw={800}>
+                {communityStats ? <AnimatedCount value={communityStats.votes} /> : '—'}
+                <span className={styles.statSuffix}>票</span>
+              </Text>
+              <Text c="dimmed" fw={600} size="sm">
+                贡献投票
+              </Text>
+            </div>
+          </div>
+        </SimpleGrid>
+
         <Stack align="center" className={styles.homeHero} gap="md">
-          <ThemeIcon
-            className={styles.heroIcon}
-            color="bilibili"
-            radius="xl"
-            size={76}
-            variant="light"
-          >
-            <ShieldCheckIcon size={42} weight="duotone" />
-          </ThemeIcon>
-          <Badge color="bilibiliPink" radius="xl" size="lg" variant="light">
-            Bilibili Blocker
-          </Badge>
           <Title className={styles.homeTitle} order={1} ta="center">
-            输入 UID，了解账号内容标签
+            屏蔽低质量与不合你喜好的账号
           </Title>
           <Text c="dimmed" className={styles.homeDescription} size="lg" ta="center">
-            查询账号关联的屏蔽规则，帮助你快速了解创作者内容。
+            社群开放协作维护，软件开源透明，尊重并保护你的隐私。
           </Text>
         </Stack>
 
         <div className={styles.homeSearch}>
           <AccountSearchForm size="lg" />
         </div>
-
-        <SimpleGrid className={styles.homeFeatures} cols={{ base: 1, sm: 3 }} spacing="md" w="100%">
-          <Paper className={styles.featureCard} p="lg" radius="lg" withBorder>
-            <Group align="center" gap="sm" wrap="nowrap">
-              <ThemeIcon color="bilibili" radius="md" variant="light">
-                <UsersIcon size={19} />
-              </ThemeIcon>
-              <div>
-                <Text c="dimmed" size="sm">
-                  贡献用户
-                </Text>
-                <Text fw={700} size="xl">
-                  {communityStats?.contributors.toLocaleString() ?? '—'} 人
-                </Text>
-              </div>
-            </Group>
-          </Paper>
-          <Paper className={styles.featureCard} p="lg" radius="lg" withBorder>
-            <Group align="center" gap="sm" wrap="nowrap">
-              <ThemeIcon color="bilibiliPink" radius="md" variant="light">
-                <TagIcon size={19} />
-              </ThemeIcon>
-              <div>
-                <Text c="dimmed" size="sm">
-                  标记账号
-                </Text>
-                <Text fw={700} size="xl">
-                  {communityStats?.markedAccounts.toLocaleString() ?? '—'} 个
-                </Text>
-              </div>
-            </Group>
-          </Paper>
-          <Paper className={styles.featureCard} p="lg" radius="lg" withBorder>
-            <Group align="center" gap="sm" wrap="nowrap">
-              <ThemeIcon color="bilibili" radius="md" variant="light">
-                <ThumbsUpIcon size={19} />
-              </ThemeIcon>
-              <div>
-                <Text c="dimmed" size="sm">
-                  贡献投票
-                </Text>
-                <Text fw={700} size="xl">
-                  {communityStats?.votes.toLocaleString() ?? '—'} 票
-                </Text>
-              </div>
-            </Group>
-          </Paper>
-        </SimpleGrid>
-
-        <SimpleGrid className={styles.homeFeatures} cols={{ base: 1, sm: 3 }} spacing="md" w="100%">
-          <Paper className={styles.featureCard} p="lg" radius="lg" withBorder>
-            <Group align="flex-start" gap="sm" wrap="nowrap">
-              <ThemeIcon color="bilibili" radius="md" variant="light">
-                <MagnifyingGlassIcon size={19} />
-              </ThemeIcon>
-              <div>
-                <Text fw={700}>UID 精确查询</Text>
-                <Text c="dimmed" mt={4} size="sm">
-                  直接按账号 UID 查看匹配结果。
-                </Text>
-              </div>
-            </Group>
-          </Paper>
-          <Paper className={styles.featureCard} p="lg" radius="lg" withBorder>
-            <Group align="flex-start" gap="sm" wrap="nowrap">
-              <ThemeIcon color="bilibiliPink" radius="md" variant="light">
-                <LockKeyOpenIcon size={19} />
-              </ThemeIcon>
-              <div>
-                <Text fw={700}>公开查询</Text>
-                <Text c="dimmed" mt={4} size="sm">
-                  查询账号不需要登录或注册。
-                </Text>
-              </div>
-            </Group>
-          </Paper>
-          <Paper className={styles.featureCard} p="lg" radius="lg" withBorder>
-            <Group align="flex-start" gap="sm" wrap="nowrap">
-              <ThemeIcon color="bilibili" radius="md" variant="light">
-                <ShieldCheckIcon size={19} />
-              </ThemeIcon>
-              <div>
-                <Text fw={700}>查看规则标签</Text>
-                <Text c="dimmed" mt={4} size="sm">
-                  了解账号命中的屏蔽规则。
-                </Text>
-              </div>
-            </Group>
-          </Paper>
-        </SimpleGrid>
 
         <Group gap="md" justify="center" wrap="wrap">
           {extensionDownloads.map(({ browser, store, iconPath, url, userCountLabel }) => {
@@ -241,6 +227,31 @@ export default function HomePage() {
               </Button>
             )
           })}
+        </Group>
+
+        <Group className={styles.communityLinks} gap="md" justify="center" wrap="wrap">
+          <Button
+            component="a"
+            href="https://github.com/guoyunhe/bilibili-blocker"
+            leftSection={<GithubLogoIcon aria-hidden="true" size={20} />}
+            rel="noopener noreferrer"
+            size="lg"
+            target="_blank"
+            variant="default"
+          >
+            GitHub 源代码
+          </Button>
+          <Button
+            component="a"
+            href="https://t.me/bilibili_blocker"
+            leftSection={<TelegramLogoIcon aria-hidden="true" size={20} />}
+            rel="noopener noreferrer"
+            size="lg"
+            target="_blank"
+            variant="default"
+          >
+            Telegram 讨论群
+          </Button>
         </Group>
         {statsError && (
           <Alert color="red" role="alert" title="用户数加载失败">

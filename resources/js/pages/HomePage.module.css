@@ -14,8 +14,37 @@
   max-width: 760px;
 }
 
-.heroIcon {
-  box-shadow: 0 10px 32px rgb(0 161 214 / 14%);
+.communityStats {
+  max-width: 1000px;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.statIcon {
+  flex: 0 0 auto;
+}
+
+.statContent {
+  text-align: left;
+}
+
+.statValue {
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  letter-spacing: -0.055em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.statSuffix {
+  margin-left: 4px;
+  font-size: 0.4em;
+  letter-spacing: 0;
 }
 
 .homeTitle {
@@ -34,19 +63,13 @@
   width: min(100%, 760px);
 }
 
-.homeFeatures {
-  max-width: 1000px;
-}
-
-.featureCard {
-  height: 100%;
-  border-color: #e1edf2;
-  background: rgb(255 255 255 / 76%);
-}
-
 .browserLogo {
   display: block;
   object-fit: contain;
+}
+
+.communityLinks {
+  width: 100%;
 }
 
 .extensionDownloadButton {

@@ -82,6 +82,7 @@
     "@vinejs/vine": "^4.4.0",
     "adonisjs-auth-mail": "^0.1.1",
     "chalk": "^6.0.1",
+    "countup.js": "^2.10.1",
     "edge.js": "^6.5.1",
     "luxon": "^3.7.2",
     "mysql2": "^3.24.6",
