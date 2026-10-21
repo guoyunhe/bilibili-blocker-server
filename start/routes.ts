@@ -16,6 +16,14 @@ router
     router.get('/', () => ({ hello: 'world' }))
     router.get('flags', [controllers.Flags, 'index'])
     router.get('accounts/:uid', [controllers.Accounts, 'show'])
+    router
+      .group(() => {
+        router.get('extensions', [controllers.Stats, 'extensions'])
+        router.get('contributors', [controllers.Stats, 'contributors'])
+        router.get('marked-accounts', [controllers.Stats, 'markedAccounts'])
+        router.get('votes', [controllers.Stats, 'votes'])
+      })
+      .prefix('stats')
     router.get('users/:id', [controllers.Users, 'show'])
     router.post('email/verify/send', [controllers.EmailVerification, 'send']).use(middleware.auth())
     router.post('email/verify', [controllers.EmailVerification, 'verify'])
@@ -43,7 +51,6 @@ router
         router.get('user', [controllers.Auth, 'user']).use(middleware.auth())
       })
       .prefix('auth')
-      .as('auth')
   })
   .prefix('/api')
 

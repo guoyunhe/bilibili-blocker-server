@@ -24,6 +24,30 @@ const routes = {
     tokens: [{"old":"/api/accounts/:uid","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid","type":1,"val":"uid","end":""}],
     types: placeholder as Registry['accounts.show']['types'],
   },
+  'stats.extensions': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/stats/extensions',
+    tokens: [{"old":"/api/stats/extensions","type":0,"val":"api","end":""},{"old":"/api/stats/extensions","type":0,"val":"stats","end":""},{"old":"/api/stats/extensions","type":0,"val":"extensions","end":""}],
+    types: placeholder as Registry['stats.extensions']['types'],
+  },
+  'stats.contributors': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/stats/contributors',
+    tokens: [{"old":"/api/stats/contributors","type":0,"val":"api","end":""},{"old":"/api/stats/contributors","type":0,"val":"stats","end":""},{"old":"/api/stats/contributors","type":0,"val":"contributors","end":""}],
+    types: placeholder as Registry['stats.contributors']['types'],
+  },
+  'stats.marked_accounts': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/stats/marked-accounts',
+    tokens: [{"old":"/api/stats/marked-accounts","type":0,"val":"api","end":""},{"old":"/api/stats/marked-accounts","type":0,"val":"stats","end":""},{"old":"/api/stats/marked-accounts","type":0,"val":"marked-accounts","end":""}],
+    types: placeholder as Registry['stats.marked_accounts']['types'],
+  },
+  'stats.votes': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/stats/votes',
+    tokens: [{"old":"/api/stats/votes","type":0,"val":"api","end":""},{"old":"/api/stats/votes","type":0,"val":"stats","end":""},{"old":"/api/stats/votes","type":0,"val":"votes","end":""}],
+    types: placeholder as Registry['stats.votes']['types'],
+  },
   'users.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/users/:id',
@@ -96,29 +120,29 @@ const routes = {
     tokens: [{"old":"/api/admin/votes","type":0,"val":"api","end":""},{"old":"/api/admin/votes","type":0,"val":"admin","end":""},{"old":"/api/admin/votes","type":0,"val":"votes","end":""}],
     types: placeholder as Registry['admin.votes.index']['types'],
   },
-  'auth.auth.register': {
+  'auth.register': {
     methods: ["POST"],
     pattern: '/api/auth/register',
     tokens: [{"old":"/api/auth/register","type":0,"val":"api","end":""},{"old":"/api/auth/register","type":0,"val":"auth","end":""},{"old":"/api/auth/register","type":0,"val":"register","end":""}],
-    types: placeholder as Registry['auth.auth.register']['types'],
+    types: placeholder as Registry['auth.register']['types'],
   },
-  'auth.auth.login': {
+  'auth.login': {
     methods: ["POST"],
     pattern: '/api/auth/login',
     tokens: [{"old":"/api/auth/login","type":0,"val":"api","end":""},{"old":"/api/auth/login","type":0,"val":"auth","end":""},{"old":"/api/auth/login","type":0,"val":"login","end":""}],
-    types: placeholder as Registry['auth.auth.login']['types'],
+    types: placeholder as Registry['auth.login']['types'],
   },
-  'auth.auth.logout': {
+  'auth.logout': {
     methods: ["POST"],
     pattern: '/api/auth/logout',
     tokens: [{"old":"/api/auth/logout","type":0,"val":"api","end":""},{"old":"/api/auth/logout","type":0,"val":"auth","end":""},{"old":"/api/auth/logout","type":0,"val":"logout","end":""}],
-    types: placeholder as Registry['auth.auth.logout']['types'],
+    types: placeholder as Registry['auth.logout']['types'],
   },
-  'auth.auth.user': {
+  'auth.user': {
     methods: ["GET","HEAD"],
     pattern: '/api/auth/user',
     tokens: [{"old":"/api/auth/user","type":0,"val":"api","end":""},{"old":"/api/auth/user","type":0,"val":"auth","end":""},{"old":"/api/auth/user","type":0,"val":"user","end":""}],
-    types: placeholder as Registry['auth.auth.user']['types'],
+    types: placeholder as Registry['auth.user']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

@@ -43,6 +43,54 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['show']>>>
     }
   }
+  'stats.extensions': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/stats/extensions'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/stats_controller').default['extensions']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/stats_controller').default['extensions']>>>
+    }
+  }
+  'stats.contributors': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/stats/contributors'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/stats_controller').default['contributors']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/stats_controller').default['contributors']>>>
+    }
+  }
+  'stats.marked_accounts': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/stats/marked-accounts'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/stats_controller').default['markedAccounts']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/stats_controller').default['markedAccounts']>>>
+    }
+  }
+  'stats.votes': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/stats/votes'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/stats_controller').default['votes']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/stats_controller').default['votes']>>>
+    }
+  }
   'users.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/users/:id'
@@ -187,7 +235,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_votes_controller').default['index']>>>
     }
   }
-  'auth.auth.register': {
+  'auth.register': {
     methods: ["POST"]
     pattern: '/api/auth/register'
     types: {
@@ -199,7 +247,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['register']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'auth.auth.login': {
+  'auth.login': {
     methods: ["POST"]
     pattern: '/api/auth/login'
     types: {
@@ -211,7 +259,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['login']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'auth.auth.logout': {
+  'auth.logout': {
     methods: ["POST"]
     pattern: '/api/auth/logout'
     types: {
@@ -223,7 +271,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['logout']>>>
     }
   }
-  'auth.auth.user': {
+  'auth.user': {
     methods: ["GET","HEAD"]
     pattern: '/api/auth/user'
     types: {

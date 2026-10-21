@@ -13,6 +13,12 @@ export interface ApiDefinition {
   accounts: {
     show: typeof routes['accounts.show']
   }
+  stats: {
+    extensions: typeof routes['stats.extensions']
+    contributors: typeof routes['stats.contributors']
+    markedAccounts: typeof routes['stats.marked_accounts']
+    votes: typeof routes['stats.votes']
+  }
   users: {
     show: typeof routes['users.show']
   }
@@ -40,11 +46,9 @@ export interface ApiDefinition {
     }
   }
   auth: {
-    auth: {
-      register: typeof routes['auth.auth.register']
-      login: typeof routes['auth.auth.login']
-      logout: typeof routes['auth.auth.logout']
-      user: typeof routes['auth.auth.user']
-    }
+    register: typeof routes['auth.register']
+    login: typeof routes['auth.login']
+    logout: typeof routes['auth.logout']
+    user: typeof routes['auth.user']
   }
 }

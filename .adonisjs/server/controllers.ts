@@ -13,5 +13,6 @@ export const controllers = {
   EmailVerification: () => import('#controllers/email_verification_controller'),
   Flags: () => import('#controllers/flags_controller'),
   PasswordReset: () => import('#controllers/password_reset_controller'),
+  Stats: () => import('#controllers/stats_controller'),
   Users: () => import('#controllers/users_controller'),
 }
