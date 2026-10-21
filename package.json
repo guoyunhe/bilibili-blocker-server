@@ -72,7 +72,7 @@
     "@adonisjs/shield": "^9.0.0",
     "@adonisjs/static": "^2.0.1",
     "@adonisjs/vite": "^6.0.3",
-    "@guoyunhe/react-odometer": "0.1.1",
+    "@guoyunhe/react-odometer": "0.1.3",
     "@guoyunhe/react-storage": "^2.0.3",
     "@japa/api-client": "^3.2.1",
     "@mantine/core": "^9.7.2",
