@@ -38,6 +38,9 @@ importers:
       '@adonisjs/vite':
         specifier: ^6.0.3
         version: 6.0.3(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@adonisjs/core@7.6.0(@adonisjs/assembler@8.5.2(typescript@6.0.3))(@vinejs/vine@4.4.0)(edge.js@6.5.1)(pino-pretty@13.2.0)(supports-color@10.2.2)(youch@4.1.1))(@adonisjs/shield@9.0.0(55af4446a100c4c3aecd7bdd51fb8abb))(edge.js@6.5.1)(vite@8.3.4(@types/node@26.6.5))
+      '@guoyunhe/react-odometer':
+        specifier: 0.1.0
+        version: 0.1.0(react@19.3.1)
       '@guoyunhe/react-storage':
         specifier: ^2.0.3
         version: 2.0.3(react@19.3.1)
@@ -68,9 +71,6 @@ importers:
       chalk:
         specifier: ^6.0.1
         version: 6.0.1
-      countup.js:
-        specifier: ^2.10.1
-        version: 2.10.1
       edge.js:
         specifier: ^6.5.1
         version: 6.5.1
@@ -688,6 +688,11 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@guoyunhe/react-odometer@0.1.0':
+    resolution: {integrity: sha512-2kYZGaHsY9Z+fFb0+LwSIdxaCOGyuKlj8r+pNOBsTIu6TeiwHX8gSov5FfGzDo0e5T+lfFRYpj/lXdPbr9DadA==}
+    peerDependencies:
+      react: '>=18'
 
   '@guoyunhe/react-storage@2.0.3':
     resolution: {integrity: sha512-SAloNhExBOEBH/FZOktRerq5eY5XvbTb3AykRI+XV/jmmOIugGra4EAbacMmvGox0GgI7H3diY4XSlz/IEVwXw==}
@@ -1536,9 +1541,6 @@ packages:
   core-js-compat@3.50.0:
     resolution: {integrity: sha512-XGpFGbMLHwSt74YLTKho7Ib242qi6O8MSX+sRokV4oz7iKXvQWGYZthjIhjRGMxjzVkAubBO512dKGYcefmX3Q==}
     engines: {node: '>=6.4.0'}
-
-  countup.js@2.10.1:
-    resolution: {integrity: sha512-UHW/BsPDgVZfN919D4iu2HPv+jJxZUuaR3EhT0ScFZaD446GiQtkMTgOnOyJXdA2AewdlyUk9UvERlTHTbVpcw==}
 
   cron-parser@5.10.2:
     resolution: {integrity: sha512-JfAYMY0LZaWQTuict8PhtF/ksSnq8xefSDmQUnnoqvkPYkU/y3UP0DTWzJKFBz0P1IXsDG8q0vY3zHkoFZOhvw==}
@@ -3721,6 +3723,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
+  '@guoyunhe/react-odometer@0.1.0(react@19.3.1)':
+    dependencies:
+      react: 19.3.1
+
   '@guoyunhe/react-storage@2.0.3(react@19.3.1)':
     dependencies:
       '@guoyunhe/use-latest-callback': 1.0.0(react@19.3.1)
@@ -4470,8 +4476,6 @@ snapshots:
   core-js-compat@3.50.0:
     dependencies:
       browserslist: 4.29.3
-
-  countup.js@2.10.1: {}
 
   cron-parser@5.10.2:
     dependencies:

@@ -15,8 +15,8 @@ import { TelegramLogoIcon } from '@phosphor-icons/react/TelegramLogo'
 import { TagIcon } from '@phosphor-icons/react/Tag'
 import { ThumbsUpIcon } from '@phosphor-icons/react/ThumbsUp'
 import { UsersIcon } from '@phosphor-icons/react/Users'
-import { CountUp } from 'countup.js'
-import { useEffect, useRef, useState } from 'react'
+import { Odometer } from '@guoyunhe/react-odometer'
+import { useEffect, useState } from 'react'
 
 import AccountSearchForm from '../components/AccountSearchForm.js'
 import {
@@ -51,27 +51,6 @@ const extensionDownloads = [
     userCountLabel: 'Edge 商店用户',
   },
 ] as const
-
-function AnimatedCount({ value }: { value: number }) {
-  const countRef = useRef<HTMLSpanElement>(null)
-
-  useEffect(() => {
-    const element = countRef.current
-    if (!element) return
-
-    const counter = new CountUp(element, value, { duration: 2, separator: ',' })
-    if (counter.error) {
-      console.error('Failed to animate homepage statistic:', counter.error)
-      element.textContent = value.toLocaleString()
-      return
-    }
-
-    counter.start()
-    return () => counter.onDestroy()
-  }, [value])
-
-  return <span ref={countRef}>{value.toLocaleString()}</span>
-}
 
 export default function HomePage() {
   const [storeStats, setStoreStats] = useState<ExtensionStoreStats | null>(null)
@@ -124,7 +103,11 @@ export default function HomePage() {
             </ThemeIcon>
             <div className={styles.statContent}>
               <Text className={styles.statValue} c="bilibili" fw={800}>
-                {communityStats ? <AnimatedCount value={communityStats.contributors} /> : '—'}
+                {communityStats ? (
+                  <Odometer value={communityStats.contributors} duration={2000} separator="," />
+                ) : (
+                  '—'
+                )}
                 <span className={styles.statSuffix}>人</span>
               </Text>
               <Text c="dimmed" fw={600} size="sm">
@@ -144,7 +127,11 @@ export default function HomePage() {
             </ThemeIcon>
             <div className={styles.statContent}>
               <Text className={styles.statValue} c="bilibiliPink" fw={800}>
-                {communityStats ? <AnimatedCount value={communityStats.markedAccounts} /> : '—'}
+                {communityStats ? (
+                  <Odometer value={communityStats.markedAccounts} duration={2000} separator="," />
+                ) : (
+                  '—'
+                )}
                 <span className={styles.statSuffix}>个</span>
               </Text>
               <Text c="dimmed" fw={600} size="sm">
@@ -164,7 +151,11 @@ export default function HomePage() {
             </ThemeIcon>
             <div className={styles.statContent}>
               <Text className={styles.statValue} c="bilibili" fw={800}>
-                {communityStats ? <AnimatedCount value={communityStats.votes} /> : '—'}
+                {communityStats ? (
+                  <Odometer value={communityStats.votes} duration={2000} separator="," />
+                ) : (
+                  '—'
+                )}
                 <span className={styles.statSuffix}>票</span>
               </Text>
               <Text c="dimmed" fw={600} size="sm">
