@@ -16,7 +16,7 @@ import { useForm } from '@mantine/form'
 import { UserPlusIcon } from '@phosphor-icons/react/UserPlus'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useState } from 'react'
-import { useLocation } from 'wouter'
+import { Link, useLocation } from 'wouter'
 
 import { useAuth } from '../contexts/AuthContext.js'
 import { register } from '../services/auth.js'
@@ -130,7 +130,7 @@ export default function RegisterPage() {
 
           <Text c="dimmed" size="sm" ta="center">
             已有账户？{' '}
-            <Anchor component="button" type="button" onClick={() => navigate('/login')}>
+            <Anchor component={Link} href="/login">
               登录
             </Anchor>
           </Text>

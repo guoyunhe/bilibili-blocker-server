@@ -17,7 +17,7 @@ import { ArrowClockwiseIcon } from '@phosphor-icons/react/ArrowClockwise'
 import { TrashIcon } from '@phosphor-icons/react/Trash'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'wouter'
+import { Link } from 'wouter'
 
 import { useAuth } from '../contexts/AuthContext.js'
 import AdminFlagsSection from './AdminFlagsSection.js'
@@ -37,7 +37,6 @@ function formatDate(value: string) {
 }
 
 export default function AdminPage() {
-  const [, navigate] = useLocation()
   const { authReady, user } = useAuth()
   const [users, setUsers] = useState<AdminUser[]>([])
   const [votes, setVotes] = useState<RecentVote[]>([])
@@ -147,7 +146,11 @@ export default function AdminPage() {
             <Text c="dimmed" ta="center">
               {!user ? '请先登录管理员账户。' : '当前账户没有管理员权限。'}
             </Text>
-            {!user && <Button onClick={() => navigate('/login')}>登录</Button>}
+            {!user && (
+              <Button component={Link} href="/login">
+                登录
+              </Button>
+            )}
           </Stack>
         </Paper>
       </Container>
@@ -213,12 +216,7 @@ export default function AdminPage() {
                   {users.map((item) => (
                     <Table.Tr key={item.id}>
                       <Table.Td>
-                        <Anchor
-                          component="button"
-                          fw={600}
-                          type="button"
-                          onClick={() => navigate(`/users/${item.id}`)}
-                        >
+                        <Anchor component={Link} href={`/users/${item.id}`} fw={600}>
                           {item.name}
                         </Anchor>
                         <Text c="dimmed" size="xs">
@@ -304,12 +302,7 @@ export default function AdminPage() {
                   {votes.map((vote) => (
                     <Table.Tr key={vote.id}>
                       <Table.Td>
-                        <Anchor
-                          component="button"
-                          fw={600}
-                          type="button"
-                          onClick={() => navigate(`/users/${vote.userId}`)}
-                        >
+                        <Anchor component={Link} href={`/users/${vote.userId}`} fw={600}>
                           {vote.userName}
                         </Anchor>
                         <Text c="dimmed" size="xs">
@@ -317,11 +310,7 @@ export default function AdminPage() {
                         </Text>
                       </Table.Td>
                       <Table.Td>
-                        <Anchor
-                          component="button"
-                          type="button"
-                          onClick={() => navigate(`/accounts/${vote.uid}`)}
-                        >
+                        <Anchor component={Link} href={`/accounts/${vote.uid}`}>
                           {vote.uid}
                         </Anchor>
                       </Table.Td>

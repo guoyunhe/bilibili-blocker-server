@@ -13,7 +13,7 @@ import {
 import { CheckCircleIcon } from '@phosphor-icons/react/CheckCircle'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useRef, useState } from 'react'
-import { useLocation, useParams } from 'wouter'
+import { Link, useLocation, useParams } from 'wouter'
 
 import styles from './EmailVerificationPage.module.css'
 import useResendVerificationEmail, {
@@ -136,16 +136,19 @@ export default function EmailVerificationPage() {
                 重新发送验证邮件
               </Button>
             )}
-            <Button
-              disabled={isVerifying}
-              onClick={() => {
-                const returnTo = getSavedReturnPath()
-                if (isSuccess) clearSavedReturnPath()
-                navigate(returnTo ?? '/')
-              }}
-            >
-              {isSuccess ? '返回原页面' : '返回首页'}
-            </Button>
+            {isVerifying ? (
+              <Button disabled>返回首页</Button>
+            ) : (
+              <Button
+                component={Link}
+                href={getSavedReturnPath() ?? '/'}
+                onClick={() => {
+                  if (isSuccess) clearSavedReturnPath()
+                }}
+              >
+                {isSuccess ? '返回原页面' : '返回首页'}
+              </Button>
+            )}
           </Group>
         </Stack>
       </Paper>

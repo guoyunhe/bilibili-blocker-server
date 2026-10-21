@@ -14,7 +14,7 @@ import { ThumbsDownIcon } from '@phosphor-icons/react/ThumbsDown'
 import { ThumbsUpIcon } from '@phosphor-icons/react/ThumbsUp'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { Fragment, useState } from 'react'
-import { useLocation, useSearch } from 'wouter'
+import { Link, useLocation, useSearch } from 'wouter'
 
 import { useAuth } from '../contexts/AuthContext.js'
 import { type AccountDetails, type VoteDirection, voteForFlag } from '../services/accounts.js'
@@ -79,11 +79,10 @@ export default function AccountFlagVotingSection({
       {authReady && !user && (
         <Text c="dimmed" size="sm">
           <Anchor
-            component="button"
-            type="button"
+            component={Link}
+            href="/login"
             onClick={() => {
               if (returnTo) saveReturnPath(returnTo)
-              navigate('/login')
             }}
           >
             登录
@@ -95,12 +94,11 @@ export default function AccountFlagVotingSection({
         <Text c="dimmed" size="sm">
           请先验证邮箱后再参与投票。
           <Anchor
-            component="button"
+            component={Link}
+            href="/email/verification/send"
             ml={4}
-            type="button"
             onClick={() => {
               if (returnTo) saveReturnPath(returnTo)
-              navigate('/email/verification/send')
             }}
           >
             前往验证

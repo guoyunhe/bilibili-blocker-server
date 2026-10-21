@@ -1,6 +1,6 @@
 import { Alert, AppShell, Button, Group } from '@mantine/core'
 import { lazy, Suspense, useState } from 'react'
-import { Route, Switch, useLocation, useRoute, useSearch } from 'wouter'
+import { Link, Route, Switch, useLocation, useRoute, useSearch } from 'wouter'
 
 import AppFooter from './components/AppFooter.js'
 import AppHeader from './components/AppHeader.js'
@@ -74,11 +74,14 @@ export default function App() {
             <Group justify="space-between" gap="sm">
               <span>验证邮箱后即可完整使用账户功能。</span>
               <Button
+                component={Link}
+                href="/email/verification/send"
                 size="xs"
                 variant="light"
                 onClick={() => {
                   if (returnTo) saveReturnPath(returnTo)
-                  navigateTo('/email/verification/send')
+                  setError('')
+                  clearError()
                 }}
               >
                 前往验证

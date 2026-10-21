@@ -1,6 +1,6 @@
 import { Button, Container, Group, Paper, Stack, Text, ThemeIcon, Title } from '@mantine/core'
 import { EnvelopeSimpleIcon } from '@phosphor-icons/react/EnvelopeSimple'
-import { useLocation } from 'wouter'
+import { Link } from 'wouter'
 
 import styles from './EmailVerificationPage.module.css'
 import useResendVerificationEmail, {
@@ -10,7 +10,6 @@ import { getSavedReturnPath } from '../utils/return_path.js'
 import { useAuth } from '../contexts/AuthContext.js'
 
 export default function EmailVerificationSendPage() {
-  const [, navigate] = useLocation()
   const { user } = useAuth()
   const resend = useResendVerificationEmail()
   const returnTo = getSavedReturnPath()
@@ -44,7 +43,9 @@ export default function EmailVerificationSendPage() {
             <Button loading={resend.resending} onClick={resend.send} variant="light">
               重新发送验证邮件
             </Button>
-            <Button onClick={() => navigate(returnTo ?? '/')}>返回</Button>
+            <Button component={Link} href={returnTo ?? '/'}>
+              返回
+            </Button>
           </Group>
         </Stack>
       </Paper>

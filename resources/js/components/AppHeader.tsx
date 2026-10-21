@@ -4,8 +4,7 @@ import { SignOutIcon } from '@phosphor-icons/react/SignOut'
 import { ShieldCheckIcon } from '@phosphor-icons/react/ShieldCheck'
 import { UserCircleIcon } from '@phosphor-icons/react/UserCircle'
 import { UserPlusIcon } from '@phosphor-icons/react/UserPlus'
-import type { MouseEvent } from 'react'
-import { useLocation } from 'wouter'
+import { Link } from 'wouter'
 
 import { useAuth } from '../contexts/AuthContext.js'
 import AccountSearchForm from './AccountSearchForm.js'
@@ -17,24 +16,12 @@ type AppHeaderProps = {
 }
 
 export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
-  const [, navigate] = useLocation()
   const { authReady, user } = useAuth()
-
-  function handleNavigate(event: MouseEvent<HTMLAnchorElement>, path: string) {
-    event.preventDefault()
-    navigate(path)
-  }
 
   return (
     <AppShell.Header className={styles.siteHeader}>
       <Group className={styles.siteHeaderInner} gap="lg" wrap="nowrap">
-        <Text
-          className={styles.brand}
-          component="a"
-          href="/"
-          fw={800}
-          onClick={(event) => handleNavigate(event, '/')}
-        >
+        <Text className={styles.brand} component={Link} href="/" fw={800}>
           <ShieldCheckIcon size={28} weight="fill" />
           Bilibili Blocker
         </Text>
@@ -58,7 +45,9 @@ export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
                     </Text>
                   </Menu.Label>
                   {user.role === 'admin' && (
-                    <Menu.Item onClick={() => navigate('/admin')}>管理员后台</Menu.Item>
+                    <Menu.Item component={Link} href="/admin">
+                      管理员后台
+                    </Menu.Item>
                   )}
                   <Menu.Item
                     color="red"
@@ -73,21 +62,19 @@ export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
             ) : (
               <>
                 <Button
-                  component="a"
+                  component={Link}
                   href="/login"
                   leftSection={<SignInIcon size={18} />}
                   size="sm"
                   variant="default"
-                  onClick={(event) => handleNavigate(event, '/login')}
                 >
                   登录
                 </Button>
                 <Button
-                  component="a"
+                  component={Link}
                   href="/register"
                   leftSection={<UserPlusIcon size={18} />}
                   size="sm"
-                  onClick={(event) => handleNavigate(event, '/register')}
                 >
                   注册
                 </Button>

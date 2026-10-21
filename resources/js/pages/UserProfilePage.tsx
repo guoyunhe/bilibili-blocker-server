@@ -14,7 +14,7 @@ import {
 } from '@mantine/core'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { useEffect, useState } from 'react'
-import { useLocation, useParams } from 'wouter'
+import { Link, useParams } from 'wouter'
 
 import {
   getUserProfile,
@@ -30,7 +30,6 @@ function formatDate(value: string) {
 }
 
 export default function UserProfilePage() {
-  const [, navigate] = useLocation()
   const { userId = '' } = useParams<{ userId?: string }>()
   const [profile, setProfile] = useState<PublicUserProfile | null>(null)
   const [votes, setVotes] = useState<PublicUserVote[]>([])
@@ -125,11 +124,7 @@ export default function UserProfilePage() {
                       {votes.map((vote) => (
                         <Table.Tr key={vote.id}>
                           <Table.Td>
-                            <Anchor
-                              component="button"
-                              type="button"
-                              onClick={() => navigate(`/accounts/${vote.uid}`)}
-                            >
+                            <Anchor component={Link} href={`/accounts/${vote.uid}`}>
                               {vote.uid}
                             </Anchor>
                           </Table.Td>
