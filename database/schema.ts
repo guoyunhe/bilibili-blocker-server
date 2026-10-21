@@ -92,7 +92,7 @@ export class FlagSchema extends BaseModel {
   declare id: number
   @column()
   declare name: string
-  @column()
+  @column({ prepare: (value) => Number(value), consume: (value) => Boolean(value) })
   declare recommended: boolean
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
