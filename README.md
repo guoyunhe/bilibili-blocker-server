@@ -12,6 +12,7 @@ Bilibili Blocker 的服务端项目，提供账户认证 API、按 UID 查询账
 - `user:role` 命令，用邮箱查找用户并修改角色
 - 从浏览器扩展规则清单导入规则、UID 账号和多对多关联
 - 每天凌晨 3 点导出已审核通过的规则到 public Drive，可从 `/uploads/rules/{规则 code}.txt` 下载
+- 用户提交 up vote 或管理员批量导入 UID 后，会通过页面消息通知浏览器扩展，直接更新扩展本地规则缓存并立即生效
 - 仅在 development 环境运行的演示投票 seeder
 - Podman Compose 管理本地 MariaDB 开发容器
 - 仅在 development/test 环境运行的演示用户 seeder

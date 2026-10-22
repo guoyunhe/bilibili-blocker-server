@@ -28,6 +28,7 @@ import {
   updateAdminFlag,
   type AdminFlag,
 } from '../services/admin.js'
+import { sendAddRuleUidsMessage } from '../services/extension.js'
 import { errorMessage } from '../utils/error_message.js'
 import styles from './AdminPage.module.css'
 
@@ -55,6 +56,7 @@ export default function AdminFlagsSection() {
   const [importResult, setImportResult] = useState<{
     succeeded: string[]
     failed: Array<{ uid: string; message: string }>
+    syncMessage: string
   } | null>(null)
   const [error, setError] = useState('')
   const form = useForm<AdminFlagValues>({
@@ -197,7 +199,17 @@ export default function AdminFlagsSection() {
         }
       }
 
-      setImportResult({ succeeded, failed })
+      let syncMessage = ''
+      if (succeeded.length > 0) {
+        try {
+          sendAddRuleUidsMessage(importFlagCode, succeeded)
+          syncMessage = '已向浏览器扩展发送 UID；若扩展已安装，本地规则缓存会立即更新并生效。'
+        } catch (reason) {
+          syncMessage = `UID 已导入，但发送扩展同步消息失败：${errorMessage(reason)}。`
+        }
+      }
+
+      setImportResult({ succeeded, failed, syncMessage })
       setImportUids(failed.map(({ uid }) => uid).join('\n'))
     } finally {
       setImporting(false)
@@ -345,7 +357,8 @@ export default function AdminFlagsSection() {
       >
         <Stack>
           <Text c="dimmed" size="sm">
-            为每个 UID 提交 up vote。支持换行、空格或逗号分隔；重复 UID 会自动去重。
+            为每个 UID 提交 up vote。支持换行、空格或逗号分隔；重复 UID
+            会自动去重。导入成功后会向扩展发送 UID 并立即更新本地规则缓存。
           </Text>
           {importError && (
             <Alert color="red" icon={<WarningCircleIcon size={20} />} title="无法导入">
@@ -354,9 +367,16 @@ export default function AdminFlagsSection() {
           )}
           {importResult && (
             <Alert
-              color={importResult.failed.length > 0 ? 'yellow' : 'green'}
+              color={
+                importResult.failed.length > 0 || importResult.syncMessage ? 'yellow' : 'green'
+              }
               title={`导入完成：成功 ${importResult.succeeded.length} 个，失败 ${importResult.failed.length} 个`}
             >
+              {importResult.syncMessage && (
+                <Text size="sm" mb="xs">
+                  {importResult.syncMessage}
+                </Text>
+              )}
               {importResult.failed.length > 0 && (
                 <Stack gap="xs" mt="xs">
                   {importResult.failed.map(({ uid, message }) => (

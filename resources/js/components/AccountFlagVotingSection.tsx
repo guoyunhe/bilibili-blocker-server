@@ -18,6 +18,7 @@ import { Link, useLocation, useSearch } from 'wouter'
 
 import { useAuth } from '../contexts/AuthContext.js'
 import { type AccountDetails, type VoteDirection, voteForFlag } from '../services/accounts.js'
+import { sendAddRuleUidsMessage } from '../services/extension.js'
 import { errorMessage } from '../utils/error_message.js'
 import { createReturnPath, saveReturnPath } from '../utils/return_path.js'
 import styles from './AccountFlagVotingSection.module.css'
@@ -59,6 +60,9 @@ export default function AccountFlagVotingSection({
     setVotingFlag({ code, direction })
     try {
       onAccountUpdated(await voteForFlag(uid, code, direction))
+      if (direction === 'up') {
+        sendAddRuleUidsMessage(code, [uid])
+      }
     } catch (reason) {
       setVoteError(errorMessage(reason))
     } finally {
