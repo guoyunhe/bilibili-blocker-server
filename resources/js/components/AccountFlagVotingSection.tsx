@@ -76,7 +76,7 @@ export default function AccountFlagVotingSection({
         <Title order={3} size="h4">
           规则标签投票
         </Title>
-        <Text c="dimmed" mt={4} size="sm">
+        <Text className={styles.flagDescription} c="dimmed" mt={4} size="sm">
           为该账号的每个 flag 投 up 或 down vote。每位用户对每个 flag 只能投一票。
         </Text>
       </div>
@@ -125,7 +125,7 @@ export default function AccountFlagVotingSection({
               )}
               <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
                 <Paper className={styles.flagItem} p="md" radius="md" withBorder>
-                  <Group align="flex-start" justify="space-between" wrap="wrap">
+                  <div className={styles.flagCardContent}>
                     <div>
                       <Group gap="sm">
                         <Text fw={600}>{flag.name}</Text>
@@ -146,11 +146,11 @@ export default function AccountFlagVotingSection({
                               : '待定'}
                         </Badge>
                       </Group>
-                      <Text c="dimmed" mt={4} size="sm">
+                      <Text className={styles.flagDescription} c="dimmed" mt={4} size="sm">
                         {flag.description}
                       </Text>
                     </div>
-                    <Group gap="xs">
+                    <Group className={styles.flagVoteGroup} gap="xs">
                       <Button
                         aria-label={`赞成 ${flag.name}，${flag.upVotes} 票`}
                         aria-pressed={flag.userVote === 'up'}
@@ -191,7 +191,7 @@ export default function AccountFlagVotingSection({
                         {flag.score > 0 ? `+${flag.score}` : flag.score}
                       </Text>
                     </Group>
-                  </Group>
+                  </div>
                 </Paper>
               </Grid.Col>
             </Fragment>

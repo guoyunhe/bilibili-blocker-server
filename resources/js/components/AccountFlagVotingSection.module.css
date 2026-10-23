@@ -1,4 +1,26 @@
 .flagItem {
   border-color: #e4edf1;
   background: #fcfeff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.flagCardContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.flagDescription {
+  display: -webkit-box;
+  height: 3em;
+  overflow: hidden;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.flagVoteGroup {
+  margin-top: auto;
 }
