@@ -3,7 +3,7 @@ import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { Fragment, useState } from 'react'
 import { Link, useLocation, useSearch } from 'wouter'
 
-import AccountFlagVotingItem from './AccountFlagVotingItem.js'
+import FlagVoteCard from './FlagVoteCard.js'
 import { useAuth } from '../contexts/AuthContext.js'
 import { type AccountDetails, type VoteDirection, voteForFlag } from '../services/accounts.js'
 import { sendAddRuleUidsMessage } from '../services/extension.js'
@@ -110,14 +110,16 @@ export default function AccountFlagVotingSection({
                   <Divider label="其他规则" labelPosition="left" />
                 </Grid.Col>
               )}
-              <AccountFlagVotingItem
-                flag={flag}
-                voteDisabled={
-                  !authReady || votingFlag !== null || (!!user && !user.emailVerifiedAt)
-                }
-                votingDirection={votingFlag?.code === flag.code ? votingFlag.direction : null}
-                onVote={(direction) => void handleVote(flag.code, direction)}
-              />
+              <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
+                <FlagVoteCard
+                  flag={flag}
+                  voteDisabled={
+                    !authReady || votingFlag !== null || (!!user && !user.emailVerifiedAt)
+                  }
+                  votingDirection={votingFlag?.code === flag.code ? votingFlag.direction : null}
+                  onVote={(direction) => void handleVote(flag.code, direction)}
+                />
+              </Grid.Col>
             </Fragment>
           ))}
         </Grid>
