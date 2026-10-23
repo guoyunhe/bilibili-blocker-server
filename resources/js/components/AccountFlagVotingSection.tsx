@@ -1,27 +1,14 @@
-import {
-  Alert,
-  Anchor,
-  Badge,
-  Button,
-  Divider,
-  Grid,
-  Group,
-  Paper,
-  Text,
-  Title,
-} from '@mantine/core'
-import { ThumbsDownIcon } from '@phosphor-icons/react/ThumbsDown'
-import { ThumbsUpIcon } from '@phosphor-icons/react/ThumbsUp'
+import { Alert, Anchor, Divider, Grid, Text, Title } from '@mantine/core'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
 import { Fragment, useState } from 'react'
 import { Link, useLocation, useSearch } from 'wouter'
 
+import AccountFlagVotingItem from './AccountFlagVotingItem.js'
 import { useAuth } from '../contexts/AuthContext.js'
 import { type AccountDetails, type VoteDirection, voteForFlag } from '../services/accounts.js'
 import { sendAddRuleUidsMessage } from '../services/extension.js'
 import { errorMessage } from '../utils/error_message.js'
 import { createReturnPath, saveReturnPath } from '../utils/return_path.js'
-import styles from './AccountFlagVotingSection.module.css'
 
 type AccountFlagVotingSectionProps = {
   account: AccountDetails
@@ -76,7 +63,7 @@ export default function AccountFlagVotingSection({
         <Title order={3} size="h4">
           规则标签投票
         </Title>
-        <Text className={styles.flagDescription} c="dimmed" mt={4} size="sm">
+        <Text c="dimmed" mt={4} size="sm">
           为该账号的每个 flag 投 up 或 down vote。每位用户对每个 flag 只能投一票。
         </Text>
       </div>
@@ -123,77 +110,14 @@ export default function AccountFlagVotingSection({
                   <Divider label="其他规则" labelPosition="left" />
                 </Grid.Col>
               )}
-              <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
-                <Paper className={styles.flagItem} p="md" radius="md" withBorder>
-                  <div className={styles.flagCardContent}>
-                    <div>
-                      <Group gap="sm">
-                        <Text fw={600}>{flag.name}</Text>
-                        <Badge
-                          color={
-                            flag.status === 'approved'
-                              ? 'bilibili'
-                              : flag.status === 'rejected'
-                                ? 'bilibiliPink'
-                                : 'gray'
-                          }
-                          variant="light"
-                        >
-                          {flag.status === 'approved'
-                            ? '认可'
-                            : flag.status === 'rejected'
-                              ? '不认可'
-                              : '待定'}
-                        </Badge>
-                      </Group>
-                      <Text className={styles.flagDescription} c="dimmed" mt={4} size="sm">
-                        {flag.description}
-                      </Text>
-                    </div>
-                    <Group className={styles.flagVoteGroup} gap="xs">
-                      <Button
-                        aria-label={`赞成 ${flag.name}，${flag.upVotes} 票`}
-                        aria-pressed={flag.userVote === 'up'}
-                        color="bilibili"
-                        disabled={
-                          !authReady || votingFlag !== null || (!!user && !user.emailVerifiedAt)
-                        }
-                        loading={votingFlag?.code === flag.code && votingFlag.direction === 'up'}
-                        leftSection={<ThumbsUpIcon size={18} />}
-                        size="sm"
-                        variant={flag.userVote === 'up' ? 'filled' : 'light'}
-                        onClick={() => handleVote(flag.code, 'up')}
-                      >
-                        {flag.upVotes}
-                      </Button>
-                      <Button
-                        aria-label={`反对 ${flag.name}，${flag.downVotes} 票`}
-                        aria-pressed={flag.userVote === 'down'}
-                        color="bilibiliPink"
-                        disabled={
-                          !authReady || votingFlag !== null || (!!user && !user.emailVerifiedAt)
-                        }
-                        loading={votingFlag?.code === flag.code && votingFlag.direction === 'down'}
-                        leftSection={<ThumbsDownIcon size={18} />}
-                        size="sm"
-                        variant={flag.userVote === 'down' ? 'filled' : 'light'}
-                        onClick={() => handleVote(flag.code, 'down')}
-                      >
-                        {flag.downVotes}
-                      </Button>
-                      <Text
-                        aria-label={`净得分 ${flag.score}`}
-                        c={flag.score < 0 ? 'red' : 'bilibili'}
-                        component="span"
-                        ml="sm"
-                        size="sm"
-                      >
-                        {flag.score > 0 ? `+${flag.score}` : flag.score}
-                      </Text>
-                    </Group>
-                  </div>
-                </Paper>
-              </Grid.Col>
+              <AccountFlagVotingItem
+                flag={flag}
+                voteDisabled={
+                  !authReady || votingFlag !== null || (!!user && !user.emailVerifiedAt)
+                }
+                votingDirection={votingFlag?.code === flag.code ? votingFlag.direction : null}
+                onVote={(direction) => void handleVote(flag.code, direction)}
+              />
             </Fragment>
           ))}
         </Grid>
