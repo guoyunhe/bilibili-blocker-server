@@ -87,7 +87,6 @@ export default function AccountDetailsPage() {
                   {associatedFlagCount} 条
                 </Badge>
               </Group>
-              {associatedFlagCount === 0 && <Text c="dimmed">该账号目前没有关联的屏蔽规则。</Text>}
               <AccountFlagVotingSection account={account} uid={uid} onAccountUpdated={setAccount} />
             </>
           )}
