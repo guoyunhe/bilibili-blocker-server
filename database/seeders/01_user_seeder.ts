@@ -1,4 +1,5 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
+import { DateTime } from 'luxon'
 
 import User from '#models/user'
 
@@ -8,6 +9,7 @@ const users = [
     email: 'admin@example.com',
     password: 'Admin123!',
     role: 'admin',
+    emailVerifiedAt: DateTime.now(),
   },
   {
     name: 'Test User',
