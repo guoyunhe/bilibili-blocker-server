@@ -1,9 +1,16 @@
 :root {
+  --site-footer-height: 80px;
   font-family: Inter, 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 576px) {
+  :root {
+    --site-footer-height: 68px;
+  }
 }
 
 * {

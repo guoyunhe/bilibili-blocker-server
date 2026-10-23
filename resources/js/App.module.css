@@ -4,6 +4,7 @@
 
 .appMain {
   display: flex;
+  min-height: 100dvh;
   flex-direction: column;
   background:
     radial-gradient(ellipse at 86% 12%, rgb(251 114 153 / 9%), transparent 32rem),
