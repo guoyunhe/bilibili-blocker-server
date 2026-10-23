@@ -3,6 +3,7 @@ import { lazy, Suspense, useState } from 'react'
 import { Link, Route, Switch, useLocation, useRoute, useSearch } from 'wouter'
 
 import AppFooter from './components/AppFooter.js'
+import footerStyles from './components/AppFooter.module.css'
 import AppHeader from './components/AppHeader.js'
 import AccountDetailsPage from './pages/AccountDetailsPage.js'
 import EmailVerificationPage from './pages/EmailVerificationPage.js'
@@ -56,7 +57,11 @@ export default function App() {
     !matchesVerificationLink
 
   return (
-    <AppShell className={styles.appShell} header={{ height: 'var(--app-header-height)' }}>
+    <AppShell
+      className={styles.appShell}
+      footer={{ height: { base: 80, xs: 68 } }}
+      header={{ height: 68 }}
+    >
       <AppHeader logoutBusy={logoutBusy} onLogout={handleLogout} />
       <AppShell.Main className={styles.appMain}>
         {error && (
@@ -120,7 +125,9 @@ export default function App() {
           </Route>
         </Switch>
       </AppShell.Main>
-      <AppFooter />
+      <AppShell.Footer className={footerStyles.siteFooter}>
+        <AppFooter />
+      </AppShell.Footer>
     </AppShell>
   )
 }
