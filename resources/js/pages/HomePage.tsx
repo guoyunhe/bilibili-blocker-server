@@ -19,6 +19,7 @@ import { Odometer } from '@guoyunhe/react-odometer'
 import { useEffect, useState } from 'react'
 
 import AccountSearchForm from '../components/AccountSearchForm.js'
+import FlagCloud from '../components/FlagCloud.js'
 import {
   getCommunityStats,
   getExtensionStoreStats,
@@ -173,6 +174,8 @@ export default function HomePage() {
             社群开放协作维护，软件开源透明，尊重并保护你的隐私。
           </Text>
         </Stack>
+
+        <FlagCloud />
 
         <div className={styles.homeSearch}>
           <AccountSearchForm size="lg" />
