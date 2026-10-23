@@ -1,6 +1,5 @@
 .homePage {
   display: flex;
-  min-height: calc(100vh - 136px);
   align-items: center;
   padding-top: 52px;
   padding-bottom: 64px;

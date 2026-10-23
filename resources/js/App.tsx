@@ -56,7 +56,7 @@ export default function App() {
     !matchesVerificationLink
 
   return (
-    <AppShell className={styles.appShell} header={{ height: 68 }}>
+    <AppShell className={styles.appShell} header={{ height: 'var(--app-header-height)' }}>
       <AppHeader logoutBusy={logoutBusy} onLogout={handleLogout} />
       <AppShell.Main className={styles.appMain}>
         {error && (

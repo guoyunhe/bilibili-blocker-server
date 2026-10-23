@@ -1,12 +1,12 @@
 .siteFooter {
-  min-height: 68px;
+  min-height: var(--app-footer-height);
   border-top: 1px solid #dcecf3;
   background: rgb(255 255 255 / 94%);
 }
 
 .siteFooterInner {
   display: flex;
-  min-height: 68px;
+  min-height: calc(var(--app-footer-height) - 1px);
   align-items: center;
   justify-content: space-between;
   gap: 12px 24px;
