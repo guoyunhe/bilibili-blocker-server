@@ -94,7 +94,7 @@ export default function UserProfilePage() {
                     注册于 {formatDate(profile.createdAt)}
                   </Text>
                   <Text c="dimmed" size="sm">
-                    当前有效 vote：{profile.voteCount}
+                    当前有效投票：{profile.voteCount}
                   </Text>
                 </Group>
               </Stack>
@@ -115,7 +115,7 @@ export default function UserProfilePage() {
                     <Table.Thead>
                       <Table.Tr>
                         <Table.Th>账号 UID</Table.Th>
-                        <Table.Th>Flag</Table.Th>
+                        <Table.Th>标记</Table.Th>
                         <Table.Th>投票</Table.Th>
                         <Table.Th>最后变更</Table.Th>
                       </Table.Tr>

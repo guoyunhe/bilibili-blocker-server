@@ -61,10 +61,10 @@ export default function AccountFlagVotingSection({
     <>
       <div>
         <Title order={3} size="h4">
-          规则标签投票
+          规则标记投票
         </Title>
         <Text c="dimmed" mt={4} size="sm">
-          为该账号的每个 flag 投 up 或 down vote。每位用户对每个 flag 只能投一票。
+          为该账号的每个标记投赞成票或反对票。每位用户对每个标记只能投一票。
         </Text>
       </div>
       {authReady && !user && (
@@ -124,7 +124,7 @@ export default function AccountFlagVotingSection({
           ))}
         </Grid>
       ) : (
-        <Text c="dimmed">尚未定义任何 flag。</Text>
+        <Text c="dimmed">尚未定义任何标记。</Text>
       )}
     </>
   )

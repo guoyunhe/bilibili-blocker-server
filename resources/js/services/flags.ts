@@ -24,11 +24,11 @@ export async function getFlags(): Promise<PublicFlag[]> {
 
   if (!response.ok) {
     const errorBody = body as ApiErrorBody
-    throw new Error(errorBody.message ?? errorBody.errors?.[0]?.message ?? '获取规则标签失败')
+    throw new Error(errorBody.message ?? errorBody.errors?.[0]?.message ?? '获取规则标记失败')
   }
 
   if (!('data' in body) || !Array.isArray(body.data)) {
-    throw new Error('规则标签接口返回了无效数据')
+    throw new Error('规则标记接口返回了无效数据')
   }
 
   return body.data

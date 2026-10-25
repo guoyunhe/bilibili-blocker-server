@@ -28,10 +28,10 @@ export default function FlagCloud() {
   return (
     <Stack align="center" gap="xs" w="100%">
       <Text c="dimmed" fw={600} size="sm">
-        规则标签
+        规则标记
       </Text>
       {error ? (
-        <Alert color="red" role="alert" title="标签加载失败">
+        <Alert color="red" role="alert" title="标记加载失败">
           {error}
         </Alert>
       ) : flags ? (
@@ -53,13 +53,13 @@ export default function FlagCloud() {
           </Group>
         ) : (
           <Text c="dimmed" size="sm">
-            暂无规则标签
+            暂无规则标记
           </Text>
         )
       ) : (
         <Group c="dimmed" gap="xs" justify="center">
           <Loader size="xs" />
-          <Text size="sm">正在加载规则标签…</Text>
+          <Text size="sm">正在加载规则标记…</Text>
         </Group>
       )}
     </Stack>

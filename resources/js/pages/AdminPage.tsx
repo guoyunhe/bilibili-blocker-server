@@ -195,7 +195,7 @@ export default function AdminPage() {
                 用户管理
               </Title>
               <Text c="dimmed" mt={4} size="sm">
-                用户 vote 数统计当前有效投票；删除用户会同时删除其投票记录。
+                用户投票数统计当前有效投票；删除用户会同时删除其投票记录。
                 {userPagination ? ` 共 ${userPagination.total} 位用户。` : ''}
               </Text>
             </div>
@@ -207,7 +207,7 @@ export default function AdminPage() {
                     <Table.Th>邮箱</Table.Th>
                     <Table.Th>邮箱验证</Table.Th>
                     <Table.Th>角色</Table.Th>
-                    <Table.Th ta="right">有效 vote</Table.Th>
+                    <Table.Th ta="right">有效投票</Table.Th>
                     <Table.Th>注册时间</Table.Th>
                     <Table.Th />
                   </Table.Tr>
@@ -293,7 +293,7 @@ export default function AdminPage() {
                   <Table.Tr>
                     <Table.Th>投票用户</Table.Th>
                     <Table.Th>账号 UID</Table.Th>
-                    <Table.Th>Flag</Table.Th>
+                    <Table.Th>标记</Table.Th>
                     <Table.Th>投票</Table.Th>
                     <Table.Th>最后变更</Table.Th>
                   </Table.Tr>

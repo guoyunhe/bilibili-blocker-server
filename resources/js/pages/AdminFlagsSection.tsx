@@ -137,7 +137,7 @@ export default function AdminFlagsSection() {
   async function handleDelete(flag: AdminFlag) {
     if (
       !window.confirm(
-        `确定删除「${flag.name}」吗？此操作会同时删除该 flag 在所有账号上的关联和相关投票，且无法撤销。`
+        `确定删除「${flag.name}」吗？此操作会同时删除该标记在所有账号上的关联和相关投票，且无法撤销。`
       )
     ) {
       return
@@ -168,7 +168,7 @@ export default function AdminFlagsSection() {
     setImportResult(null)
 
     if (!importFlagCode) {
-      setImportError('请选择 Flag')
+      setImportError('请选择标记')
       return
     }
 
@@ -223,10 +223,10 @@ export default function AdminFlagsSection() {
           <Group align="flex-end" justify="space-between">
             <div>
               <Title order={2} size="h3">
-                Flag 管理
+                标记管理
               </Title>
               <Text c="dimmed" mt={4} size="sm">
-                管理标签代码、名称和描述。删除标签会同时删除其账号关联与投票记录。共 {flags.length}{' '}
+                管理标记代码、名称和描述。删除标记会同时删除其账号关联与投票记录。共 {flags.length}{' '}
                 个。
               </Text>
             </div>
@@ -235,7 +235,7 @@ export default function AdminFlagsSection() {
                 批量导入 UID
               </Button>
               <Button leftSection={<PlusIcon size={18} />} onClick={openCreateModal}>
-                新增 Flag
+                新增标记
               </Button>
             </Group>
           </Group>
@@ -293,7 +293,7 @@ export default function AdminFlagsSection() {
                   <Table.Tr>
                     <Table.Td colSpan={5}>
                       <Text c="dimmed" py="md" ta="center">
-                        暂无 Flag
+                        暂无标记
                       </Text>
                     </Table.Td>
                   </Table.Tr>
@@ -302,7 +302,7 @@ export default function AdminFlagsSection() {
                   <Table.Tr>
                     <Table.Td colSpan={5}>
                       <Text c="dimmed" py="md" ta="center">
-                        正在加载 Flag…
+                        正在加载标记…
                       </Text>
                     </Table.Td>
                   </Table.Tr>
@@ -315,7 +315,7 @@ export default function AdminFlagsSection() {
 
       <Modal
         opened={modalOpened}
-        title={editingFlag ? '编辑 Flag' : '新增 Flag'}
+        title={editingFlag ? '编辑标记' : '新增标记'}
         onClose={() => setModalOpened(false)}
       >
         <form onSubmit={handleSubmit}>
@@ -357,7 +357,7 @@ export default function AdminFlagsSection() {
       >
         <Stack>
           <Text c="dimmed" size="sm">
-            为每个 UID 提交 up vote。支持换行、空格或逗号分隔；重复 UID
+            为每个 UID 提交赞成票。支持换行、空格或逗号分隔；重复 UID
             会自动去重。导入成功后会向扩展发送 UID 并立即更新本地规则缓存。
           </Text>
           {importError && (
@@ -394,8 +394,8 @@ export default function AdminFlagsSection() {
               value: flag.code,
               label: `${flag.name} (${flag.code})`,
             }))}
-            label="Flag"
-            placeholder="选择要投票的 Flag"
+            label="标记"
+            placeholder="选择要投票的标记"
             searchable
             value={importFlagCode}
             onChange={(value) => {
