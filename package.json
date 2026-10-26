@@ -16,7 +16,8 @@
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p resources/js"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p resources/js",
+    "generate:og-image": "node ace og-image:generate"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
@@ -89,6 +90,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "reflect-metadata": "^0.2.2",
+    "sharp": "^0.35.5",
     "wouter": "^3.13.0"
   },
   "hotHook": {

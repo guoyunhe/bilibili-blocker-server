@@ -1,5 +1,5 @@
 import { Alert, AppShell, Button, Group } from '@mantine/core'
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link, Route, Switch, useLocation, useRoute, useSearch } from 'wouter'
 
 import AppFooter from './components/AppFooter.js'
@@ -27,6 +27,44 @@ export default function App() {
   const [error, setError] = useState('')
   const { authReady, clearAuth, clearError, error: authError, user } = useAuth()
   const returnTo = createReturnPath(pathname, search, window.location.hash)
+
+  useEffect(() => {
+    const accountMatch = pathname.match(/^\/accounts\/(\d+)\/?$/)
+    const isHomepage = pathname === '/'
+    const isIndexable = isHomepage || accountMatch !== null
+    const title = accountMatch
+      ? `B站账号 UID ${accountMatch[1]} 屏蔽规则查询 | Bilibili Blocker`
+      : 'Bilibili Blocker - B站账号屏蔽与社区规则查询'
+    const description = accountMatch
+      ? `查询 Bilibili 账号 UID ${accountMatch[1]} 的社区标记与屏蔽规则，查看规则关联状态并参与投票。`
+      : '使用 Bilibili Blocker 查询 B 站账号屏蔽规则，社区协作标记不良内容账号，并下载 Chrome、Firefox 和 Edge 浏览器插件。'
+    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+    const canonicalUrl = new URL(
+      pathname,
+      canonical ? new URL(canonical.href).origin : window.location.origin
+    ).toString()
+
+    document.title = title
+
+    const updateMeta = (selector: string, attribute: string, value: string) => {
+      let element = document.head.querySelector<HTMLMetaElement>(selector)
+      if (!element) {
+        element = document.createElement('meta')
+        document.head.append(element)
+      }
+      element.setAttribute(attribute, value)
+    }
+
+    updateMeta('meta[name="description"]', 'content', description)
+    updateMeta('meta[name="robots"]', 'content', isIndexable ? 'index,follow' : 'noindex,follow')
+    updateMeta('meta[property="og:title"]', 'content', title)
+    updateMeta('meta[property="og:description"]', 'content', description)
+    updateMeta('meta[property="og:url"]', 'content', canonicalUrl)
+    updateMeta('meta[name="twitter:title"]', 'content', title)
+    updateMeta('meta[name="twitter:description"]', 'content', description)
+
+    if (canonical) canonical.href = canonicalUrl
+  }, [pathname])
 
   function navigateTo(path: string) {
     navigate(path)

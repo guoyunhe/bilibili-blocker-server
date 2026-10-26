@@ -13,6 +13,7 @@ Bilibili Blocker 的服务端项目，提供账户认证 API、按 UID 查询账
 - 从浏览器扩展规则清单导入规则、UID 账号和多对多关联
 - 每天凌晨 3 点导出已审核通过的规则到 public Drive，可从 `/uploads/rules/{规则 code}.txt` 下载
 - 用户提交 up vote 或管理员批量导入 UID 后，会通过页面消息通知浏览器扩展，直接更新扩展本地规则缓存并立即生效
+- 社交分享预览图由线上 flag 数据生成并作为静态 PNG 提供
 - 仅在 development 环境运行的演示投票 seeder
 - Podman Compose 管理本地 MariaDB 开发容器
 - 仅在 development/test 环境运行的演示用户 seeder
@@ -55,6 +56,8 @@ pnpm dev
 浏览器打开 <http://localhost:3520>。登录和注册页面分别位于 `/login` 和 `/register`。
 计划任务使用数据库队列：首次部署需执行 `node ace migration:run`，并保持 `pnpm worker` 进程运行。规则文件写入项目 `storage/rules` 目录，下载地址为 `/uploads/rules/{规则 code}.txt`。
 需要立即重新生成规则文件时，可运行 `node ace rules:export`。
+
+社交分享预览图存放于 `public/og-image.png`，请求时以静态文件提供。规则标签更新后，可运行 `pnpm generate:og-image` 从线上 flags API 重新生成；提交更新后的图片以发布变更。
 
 ### PM2 部署
 
