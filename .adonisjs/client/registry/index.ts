@@ -72,6 +72,18 @@ const routes = {
     tokens: [{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"flags","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"code","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"votes","end":""}],
     types: placeholder as Registry['account_flag_votes.store']['types'],
   },
+  'account_ratings.store': {
+    methods: ["POST"],
+    pattern: '/api/accounts/:uid/rating',
+    tokens: [{"old":"/api/accounts/:uid/rating","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/rating","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/rating","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/rating","type":0,"val":"rating","end":""}],
+    types: placeholder as Registry['account_ratings.store']['types'],
+  },
+  'account_ratings.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/accounts/:uid/rating',
+    tokens: [{"old":"/api/accounts/:uid/rating","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/rating","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/rating","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/rating","type":0,"val":"rating","end":""}],
+    types: placeholder as Registry['account_ratings.destroy']['types'],
+  },
   'admin.flags.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/admin/flags',

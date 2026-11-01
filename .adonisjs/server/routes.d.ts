@@ -15,6 +15,8 @@ export type ScannedRoutes = {
     'email_verification.send': { paramsTuple?: []; params?: {} }
     'email_verification.verify': { paramsTuple?: []; params?: {} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+    'account_ratings.store': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
+    'account_ratings.destroy': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'admin.flags.index': { paramsTuple?: []; params?: {} }
     'admin.flags.store': { paramsTuple?: []; params?: {} }
     'admin.flags.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -62,20 +64,22 @@ export type ScannedRoutes = {
     'email_verification.send': { paramsTuple?: []; params?: {} }
     'email_verification.verify': { paramsTuple?: []; params?: {} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+    'account_ratings.store': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'admin.flags.store': { paramsTuple?: []; params?: {} }
     'auth.register': { paramsTuple?: []; params?: {} }
     'auth.login': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
+  }
+  DELETE: {
+    'account_ratings.destroy': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
+    'admin.flags.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'admin.flags.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PATCH: {
     'admin.flags.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-  }
-  DELETE: {
-    'admin.flags.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

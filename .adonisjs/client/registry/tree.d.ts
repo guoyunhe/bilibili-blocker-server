@@ -29,6 +29,10 @@ export interface ApiDefinition {
   accountFlagVotes: {
     store: typeof routes['account_flag_votes.store']
   }
+  accountRatings: {
+    store: typeof routes['account_ratings.store']
+    destroy: typeof routes['account_ratings.destroy']
+  }
   admin: {
     flags: {
       index: typeof routes['admin.flags.index']

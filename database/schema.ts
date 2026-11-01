@@ -8,12 +8,14 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class AccountSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'uid', 'updatedAt'] as const
+  static $columns = ['createdAt', 'id', 'rating', 'uid', 'updatedAt'] as const
   $columns = AccountSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare rating: number | null
   @column()
   declare uid: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
@@ -52,6 +54,23 @@ export class AccountFlagVoteSchema extends BaseModel {
   declare userId: number
   @column()
   declare vote: number
+}
+
+export class AccountRatingSchema extends BaseModel {
+  static $columns = ['accountId', 'createdAt', 'id', 'rating', 'updatedAt', 'userId'] as const
+  $columns = AccountRatingSchema.$columns
+  @column()
+  declare accountId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare rating: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: number
 }
 
 export class AuthAccessTokenSchema extends BaseModel {

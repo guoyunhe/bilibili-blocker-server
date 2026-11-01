@@ -6,6 +6,7 @@ Bilibili Blocker 的服务端项目，提供账户认证 API、按 UID 查询账
 
 - 无需登录即可按 UID 查询账号与屏蔽规则；登录、注册入口位于页面顶栏
 - 登录用户可对账号的任意已定义 flag 进行 up/down vote，详情页展示票数及关联状态
+- 登录用户可为账号打 0-100 分，账号评分取所有评分的四舍五入平均值，并以 0-5 星（支持半星）展示
 - 提供 Chrome、Firefox 和 Edge 浏览器插件商店下载链接
 - JSON API：注册、登录、获取当前用户、退出登录、列出可用 flag 和按 UID 查询账号
 - `user` / `admin` 角色及可用于路由授权的管理员中间件
@@ -14,7 +15,7 @@ Bilibili Blocker 的服务端项目，提供账户认证 API、按 UID 查询账
 - 每天凌晨 3 点导出已审核通过的规则到 public Drive，可从 `/uploads/rules/{规则 code}.txt` 下载
 - 用户提交 up vote 或管理员批量导入 UID 后，会通过页面消息通知浏览器扩展，直接更新扩展本地规则缓存并立即生效
 - 社交分享预览图由线上 flag 数据生成并作为静态 PNG 提供
-- 仅在 development 环境运行的演示投票 seeder
+- 仅在 development 环境运行的演示投票和账号评分 seeder
 - Podman Compose 管理本地 MariaDB 开发容器
 - 仅在 development/test 环境运行的演示用户 seeder
 
@@ -82,22 +83,24 @@ Seeder 只会在 development/test 环境创建以下演示账户，不要在真�
 
 `node ace db:seed` 还会运行规则数据 seeder，从 Bilibili Blocker CDN 下载规则文件，将规则写入 `flags`，将去重后的 UID 写入 `accounts`，并同步 `accounts_flags` 关联。执行该 seeder 需要网络连接；规则 code 和中文名称保存在 seeder 中，UID 列表不会随项目仓库分发。
 
-投票 seeder 使用演示用户和已导入的账号、flag 创建可重复运行的示例投票，仅在 development 环境执行。
+投票和账号评分 seeder 使用演示用户和已导入的账号、flag 创建可重复运行的示例投票与评分，仅在 development 环境执行。
 
 ### API
 
 API 前缀为 `/api`。除健康检查和注销外，接口响应数据包装在 `data` 字段中。
 
-| 方法   | 路径                                   | 认证 | 说明                                                                                                                                            |
-| ------ | -------------------------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | `/api/`                                | 否   | API 健康检查                                                                                                                                    |
-| `GET`  | `/api/flags`                           | 否   | 列出所有可用 flag，包含 `code`、`name` 和 `description`                                                                                         |
-| `GET`  | `/api/accounts/:uid`                   | 否   | 查询 UID 的所有 flag、关联状态和投票数；未记录的 UID 也可查看，登录时会返回自己的投票状态                                                       |
-| `POST` | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；首次投票会创建账号，每位用户对每个账号/flag 只有一票，管理员投票会直接将状态设为认可或否定 |
-| `POST` | `/api/auth/register`                   | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation`                                                                              |
-| `POST` | `/api/auth/login`                      | 否   | 登录并获取 Bearer token                                                                                                                         |
-| `GET`  | `/api/auth/user`                       | 是   | 获取当前用户                                                                                                                                    |
-| `POST` | `/api/auth/logout`                     | 是   | 注销当前 token                                                                                                                                  |
+| 方法     | 路径                                   | 认证 | 说明                                                                                                                                            |
+| -------- | -------------------------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/api/`                                | 否   | API 健康检查                                                                                                                                    |
+| `GET`    | `/api/flags`                           | 否   | 列出所有可用 flag，包含 `code`、`name` 和 `description`                                                                                         |
+| `GET`    | `/api/accounts/:uid`                   | 否   | 查询 UID 的评分、所有 flag、关联状态和投票数；未记录的 UID 也可查看，登录时会返回自己的评分和投票状态                                           |
+| `POST`   | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；首次投票会创建账号，每位用户对每个账号/flag 只有一票，管理员投票会直接将状态设为认可或否定 |
+| `POST`   | `/api/accounts/:uid/rating`            | 是   | 提交 `{"rating":80}`（0-100 的整数）；每位用户对每个账号只能评一次分，重复提交会覆盖自己的评分                                                  |
+| `DELETE` | `/api/accounts/:uid/rating`            | 是   | 清除当前用户对该账号的评分                                                                                                                      |
+| `POST`   | `/api/auth/register`                   | 否   | 注册账户，提交 `name`、`email`、`password`、`passwordConfirmation`                                                                              |
+| `POST`   | `/api/auth/login`                      | 否   | 登录并获取 Bearer token                                                                                                                         |
+| `GET`    | `/api/auth/user`                       | 是   | 获取当前用户                                                                                                                                    |
+| `POST`   | `/api/auth/logout`                     | 是   | 注销当前 token                                                                                                                                  |
 
 认证接口需要在请求头中发送 `Authorization: Bearer <token>`。管理员路由可组合使用 `auth` 和 `admin` 中间件；修改用户角色的命令示例：
 

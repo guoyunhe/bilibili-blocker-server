@@ -5,6 +5,7 @@
 
 export const controllers = {
   AccountFlagVotes: () => import('#controllers/account_flag_votes_controller'),
+  AccountRatings: () => import('#controllers/account_ratings_controller'),
   Accounts: () => import('#controllers/accounts_controller'),
   AdminFlags: () => import('#controllers/admin_flags_controller'),
   AdminUsers: () => import('#controllers/admin_users_controller'),

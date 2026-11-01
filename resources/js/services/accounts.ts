@@ -15,8 +15,15 @@ export type AccountFlag = {
   userVote: VoteDirection | null
 }
 
+export type AccountRating = {
+  value: number | null
+  count: number
+  userRating: number | null
+}
+
 export type AccountDetails = {
   uid: string
+  rating: AccountRating
   flags: AccountFlag[]
 }
 
@@ -71,4 +78,30 @@ export async function voteForFlag(uid: string, code: string, direction: VoteDire
   )
 
   return readResponse<AccountDetails>(response, '提交投票失败，请稍后重试')
+}
+
+export async function rateAccount(uid: string, rating: number) {
+  const response = await fetch(`/api/accounts/${encodeURIComponent(uid)}/rating`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      ...authorizationHeader(),
+    },
+    body: JSON.stringify({ rating }),
+  })
+
+  return readResponse<AccountDetails>(response, '提交评分失败，请稍后重试')
+}
+
+export async function clearAccountRating(uid: string) {
+  const response = await fetch(`/api/accounts/${encodeURIComponent(uid)}/rating`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      ...authorizationHeader(),
+    },
+  })
+
+  return readResponse<AccountDetails>(response, '清除评分失败，请稍后重试')
 }

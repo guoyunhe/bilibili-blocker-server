@@ -32,6 +32,14 @@ router
       .post('accounts/:uid/flags/:code/votes', [controllers.AccountFlagVotes, 'store'])
       .use(middleware.auth())
       .use(middleware.verified())
+    router
+      .post('accounts/:uid/rating', [controllers.AccountRatings, 'store'])
+      .use(middleware.auth())
+      .use(middleware.verified())
+    router
+      .delete('accounts/:uid/rating', [controllers.AccountRatings, 'destroy'])
+      .use(middleware.auth())
+      .use(middleware.verified())
 
     router
       .group(() => {

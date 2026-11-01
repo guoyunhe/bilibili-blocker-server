@@ -139,6 +139,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'account_ratings.store': {
+    methods: ["POST"]
+    pattern: '/api/accounts/:uid/rating'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/account_rating').accountRatingValidator)>>
+      paramsTuple: [ParamValue]
+      params: { uid: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/account_rating').accountRatingValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'account_ratings.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/accounts/:uid/rating'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { uid: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['destroy']>>>
+    }
+  }
   'admin.flags.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/admin/flags'

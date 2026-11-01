@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'wouter'
 
 import AccountFlagVotingSection from '../components/AccountFlagVotingSection.js'
+import AccountRatingSection from '../components/AccountRatingSection.js'
 import { getAccount, type AccountDetails } from '../services/accounts.js'
 import { errorMessage } from '../utils/error_message.js'
 import styles from './AccountDetailsPage.module.css'
@@ -87,6 +88,7 @@ export default function AccountDetailsPage() {
                   {associatedFlagCount} 条
                 </Badge>
               </Group>
+              <AccountRatingSection account={account} uid={uid} onAccountUpdated={setAccount} />
               <AccountFlagVotingSection account={account} uid={uid} onAccountUpdated={setAccount} />
             </>
           )}

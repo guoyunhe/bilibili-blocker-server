@@ -9,11 +9,23 @@ export async function getAccountDetails(
   account: Account | null,
   currentUserId?: number
 ) {
-  const [flags, accountFlags] = await Promise.all([
+  const [flags, accountFlags, ratingSummary] = await Promise.all([
     Flag.query().orderBy('code'),
     account
       ? AccountFlag.query().where('accountId', account.id).select('id', 'flagId', 'status')
       : Promise.resolve([]),
+    account
+      ? db
+          .from('account_ratings')
+          .where('account_id', account.id)
+          .select(
+            db.raw('COUNT(*) as count'),
+            db.raw('MAX(CASE WHEN user_id = ? THEN rating END) as user_rating', [
+              currentUserId ?? 0,
+            ])
+          )
+          .first()
+      : Promise.resolve(null),
   ])
   const accountFlagIdByFlagId = new Map(accountFlags.map(({ id, flagId }) => [flagId, id]))
   const statusByFlagId = new Map(accountFlags.map(({ flagId, status }) => [flagId, status]))
@@ -60,6 +72,14 @@ export async function getAccountDetails(
 
   return {
     uid,
+    rating: {
+      value: account?.rating ?? null,
+      count: Number(ratingSummary?.count ?? 0),
+      userRating:
+        ratingSummary?.user_rating === undefined || ratingSummary?.user_rating === null
+          ? null
+          : Number(ratingSummary.user_rating),
+    },
     flags: flags
       .map(({ id, code, name, description, recommended }) => {
         const accountFlagId = accountFlagIdByFlagId.get(id)
