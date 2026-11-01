@@ -6,6 +6,6 @@
 }
 
 .verificationPaper {
-  border: 1px solid #e1edf2;
-  background: rgb(255 255 255 / 96%);
+  border: 1px solid var(--mantine-color-default-border);
+  background: var(--mantine-color-body);
 }

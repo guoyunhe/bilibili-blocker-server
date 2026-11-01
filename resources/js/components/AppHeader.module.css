@@ -1,6 +1,6 @@
 .siteHeader {
-  background: rgb(255 255 255 / 94%);
-  border-bottom: 1px solid #dcecf3;
+  background: var(--mantine-color-body);
+  border-bottom: 1px solid var(--mantine-color-default-border);
   backdrop-filter: blur(14px);
 }
 

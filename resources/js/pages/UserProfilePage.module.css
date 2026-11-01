@@ -4,8 +4,8 @@
 }
 
 .profileCard {
-  border-color: #e4edf1;
-  background: #fcfeff;
+  border-color: var(--mantine-color-default-border);
+  background: var(--mantine-color-body);
 }
 
 .tableScroll {

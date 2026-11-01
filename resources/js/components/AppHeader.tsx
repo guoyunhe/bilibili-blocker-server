@@ -1,7 +1,18 @@
-import { AppShell, Button, Group, Menu, Text } from '@mantine/core'
+import {
+  ActionIcon,
+  AppShell,
+  Button,
+  Group,
+  Menu,
+  Text,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from '@mantine/core'
+import { MoonIcon } from '@phosphor-icons/react/Moon'
 import { SignInIcon } from '@phosphor-icons/react/SignIn'
 import { SignOutIcon } from '@phosphor-icons/react/SignOut'
 import { ShieldCheckIcon } from '@phosphor-icons/react/ShieldCheck'
+import { SunIcon } from '@phosphor-icons/react/Sun'
 import { UserCircleIcon } from '@phosphor-icons/react/UserCircle'
 import { UserPlusIcon } from '@phosphor-icons/react/UserPlus'
 import { Link } from 'wouter'
@@ -17,6 +28,10 @@ type AppHeaderProps = {
 
 export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
   const { authReady, user } = useAuth()
+  const { setColorScheme } = useMantineColorScheme()
+  const computedColorScheme = useComputedColorScheme('light', {
+    getInitialValueInEffect: true,
+  })
 
   return (
     <AppShell.Header className={styles.siteHeader}>
@@ -29,6 +44,15 @@ export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
           <AccountSearchForm placeholder="按 UID 查询" size="sm" />
         </div>
         <Group className={styles.headerActions} gap="xs" wrap="nowrap">
+          <ActionIcon
+            aria-label={computedColorScheme === 'dark' ? '切换到浅色主题' : '切换到深色主题'}
+            onClick={() => setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark')}
+            size="lg"
+            title={computedColorScheme === 'dark' ? '切换到浅色主题' : '切换到深色主题'}
+            variant="subtle"
+          >
+            {computedColorScheme === 'dark' ? <SunIcon size={20} /> : <MoonIcon size={20} />}
+          </ActionIcon>
           {authReady &&
             (user ? (
               <Menu position="bottom-end" shadow="md" width={220}>

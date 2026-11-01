@@ -18,7 +18,7 @@ if (!root) {
 
 createRoot(root).render(
   <React.StrictMode>
-    <MantineProvider defaultColorScheme="light" theme={theme}>
+    <MantineProvider defaultColorScheme="auto" theme={theme}>
       <AuthProvider>
         <Router>
           <App />
