@@ -9,7 +9,7 @@ import { accountUidParamsMessages, accountUidParamsValidator } from '#validators
 import { accountFlagVoteValidator } from '#validators/account_flag_vote'
 
 export default class AccountFlagVotesController {
-  async store({ auth, params, request, response, serialize }: HttpContext) {
+  async store({ auth, params, request, serialize }: HttpContext) {
     const { uid } = await request.validateUsing(accountUidParamsValidator, {
       data: params,
       messagesProvider: accountUidParamsMessages,
@@ -18,10 +18,7 @@ export default class AccountFlagVotesController {
 
     const { direction } = await request.validateUsing(accountFlagVoteValidator)
     const user = auth.getUserOrFail()
-    const flag = await Flag.findBy('code', code)
-    if (!flag) {
-      return response.notFound({ message: '未找到该 flag' })
-    }
+    const flag = await Flag.findByOrFail('code', code)
     const account = await Account.firstOrCreate({ uid })
 
     // find or create the account flag record
