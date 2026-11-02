@@ -27,9 +27,11 @@ export interface ApiDefinition {
     verify: typeof routes['email_verification.verify']
   }
   accountFlagVotes: {
+    show: typeof routes['account_flag_votes.show']
     store: typeof routes['account_flag_votes.store']
   }
   accountRatings: {
+    show: typeof routes['account_ratings.show']
     store: typeof routes['account_ratings.store']
     destroy: typeof routes['account_ratings.destroy']
   }

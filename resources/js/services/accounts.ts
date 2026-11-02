@@ -12,13 +12,11 @@ export type AccountFlag = {
   upVotes: number
   downVotes: number
   score: number
-  userVote: VoteDirection | null
 }
 
 export type AccountRating = {
   value: number | null
   count: number
-  userRating: number | null
 }
 
 export type AccountDetails = {
@@ -56,11 +54,28 @@ export async function getAccount(uid: string) {
   const response = await fetch(`/api/accounts/${encodeURIComponent(uid)}`, {
     headers: {
       Accept: 'application/json',
-      ...authorizationHeader(),
     },
   })
 
   return readResponse<AccountDetails>(response, '查询账号失败，请稍后重试')
+}
+
+export async function getFlagVote(uid: string, code: string) {
+  const response = await fetch(
+    `/api/accounts/${encodeURIComponent(uid)}/flags/${encodeURIComponent(code)}/votes`,
+    {
+      headers: {
+        Accept: 'application/json',
+        ...authorizationHeader(),
+      },
+    }
+  )
+
+  const result = await readResponse<{ vote: VoteDirection | null }>(
+    response,
+    '获取投票状态失败，请稍后重试'
+  )
+  return result.vote
 }
 
 export async function voteForFlag(uid: string, code: string, direction: VoteDirection) {
@@ -78,6 +93,21 @@ export async function voteForFlag(uid: string, code: string, direction: VoteDire
   )
 
   return readResponse<AccountDetails>(response, '提交投票失败，请稍后重试')
+}
+
+export async function getUserAccountRating(uid: string) {
+  const response = await fetch(`/api/accounts/${encodeURIComponent(uid)}/rating`, {
+    headers: {
+      Accept: 'application/json',
+      ...authorizationHeader(),
+    },
+  })
+
+  const result = await readResponse<{ rating: number | null }>(
+    response,
+    '获取我的评分失败，请稍后重试'
+  )
+  return result.rating
 }
 
 export async function rateAccount(uid: string, rating: number) {

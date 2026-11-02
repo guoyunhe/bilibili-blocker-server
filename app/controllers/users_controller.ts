@@ -36,6 +36,7 @@ export default class UsersController {
     const [votePaginator, ratingPaginator] = await Promise.all([
       AccountFlagVote.query()
         .where('userId', user.id)
+        .whereNot('vote', 0)
         .preload('accountFlag', (query) => {
           query
             .preload('account', (accountQuery) => accountQuery.select('id', 'uid'))

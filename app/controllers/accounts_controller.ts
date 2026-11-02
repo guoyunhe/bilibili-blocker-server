@@ -5,7 +5,7 @@ import AccountTransformer from '#transformers/account_transformer'
 import { accountUidParamsMessages, accountUidParamsValidator } from '#validators/account'
 
 export default class AccountsController {
-  async show({ auth, params, request, serialize }: HttpContext) {
+  async show({ params, request, serialize }: HttpContext) {
     const { uid } = await request.validateUsing(accountUidParamsValidator, {
       data: params,
       messagesProvider: accountUidParamsMessages,
@@ -14,6 +14,6 @@ export default class AccountsController {
     const account = (await Account.findBy('uid', uid)) ?? new Account()
     if (!account.$isPersisted) account.uid = uid
 
-    return serialize(AccountTransformer.transform(account, auth.user?.id))
+    return serialize(AccountTransformer.transform(account))
   }
 }

@@ -6,17 +6,9 @@ import db from '@adonisjs/lucid/services/db'
 import { BaseTransformer } from '@adonisjs/core/transformers'
 
 export default class AccountTransformer extends BaseTransformer<Account> {
-  constructor(
-    account: Account,
-    private currentUserId?: number
-  ) {
-    super(account)
-  }
-
   async toObject() {
     const account = this.resource
     const uid = account.uid
-    const currentUserId = this.currentUserId
     const accountIsPersisted = account.$isPersisted
     const [flags, accountFlags, ratingSummary] = await Promise.all([
       Flag.query().orderBy('code'),
@@ -24,16 +16,7 @@ export default class AccountTransformer extends BaseTransformer<Account> {
         ? AccountFlag.query().where('accountId', account.id).select('id', 'flagId', 'status')
         : Promise.resolve([]),
       accountIsPersisted
-        ? db
-            .from('account_ratings')
-            .where('account_id', account.id)
-            .select(
-              db.raw('COUNT(*) as count'),
-              db.raw('MAX(CASE WHEN user_id = ? THEN rating END) as user_rating', [
-                currentUserId ?? 0,
-              ])
-            )
-            .first()
+        ? db.from('account_ratings').where('account_id', account.id).count('* as count').first()
         : Promise.resolve(null),
     ])
     const accountFlagIdByFlagId = new Map(accountFlags.map(({ id, flagId }) => [flagId, id]))
@@ -49,14 +32,6 @@ export default class AccountTransformer extends BaseTransformer<Account> {
             .count('* as count')
             .sum('vote as score')
             .groupBy('account_flag_id', 'vote')
-    const userVotes =
-      currentUserId === undefined || accountFlagIds.length === 0
-        ? []
-        : await db
-            .from('account_flag_votes')
-            .whereIn('account_flag_id', accountFlagIds)
-            .where('user_id', currentUserId)
-            .select('account_flag_id', 'vote')
 
     const countsByAccountFlagId = new Map<number, { up: number; down: number; score: number }>()
     for (const row of voteCounts) {
@@ -72,22 +47,11 @@ export default class AccountTransformer extends BaseTransformer<Account> {
       countsByAccountFlagId.set(row.account_flag_id, counts)
     }
 
-    const userVoteByFlagId = new Map(
-      userVotes.map(({ account_flag_id, vote }) => [
-        account_flag_id,
-        voteDirectionForValue(Number(vote)),
-      ])
-    )
-
     return {
       uid,
       rating: {
-        value: account?.rating ?? null,
+        value: account.rating ?? null,
         count: Number(ratingSummary?.count ?? 0),
-        userRating:
-          ratingSummary?.user_rating === undefined || ratingSummary?.user_rating === null
-            ? null
-            : Number(ratingSummary.user_rating),
       },
       flags: flags
         .map(({ id, code, name, description, recommended }) => {
@@ -105,8 +69,6 @@ export default class AccountTransformer extends BaseTransformer<Account> {
             upVotes: counts.up,
             downVotes: counts.down,
             score: counts.score,
-            userVote:
-              accountFlagId === undefined ? null : (userVoteByFlagId.get(accountFlagId) ?? null),
           }
         })
         .sort(

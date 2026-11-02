@@ -14,7 +14,9 @@ export type ScannedRoutes = {
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'email_verification.send': { paramsTuple?: []; params?: {} }
     'email_verification.verify': { paramsTuple?: []; params?: {} }
+    'account_flag_votes.show': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
     'account_flag_votes.store': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+    'account_ratings.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'account_ratings.store': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'account_ratings.destroy': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'admin.flags.index': { paramsTuple?: []; params?: {} }
@@ -39,6 +41,8 @@ export type ScannedRoutes = {
     'stats.marked_accounts': { paramsTuple?: []; params?: {} }
     'stats.votes': { paramsTuple?: []; params?: {} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'account_flag_votes.show': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+    'account_ratings.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'admin.flags.index': { paramsTuple?: []; params?: {} }
     'admin.flags.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
@@ -54,6 +58,8 @@ export type ScannedRoutes = {
     'stats.marked_accounts': { paramsTuple?: []; params?: {} }
     'stats.votes': { paramsTuple?: []; params?: {} }
     'users.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'account_flag_votes.show': { paramsTuple: [ParamValue,ParamValue]; params: {'uid': ParamValue,'code': ParamValue} }
+    'account_ratings.show': { paramsTuple: [ParamValue]; params: {'uid': ParamValue} }
     'admin.flags.index': { paramsTuple?: []; params?: {} }
     'admin.flags.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.index': { paramsTuple?: []; params?: {} }

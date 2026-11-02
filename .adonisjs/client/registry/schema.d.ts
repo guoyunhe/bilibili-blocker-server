@@ -127,6 +127,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/email_verification_controller').default['verify']>>>
     }
   }
+  'account_flag_votes.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/accounts/:uid/flags/:code/votes'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { uid: ParamValue; code: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'account_flag_votes.store': {
     methods: ["POST"]
     pattern: '/api/accounts/:uid/flags/:code/votes'
@@ -137,6 +149,18 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>|InferInput<(typeof import('#validators/account_flag_vote').accountFlagVoteValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'account_ratings.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/accounts/:uid/rating'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { uid: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'account_ratings.store': {

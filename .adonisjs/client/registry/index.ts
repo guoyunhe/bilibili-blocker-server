@@ -66,11 +66,23 @@ const routes = {
     tokens: [{"old":"/api/email/verify","type":0,"val":"api","end":""},{"old":"/api/email/verify","type":0,"val":"email","end":""},{"old":"/api/email/verify","type":0,"val":"verify","end":""}],
     types: placeholder as Registry['email_verification.verify']['types'],
   },
+  'account_flag_votes.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/accounts/:uid/flags/:code/votes',
+    tokens: [{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"flags","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"code","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"votes","end":""}],
+    types: placeholder as Registry['account_flag_votes.show']['types'],
+  },
   'account_flag_votes.store': {
     methods: ["POST"],
     pattern: '/api/accounts/:uid/flags/:code/votes',
     tokens: [{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"flags","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":1,"val":"code","end":""},{"old":"/api/accounts/:uid/flags/:code/votes","type":0,"val":"votes","end":""}],
     types: placeholder as Registry['account_flag_votes.store']['types'],
+  },
+  'account_ratings.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/accounts/:uid/rating',
+    tokens: [{"old":"/api/accounts/:uid/rating","type":0,"val":"api","end":""},{"old":"/api/accounts/:uid/rating","type":0,"val":"accounts","end":""},{"old":"/api/accounts/:uid/rating","type":1,"val":"uid","end":""},{"old":"/api/accounts/:uid/rating","type":0,"val":"rating","end":""}],
+    types: placeholder as Registry['account_ratings.show']['types'],
   },
   'account_ratings.store': {
     methods: ["POST"],

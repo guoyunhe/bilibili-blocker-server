@@ -29,9 +29,13 @@ router
     router.post('email/verify/send', [controllers.EmailVerification, 'send']).use(middleware.auth())
     router.post('email/verify', [controllers.EmailVerification, 'verify'])
     router
+      .get('accounts/:uid/flags/:code/votes', [controllers.AccountFlagVotes, 'show'])
+      .use(middleware.auth())
+    router
       .post('accounts/:uid/flags/:code/votes', [controllers.AccountFlagVotes, 'store'])
       .use(middleware.auth())
       .use(middleware.verified())
+    router.get('accounts/:uid/rating', [controllers.AccountRatings, 'show']).use(middleware.auth())
     router
       .post('accounts/:uid/rating', [controllers.AccountRatings, 'store'])
       .use(middleware.auth())

@@ -1,9 +1,9 @@
 import { Group, Rating, Text } from '@mantine/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useSearch } from 'wouter'
 
 import { useAuth } from '../contexts/AuthContext.js'
-import { type AccountDetails, rateAccount } from '../services/accounts.js'
+import { getUserAccountRating, type AccountDetails, rateAccount } from '../services/accounts.js'
 import { errorMessage } from '../utils/error_message.js'
 import { createReturnPath, saveReturnPath } from '../utils/return_path.js'
 
@@ -23,8 +23,32 @@ export default function AccountRatingSection({
   const { authReady, user } = useAuth()
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [userRating, setUserRating] = useState<number | null>(null)
   const returnTo = createReturnPath(pathname, search, window.location.hash)
-  const { count, userRating, value } = account.rating
+  const { count, value } = account.rating
+
+  useEffect(() => {
+    let active = true
+    setUserRating(null)
+
+    if (!authReady || !user) {
+      return () => {
+        active = false
+      }
+    }
+
+    getUserAccountRating(uid)
+      .then((rating) => {
+        if (active) setUserRating(rating)
+      })
+      .catch((reason: unknown) => {
+        if (active) setError(errorMessage(reason))
+      })
+
+    return () => {
+      active = false
+    }
+  }, [authReady, uid, user?.id])
 
   async function handleRatingChange(stars: number) {
     if (!user) {
@@ -41,7 +65,9 @@ export default function AccountRatingSection({
     setError('')
     setSubmitting(true)
     try {
-      onAccountUpdated(await rateAccount(uid, Math.round(stars * 20)))
+      const rating = Math.round(stars * 20)
+      onAccountUpdated(await rateAccount(uid, rating))
+      setUserRating(rating)
     } catch (reason) {
       setError(errorMessage(reason))
     } finally {

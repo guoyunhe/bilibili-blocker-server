@@ -1,11 +1,16 @@
 import { Alert, Anchor, Divider, Grid, Text, Title } from '@mantine/core'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Link, useLocation, useSearch } from 'wouter'
 
 import FlagVoteCard from './FlagVoteCard.js'
 import { useAuth } from '../contexts/AuthContext.js'
-import { type AccountDetails, type VoteDirection, voteForFlag } from '../services/accounts.js'
+import {
+  getFlagVote,
+  type AccountDetails,
+  type VoteDirection,
+  voteForFlag,
+} from '../services/accounts.js'
 import { sendAddRuleUidsMessage } from '../services/extension.js'
 import { errorMessage } from '../utils/error_message.js'
 import { createReturnPath, saveReturnPath } from '../utils/return_path.js'
@@ -29,7 +34,40 @@ export default function AccountFlagVotingSection({
     code: string
     direction: VoteDirection
   } | null>(null)
+  const [userVotes, setUserVotes] = useState<Record<string, VoteDirection | null>>({})
+  const [loadingVotes, setLoadingVotes] = useState(false)
+  const flagCodes = account.flags.map(({ code }) => code).join(',')
   const returnTo = createReturnPath(pathname, search, window.location.hash)
+
+  useEffect(() => {
+    let active = true
+    setUserVotes({})
+    setVoteError('')
+
+    if (!authReady || !user) {
+      setLoadingVotes(false)
+      return () => {
+        active = false
+      }
+    }
+
+    setLoadingVotes(true)
+    const codes = flagCodes ? flagCodes.split(',') : []
+    Promise.all(codes.map(async (code) => [code, await getFlagVote(uid, code)] as const))
+      .then((votes) => {
+        if (active) setUserVotes(Object.fromEntries(votes))
+      })
+      .catch((reason: unknown) => {
+        if (active) setVoteError(errorMessage(reason))
+      })
+      .finally(() => {
+        if (active) setLoadingVotes(false)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [authReady, flagCodes, uid, user?.id])
 
   async function handleVote(code: string, direction: VoteDirection) {
     if (!user) {
@@ -47,6 +85,8 @@ export default function AccountFlagVotingSection({
     setVotingFlag({ code, direction })
     try {
       onAccountUpdated(await voteForFlag(uid, code, direction))
+      const userVote = await getFlagVote(uid, code)
+      setUserVotes((current) => ({ ...current, [code]: userVote }))
       if (direction === 'up') {
         sendAddRuleUidsMessage(code, [uid])
       }
@@ -97,7 +137,7 @@ export default function AccountFlagVotingSection({
         </Text>
       )}
       {voteError && (
-        <Alert color="red" icon={<WarningCircleIcon size={20} />} title="投票失败">
+        <Alert color="red" icon={<WarningCircleIcon size={20} />} title="投票状态或提交失败">
           {voteError}
         </Alert>
       )}
@@ -112,9 +152,11 @@ export default function AccountFlagVotingSection({
               )}
               <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
                 <FlagVoteCard
-                  flag={flag}
+                  flag={{ ...flag, userVote: userVotes[flag.code] ?? null }}
                   voteDisabled={
-                    !authReady || votingFlag !== null || (!!user && !user.emailVerifiedAt)
+                    !authReady ||
+                    votingFlag !== null ||
+                    (!!user && (!user.emailVerifiedAt || loadingVotes))
                   }
                   votingDirection={votingFlag?.code === flag.code ? votingFlag.direction : null}
                   onVote={(direction) => void handleVote(flag.code, direction)}

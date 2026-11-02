@@ -3,12 +3,36 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Account from '#models/account'
 import AccountFlag from '#models/account_flag'
 import Flag from '#models/flag'
-import AccountFlagVote, { voteValueForDirection } from '#models/account_flag_vote'
+import AccountFlagVote, {
+  voteDirectionForValue,
+  voteValueForDirection,
+} from '#models/account_flag_vote'
 import AccountTransformer from '#transformers/account_transformer'
 import { accountUidParamsMessages, accountUidParamsValidator } from '#validators/account'
 import { accountFlagVoteValidator } from '#validators/account_flag_vote'
 
 export default class AccountFlagVotesController {
+  async show({ auth, params, request, serialize }: HttpContext) {
+    const { uid } = await request.validateUsing(accountUidParamsValidator, {
+      data: params,
+      messagesProvider: accountUidParamsMessages,
+    })
+    const { code } = params
+    const user = auth.getUserOrFail()
+    const flag = await Flag.findByOrFail('code', code)
+    const account = await Account.firstOrCreate({ uid })
+    const accountFlag = await AccountFlag.firstOrCreate({
+      accountId: account.id,
+      flagId: flag.id,
+    })
+    const vote = await AccountFlagVote.firstOrCreate(
+      { userId: user.id, accountFlagId: accountFlag.id },
+      { vote: 0 }
+    )
+
+    return serialize({ vote: voteDirectionForValue(vote.vote) })
+  }
+
   async store({ auth, params, request, serialize }: HttpContext) {
     const { uid } = await request.validateUsing(accountUidParamsValidator, {
       data: params,
@@ -55,6 +79,6 @@ export default class AccountFlagVotesController {
       await accountFlag.save()
     }
 
-    return serialize(AccountTransformer.transform(account, user.id))
+    return serialize(AccountTransformer.transform(account))
   }
 }

@@ -13,6 +13,7 @@ export default class AdminVotesController {
     }
 
     const paginator = await AccountFlagVote.query()
+      .whereNot('vote', 0)
       .preload('user', (query) => query.select('id', 'name', 'email'))
       .preload('accountFlag', (query) => {
         query

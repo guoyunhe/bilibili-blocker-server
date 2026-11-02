@@ -8,6 +8,20 @@ import { accountUidParamsMessages, accountUidParamsValidator } from '#validators
 import { accountRatingValidator } from '#validators/account_rating'
 
 export default class AccountRatingsController {
+  async show({ auth, params, request, serialize }: HttpContext) {
+    const { uid } = await request.validateUsing(accountUidParamsValidator, {
+      data: params,
+      messagesProvider: accountUidParamsMessages,
+    })
+    const user = auth.getUserOrFail()
+    const account = await Account.findBy('uid', uid)
+    const rating = account
+      ? await AccountRating.query().where('accountId', account.id).where('userId', user.id).first()
+      : null
+
+    return serialize({ rating: rating?.rating ?? null })
+  }
+
   async store({ auth, params, request, serialize }: HttpContext) {
     const { uid } = await request.validateUsing(accountUidParamsValidator, {
       data: params,
@@ -31,7 +45,7 @@ export default class AccountRatingsController {
 
     await account.refresh()
 
-    return serialize(AccountTransformer.transform(account, user.id))
+    return serialize(AccountTransformer.transform(account))
   }
 
   async destroy({ auth, params, request, serialize }: HttpContext) {
@@ -58,6 +72,6 @@ export default class AccountRatingsController {
     const accountForTransform = account ?? new Account()
     if (!accountForTransform.$isPersisted) accountForTransform.uid = uid
 
-    return serialize(AccountTransformer.transform(accountForTransform, user.id))
+    return serialize(AccountTransformer.transform(accountForTransform))
   }
 }

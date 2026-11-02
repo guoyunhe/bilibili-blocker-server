@@ -6,7 +6,7 @@ import { type AccountFlag, type VoteDirection } from '../services/accounts.js'
 import styles from './FlagVoteCard.module.css'
 
 type FlagVoteCardProps = {
-  flag: AccountFlag
+  flag: AccountFlag & { userVote: VoteDirection | null }
   voteDisabled: boolean
   votingDirection: VoteDirection | null
   onVote: (direction: VoteDirection) => void
