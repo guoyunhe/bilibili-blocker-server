@@ -25,7 +25,7 @@ export default function AccountRatingSection({
   const [error, setError] = useState('')
   const [userRating, setUserRating] = useState<number | null>(null)
   const returnTo = createReturnPath(pathname, search, window.location.hash)
-  const { count, value } = account.rating
+  const { rating, ratingCount } = account
 
   useEffect(() => {
     let active = true
@@ -84,10 +84,10 @@ export default function AccountRatingSection({
           fractions={5}
           readOnly
           size="md"
-          value={value === null ? 0 : value / 20}
+          value={rating === null ? 0 : rating / 20}
         />
-        <Text fw={600}>{value === null ? '—' : (value / 20).toFixed(1)}</Text>
-        <Text c="dimmed">({count})</Text>
+        <Text fw={600}>{rating === null ? '—' : (rating / 20).toFixed(1)}</Text>
+        <Text c="dimmed">({ratingCount})</Text>
       </Group>
       <Group align="center" gap="xs">
         <Text c="dimmed">我的评分</Text>

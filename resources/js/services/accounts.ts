@@ -14,14 +14,10 @@ export type AccountFlag = {
   score: number
 }
 
-export type AccountRating = {
-  value: number | null
-  count: number
-}
-
 export type AccountDetails = {
   uid: string
-  rating: AccountRating
+  rating: number | null
+  ratingCount: number
   flags: AccountFlag[]
 }
 

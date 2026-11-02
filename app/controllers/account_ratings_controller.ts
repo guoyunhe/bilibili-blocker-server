@@ -43,9 +43,12 @@ export default class AccountRatingsController {
       await recalculateAccountRating(account.id, trx)
     })
 
-    await account.refresh()
+    const accountWithRatingCount = await Account.query()
+      .where('id', account.id)
+      .withCount('ratings')
+      .firstOrFail()
 
-    return serialize(AccountTransformer.transform(account))
+    return serialize(AccountTransformer.transform(accountWithRatingCount))
   }
 
   async destroy({ auth, params, request, serialize }: HttpContext) {
@@ -65,11 +68,11 @@ export default class AccountRatingsController {
           .delete()
         await recalculateAccountRating(account.id, trx)
       })
-
-      await account.refresh()
     }
 
-    const accountForTransform = account ?? new Account()
+    const accountForTransform = account
+      ? await Account.query().where('id', account.id).withCount('ratings').firstOrFail()
+      : new Account()
     if (!accountForTransform.$isPersisted) accountForTransform.uid = uid
 
     return serialize(AccountTransformer.transform(accountForTransform))

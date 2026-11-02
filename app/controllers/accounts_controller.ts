@@ -11,7 +11,8 @@ export default class AccountsController {
       messagesProvider: accountUidParamsMessages,
     })
 
-    const account = (await Account.findBy('uid', uid)) ?? new Account()
+    const account =
+      (await Account.query().where('uid', uid).withCount('ratings').first()) ?? new Account()
     if (!account.$isPersisted) account.uid = uid
 
     return serialize(AccountTransformer.transform(account))

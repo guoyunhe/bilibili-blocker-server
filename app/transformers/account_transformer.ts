@@ -10,14 +10,11 @@ export default class AccountTransformer extends BaseTransformer<Account> {
     const account = this.resource
     const uid = account.uid
     const accountIsPersisted = account.$isPersisted
-    const [flags, accountFlags, ratingSummary] = await Promise.all([
+    const [flags, accountFlags] = await Promise.all([
       Flag.query().orderBy('code'),
       accountIsPersisted
         ? AccountFlag.query().where('accountId', account.id).select('id', 'flagId', 'status')
         : Promise.resolve([]),
-      accountIsPersisted
-        ? db.from('account_ratings').where('account_id', account.id).count('* as count').first()
-        : Promise.resolve(null),
     ])
     const accountFlagIdByFlagId = new Map(accountFlags.map(({ id, flagId }) => [flagId, id]))
     const statusByFlagId = new Map(accountFlags.map(({ flagId, status }) => [flagId, status]))
@@ -49,10 +46,8 @@ export default class AccountTransformer extends BaseTransformer<Account> {
 
     return {
       uid,
-      rating: {
-        value: account.rating ?? null,
-        count: Number(ratingSummary?.count ?? 0),
-      },
+      rating: account.rating ?? null,
+      ratingCount: account.ratingCount,
       flags: flags
         .map(({ id, code, name, description, recommended }) => {
           const accountFlagId = accountFlagIdByFlagId.get(id)
