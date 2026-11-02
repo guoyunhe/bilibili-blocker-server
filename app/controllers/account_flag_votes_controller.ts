@@ -3,11 +3,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Account from '#models/account'
 import AccountFlag from '#models/account_flag'
 import Flag from '#models/flag'
-import AccountFlagVote, {
-  voteDirectionForValue,
-  voteValueForDirection,
-} from '#models/account_flag_vote'
-import AccountTransformer from '#transformers/account_transformer'
+import AccountFlagVote, { voteValueForDirection } from '#models/account_flag_vote'
+import AccountFlagVoteTransformer from '#transformers/account_flag_vote_transformer'
 import { accountUidParamsMessages, accountUidParamsValidator } from '#validators/account'
 import { accountFlagVoteValidator } from '#validators/account_flag_vote'
 
@@ -30,7 +27,7 @@ export default class AccountFlagVotesController {
       { vote: 0 }
     )
 
-    return serialize({ vote: voteDirectionForValue(vote.vote) })
+    return serialize(AccountFlagVoteTransformer.transform(vote).useVariant('toVote'))
   }
 
   async store({ auth, params, request, serialize }: HttpContext) {
@@ -79,6 +76,6 @@ export default class AccountFlagVotesController {
       await accountFlag.save()
     }
 
-    return serialize(AccountTransformer.transform(account))
+    return serialize(AccountFlagVoteTransformer.transform(accountFlagVote).useVariant('toVote'))
   }
 }

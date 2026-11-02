@@ -92,7 +92,7 @@ export async function voteForFlag(uid: string, code: string, direction: VoteDire
     }
   )
 
-  return readResponse<AccountDetails>(response, '提交投票失败，请稍后重试')
+  await readResponse<{ vote: VoteDirection | null }>(response, '提交投票失败，请稍后重试')
 }
 
 export async function getUserAccountRating(uid: string) {

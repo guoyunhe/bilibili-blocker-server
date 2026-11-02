@@ -6,6 +6,7 @@ import { Link, useLocation, useSearch } from 'wouter'
 import FlagVoteCard from './FlagVoteCard.js'
 import { useAuth } from '../contexts/AuthContext.js'
 import {
+  getAccount,
   getFlagVote,
   type AccountDetails,
   type VoteDirection,
@@ -84,8 +85,12 @@ export default function AccountFlagVotingSection({
     setVoteError('')
     setVotingFlag({ code, direction })
     try {
-      onAccountUpdated(await voteForFlag(uid, code, direction))
-      const userVote = await getFlagVote(uid, code)
+      await voteForFlag(uid, code, direction)
+      const [updatedAccount, userVote] = await Promise.all([
+        getAccount(uid),
+        getFlagVote(uid, code),
+      ])
+      onAccountUpdated(updatedAccount)
       setUserVotes((current) => ({ ...current, [code]: userVote }))
       if (direction === 'up') {
         sendAddRuleUidsMessage(code, [uid])

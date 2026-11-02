@@ -1,7 +1,14 @@
 import type AccountFlagVote from '#models/account_flag_vote'
+import { voteDirectionForValue } from '#models/account_flag_vote'
 import { BaseTransformer } from '@adonisjs/core/transformers'
 
 export default class AccountFlagVoteTransformer extends BaseTransformer<AccountFlagVote> {
+  toVote() {
+    return {
+      vote: voteDirectionForValue(this.resource.vote),
+    }
+  }
+
   toObject() {
     return this.toAdmin()
   }
