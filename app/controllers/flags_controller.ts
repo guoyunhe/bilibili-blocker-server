@@ -7,7 +7,7 @@ export default class FlagsController {
   async index({ serialize }: HttpContext) {
     const flags = await Flag.query()
       .withCount('accountFlags', (query) => query.as('uidCount'))
-      .orderBy('code')
+      .orderBy('name')
 
     return serialize(FlagTransformer.transform(flags))
   }
