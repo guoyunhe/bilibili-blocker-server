@@ -15,19 +15,21 @@ function mergeAccountWithFlags(account: AccountDetails, flags: PublicFlag[]): Ac
 
   return {
     ...account,
-    flags: flags.map(({ code, name, description, recommended }) => {
-      const accountFlag = accountFlagByCode.get(code)
-      return {
-        code,
-        name,
-        description,
-        recommended,
-        status: accountFlag?.status ?? null,
-        upVotes: accountFlag?.upVotes ?? 0,
-        downVotes: accountFlag?.downVotes ?? 0,
-        score: accountFlag?.score ?? 0,
-      }
-    }),
+    flags: flags
+      .map(({ code, name, description, recommended }) => {
+        const accountFlag = accountFlagByCode.get(code)
+        return {
+          code,
+          name,
+          description,
+          recommended,
+          status: accountFlag?.status ?? null,
+          upVotes: accountFlag?.upVotes ?? 0,
+          downVotes: accountFlag?.downVotes ?? 0,
+          score: accountFlag?.score ?? 0,
+        }
+      })
+      .sort((left, right) => left.name.localeCompare(right.name)),
   }
 }
 

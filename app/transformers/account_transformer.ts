@@ -61,12 +61,7 @@ export default class AccountTransformer extends BaseTransformer<Account> {
             score: counts.score,
           }
         })
-        .sort(
-          (left, right) =>
-            Number(right.status === 'approved') - Number(left.status === 'approved') ||
-            right.score - left.score ||
-            left.code.localeCompare(right.code)
-        ),
+        .sort((left, right) => left.name.localeCompare(right.name)),
     }
   }
 }
