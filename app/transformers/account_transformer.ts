@@ -47,21 +47,19 @@ export default class AccountTransformer extends BaseTransformer<Account> {
       uid,
       rating: account.rating ?? null,
       ratingCount: account.ratingCount,
-      flags: accountFlags
-        .map(({ id, status, flag }) => {
-          const counts = countsByAccountFlagId.get(id) ?? { up: 0, down: 0, score: 0 }
-          return {
-            code: flag.code,
-            name: flag.name,
-            description: flag.description,
-            recommended: flag.recommended,
-            status,
-            upVotes: counts.up,
-            downVotes: counts.down,
-            score: counts.score,
-          }
-        })
-        .sort((left, right) => left.name.localeCompare(right.name)),
+      flags: accountFlags.map(({ id, status, flag }) => {
+        const counts = countsByAccountFlagId.get(id) ?? { up: 0, down: 0, score: 0 }
+        return {
+          code: flag.code,
+          name: flag.name,
+          description: flag.description,
+          recommended: flag.recommended,
+          status,
+          upVotes: counts.up,
+          downVotes: counts.down,
+          score: counts.score,
+        }
+      }),
     }
   }
 }

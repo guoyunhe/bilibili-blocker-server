@@ -6,7 +6,7 @@ import { useParams } from 'wouter'
 import AccountFlagVotingSection from '../components/AccountFlagVotingSection.js'
 import AccountRatingSection from '../components/AccountRatingSection.js'
 import { getAccount, type AccountDetails } from '../services/accounts.js'
-import { getFlags, type PublicFlag } from '../services/flags.js'
+import { getFlags, sortFlagsByName, type PublicFlag } from '../services/flags.js'
 import { errorMessage } from '../utils/error_message.js'
 import styles from './AccountDetailsPage.module.css'
 
@@ -15,21 +15,19 @@ function mergeAccountWithFlags(account: AccountDetails, flags: PublicFlag[]): Ac
 
   return {
     ...account,
-    flags: flags
-      .map(({ code, name, description, recommended }) => {
-        const accountFlag = accountFlagByCode.get(code)
-        return {
-          code,
-          name,
-          description,
-          recommended,
-          status: accountFlag?.status ?? null,
-          upVotes: accountFlag?.upVotes ?? 0,
-          downVotes: accountFlag?.downVotes ?? 0,
-          score: accountFlag?.score ?? 0,
-        }
-      })
-      .sort((left, right) => left.name.localeCompare(right.name, 'en')),
+    flags: flags.map(({ code, name, description, recommended }) => {
+      const accountFlag = accountFlagByCode.get(code)
+      return {
+        code,
+        name,
+        description,
+        recommended,
+        status: accountFlag?.status ?? null,
+        upVotes: accountFlag?.upVotes ?? 0,
+        downVotes: accountFlag?.downVotes ?? 0,
+        score: accountFlag?.score ?? 0,
+      }
+    }),
   }
 }
 
@@ -58,8 +56,9 @@ export default function AccountDetailsPage() {
     Promise.all([getAccount(uid), getFlags()])
       .then(([accountResult, flagsResult]) => {
         if (active) {
-          setFlags(flagsResult)
-          setAccount(mergeAccountWithFlags(accountResult, flagsResult))
+          const sortedFlags = sortFlagsByName(flagsResult)
+          setFlags(sortedFlags)
+          setAccount(mergeAccountWithFlags(accountResult, sortedFlags))
         }
       })
       .catch((reason: unknown) => {

@@ -5,9 +5,7 @@ import FlagTransformer from '#transformers/flag_transformer'
 
 export default class FlagsController {
   async index({ serialize }: HttpContext) {
-    const flags = await Flag.query()
-      .withCount('accountFlags', (query) => query.as('uidCount'))
-      .orderBy('name')
+    const flags = await Flag.query().withCount('accountFlags', (query) => query.as('uidCount'))
 
     return serialize(FlagTransformer.transform(flags))
   }
