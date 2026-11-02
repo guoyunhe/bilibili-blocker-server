@@ -29,7 +29,7 @@ function mergeAccountWithFlags(account: AccountDetails, flags: PublicFlag[]): Ac
           score: accountFlag?.score ?? 0,
         }
       })
-      .sort((left, right) => left.name.localeCompare(right.name)),
+      .sort((left, right) => left.name.localeCompare(right.name, 'en')),
   }
 }
 
@@ -82,7 +82,7 @@ export default function AccountDetailsPage() {
     account?.flags.filter((flag) => flag.status === 'approved').length ?? 0
 
   return (
-    <Container className={styles.detailsPage} size="md">
+    <Container className={styles.detailsPage} size="xl">
       <Stack gap="lg">
         <Stack gap="lg">
           <div>
