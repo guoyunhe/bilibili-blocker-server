@@ -3,7 +3,7 @@ import db from '@adonisjs/lucid/services/db'
 
 import Account from '#models/account'
 import AccountRating, { recalculateAccountRating } from '#models/account_rating'
-import { getAccountDetails } from '#services/account_details_service'
+import AccountTransformer from '#transformers/account_transformer'
 import { accountUidParamsMessages, accountUidParamsValidator } from '#validators/account'
 import { accountRatingValidator } from '#validators/account_rating'
 
@@ -31,7 +31,7 @@ export default class AccountRatingsController {
 
     await account.refresh()
 
-    return serialize(await getAccountDetails(uid, account, user.id))
+    return serialize(AccountTransformer.transform(account, user.id))
   }
 
   async destroy({ auth, params, request, serialize }: HttpContext) {
@@ -55,6 +55,9 @@ export default class AccountRatingsController {
       await account.refresh()
     }
 
-    return serialize(await getAccountDetails(uid, account, user.id))
+    const accountForTransform = account ?? new Account()
+    if (!accountForTransform.$isPersisted) accountForTransform.uid = uid
+
+    return serialize(AccountTransformer.transform(accountForTransform, user.id))
   }
 }

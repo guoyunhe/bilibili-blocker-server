@@ -6,6 +6,7 @@
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type AccountFlagVoteTransformer from '#transformers/account_flag_vote_transformer'
+import type AccountTransformer from '#transformers/account_transformer'
 import type FlagTransformer from '#transformers/flag_transformer'
 import type UserTransformer from '#transformers/user_transformer'
 
@@ -13,6 +14,10 @@ export namespace Data {
   export type AccountFlagVote = InferData<AccountFlagVoteTransformer>
   export namespace AccountFlagVote {
     export type Variants = InferVariants<AccountFlagVoteTransformer>
+  }
+  export type Account = InferData<AccountTransformer>
+  export namespace Account {
+    export type Variants = InferVariants<AccountTransformer>
   }
   export type Flag = InferData<FlagTransformer>
   export namespace Flag {

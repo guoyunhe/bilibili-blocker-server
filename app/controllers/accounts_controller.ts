@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 
 import Account from '#models/account'
-import { getAccountDetails } from '#services/account_details_service'
+import AccountTransformer from '#transformers/account_transformer'
 import { accountUidParamsMessages, accountUidParamsValidator } from '#validators/account'
 
 export default class AccountsController {
@@ -11,8 +11,9 @@ export default class AccountsController {
       messagesProvider: accountUidParamsMessages,
     })
 
-    const account = await Account.findBy('uid', uid)
+    const account = (await Account.findBy('uid', uid)) ?? new Account()
+    if (!account.$isPersisted) account.uid = uid
 
-    return serialize(await getAccountDetails(uid, account, auth.user?.id))
+    return serialize(AccountTransformer.transform(account, auth.user?.id))
   }
 }

@@ -4,7 +4,7 @@ import Account from '#models/account'
 import AccountFlag from '#models/account_flag'
 import Flag from '#models/flag'
 import AccountFlagVote, { voteValueForDirection } from '#models/account_flag_vote'
-import { getAccountDetails } from '#services/account_details_service'
+import AccountTransformer from '#transformers/account_transformer'
 import { accountUidParamsMessages, accountUidParamsValidator } from '#validators/account'
 import { accountFlagVoteValidator } from '#validators/account_flag_vote'
 
@@ -55,6 +55,6 @@ export default class AccountFlagVotesController {
       await accountFlag.save()
     }
 
-    return serialize(await getAccountDetails(uid, account, user.id))
+    return serialize(AccountTransformer.transform(account, user.id))
   }
 }
