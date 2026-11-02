@@ -1,4 +1,11 @@
-import vine from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
+
+const positiveSafeInteger = vine.createRule((value, _options, field) => {
+  const id = Number(value)
+  if (!Number.isSafeInteger(id) || id < 1) {
+    field.report('用户 ID 无效', 'positiveSafeInteger', field)
+  }
+})
 
 /**
  * Shared rules for email and password.
@@ -23,4 +30,20 @@ export const signupValidator = vine.create({
 export const loginValidator = vine.create({
   email: email(),
   password: vine.string(),
+})
+
+/**
+ * Route param validator for the numeric user ID.
+ */
+export const userIdParamsValidator = vine.create({
+  id: vine
+    .string()
+    .regex(/^\d+$/)
+    .use(positiveSafeInteger())
+    .transform((value) => Number(value)),
+})
+
+export const userIdParamsMessages = new SimpleMessagesProvider({
+  'id.required': '用户 ID 无效',
+  'id.regex': '用户 ID 无效',
 })

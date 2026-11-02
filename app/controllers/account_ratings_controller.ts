@@ -4,14 +4,15 @@ import db from '@adonisjs/lucid/services/db'
 import Account from '#models/account'
 import AccountRating, { recalculateAccountRating } from '#models/account_rating'
 import { getAccountDetails } from '#services/account_details_service'
+import { accountUidParamsMessages, accountUidParamsValidator } from '#validators/account'
 import { accountRatingValidator } from '#validators/account_rating'
 
 export default class AccountRatingsController {
-  async store({ auth, params, request, response, serialize }: HttpContext) {
-    const { uid } = params
-    if (!/^\d+$/.test(uid)) {
-      return response.badRequest({ message: 'UID 必须为纯数字' })
-    }
+  async store({ auth, params, request, serialize }: HttpContext) {
+    const { uid } = await request.validateUsing(accountUidParamsValidator, {
+      data: params,
+      messagesProvider: accountUidParamsMessages,
+    })
 
     const { rating } = await request.validateUsing(accountRatingValidator)
     const user = auth.getUserOrFail()
@@ -33,11 +34,11 @@ export default class AccountRatingsController {
     return serialize(await getAccountDetails(uid, account, user.id))
   }
 
-  async destroy({ auth, params, response, serialize }: HttpContext) {
-    const { uid } = params
-    if (!/^\d+$/.test(uid)) {
-      return response.badRequest({ message: 'UID 必须为纯数字' })
-    }
+  async destroy({ auth, params, request, serialize }: HttpContext) {
+    const { uid } = await request.validateUsing(accountUidParamsValidator, {
+      data: params,
+      messagesProvider: accountUidParamsMessages,
+    })
 
     const user = auth.getUserOrFail()
     const account = await Account.findBy('uid', uid)

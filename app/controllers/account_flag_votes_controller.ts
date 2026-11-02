@@ -5,14 +5,16 @@ import AccountFlag from '#models/account_flag'
 import Flag from '#models/flag'
 import AccountFlagVote, { voteValueForDirection } from '#models/account_flag_vote'
 import { getAccountDetails } from '#services/account_details_service'
+import { accountUidParamsMessages, accountUidParamsValidator } from '#validators/account'
 import { accountFlagVoteValidator } from '#validators/account_flag_vote'
 
 export default class AccountFlagVotesController {
   async store({ auth, params, request, response, serialize }: HttpContext) {
-    const { uid, code } = params
-    if (!/^\d+$/.test(uid)) {
-      return response.badRequest({ message: 'UID 必须为纯数字' })
-    }
+    const { uid } = await request.validateUsing(accountUidParamsValidator, {
+      data: params,
+      messagesProvider: accountUidParamsMessages,
+    })
+    const { code } = params
 
     const { direction } = await request.validateUsing(accountFlagVoteValidator)
     const user = auth.getUserOrFail()

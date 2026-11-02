@@ -5,22 +5,20 @@ import AccountRating from '#models/account_rating'
 import User from '#models/user'
 import AccountFlagVoteTransformer from '#transformers/account_flag_vote_transformer'
 import UserTransformer from '#transformers/user_transformer'
+import { userIdParamsMessages, userIdParamsValidator } from '#validators/user'
 
 const votesPerPage = 25
 const ratingsPerPage = 25
 
 export default class UsersController {
   async show({ params, request, response, serialize }: HttpContext) {
-    if (!/^\d+$/.test(params.id)) {
-      return response.badRequest({ message: '用户 ID 无效' })
-    }
+    const { id } = await request.validateUsing(userIdParamsValidator, {
+      data: params,
+      messagesProvider: userIdParamsMessages,
+    })
 
-    const id = Number(params.id)
     const page = Number(request.input('page', 1))
     const ratingPage = Number(request.input('ratingPage', 1))
-    if (!Number.isSafeInteger(id) || id < 1) {
-      return response.badRequest({ message: '用户 ID 无效' })
-    }
     if (!Number.isInteger(page) || page < 1) {
       return response.badRequest({ message: '页码必须为正整数' })
     }

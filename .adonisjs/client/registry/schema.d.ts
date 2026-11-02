@@ -38,9 +38,9 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { uid: ParamValue }
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'stats.extensions': {
@@ -98,9 +98,9 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/user').userIdParamsValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/users_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/users_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/users_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'email_verification.send': {
@@ -131,10 +131,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/accounts/:uid/flags/:code/votes'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/account_flag_vote').accountFlagVoteValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>|InferInput<(typeof import('#validators/account_flag_vote').accountFlagVoteValidator)>>
       paramsTuple: [ParamValue, ParamValue]
       params: { uid: ParamValue; code: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/account_flag_vote').accountFlagVoteValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>|InferInput<(typeof import('#validators/account_flag_vote').accountFlagVoteValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_flag_votes_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -143,10 +143,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/accounts/:uid/rating'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/account_rating').accountRatingValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>|InferInput<(typeof import('#validators/account_rating').accountRatingValidator)>>
       paramsTuple: [ParamValue]
       params: { uid: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/account_rating').accountRatingValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>|InferInput<(typeof import('#validators/account_rating').accountRatingValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -155,12 +155,12 @@ export interface Registry {
     methods: ["DELETE"]
     pattern: '/api/accounts/:uid/rating'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>>
       paramsTuple: [ParamValue]
       params: { uid: ParamValue }
-      query: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/account').accountUidParamsValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_ratings_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.flags.index': {
