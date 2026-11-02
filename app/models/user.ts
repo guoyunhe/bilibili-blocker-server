@@ -7,6 +7,7 @@ import { hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 
 import AccountFlagVote from '#models/account_flag_vote'
+import AccountRating from '#models/account_rating'
 import { withEmailVerification } from 'adonisjs-auth-mail'
 
 export default class User extends compose(UserSchema, withAuthFinder(hash), withEmailVerification) {
@@ -15,4 +16,7 @@ export default class User extends compose(UserSchema, withAuthFinder(hash), with
 
   @hasMany(() => AccountFlagVote)
   declare votes: HasMany<typeof AccountFlagVote>
+
+  @hasMany(() => AccountRating)
+  declare ratings: HasMany<typeof AccountRating>
 }

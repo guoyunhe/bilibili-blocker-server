@@ -3,6 +3,7 @@ export type PublicUserProfile = {
   name: string
   createdAt: string
   voteCount: number
+  ratingCount: number
 }
 
 export type PublicUserVote = {
@@ -11,6 +12,13 @@ export type PublicUserVote = {
   flagCode: string
   flagName: string
   vote: number
+  updatedAt: string
+}
+
+export type PublicUserRating = {
+  id: number
+  uid: string
+  rating: number
   updatedAt: string
 }
 
@@ -30,15 +38,20 @@ type ApiErrorBody = {
   errors?: Array<{ message?: string }>
 }
 
-export async function getUserProfile(id: string, page: number) {
-  const response = await fetch(`/api/users/${encodeURIComponent(id)}?page=${page}`, {
-    headers: { Accept: 'application/json' },
-  })
+export async function getUserProfile(id: string, page: number, ratingPage: number) {
+  const response = await fetch(
+    `/api/users/${encodeURIComponent(id)}?page=${page}&ratingPage=${ratingPage}`,
+    {
+      headers: { Accept: 'application/json' },
+    }
+  )
   const body = (await response.json()) as
     | ApiEnvelope<{
         user: PublicUserProfile
         votes: PublicUserVote[]
         pagination: UserProfilePagination
+        ratings: PublicUserRating[]
+        ratingPagination: UserProfilePagination
       }>
     | ApiErrorBody
 
@@ -52,6 +65,8 @@ export async function getUserProfile(id: string, page: number) {
       user: PublicUserProfile
       votes: PublicUserVote[]
       pagination: UserProfilePagination
+      ratings: PublicUserRating[]
+      ratingPagination: UserProfilePagination
     }>
   ).data
 }

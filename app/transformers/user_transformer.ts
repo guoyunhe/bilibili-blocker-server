@@ -22,6 +22,7 @@ export default class UserTransformer extends BaseTransformer<User> {
       role: this.resource.role,
       emailVerifiedAt: this.resource.emailVerifiedAt?.toISO() ?? null,
       voteCount: Number(this.resource.$extras.votes_count),
+      ratingCount: Number(this.resource.$extras.ratings_count),
       createdAt: this.resource.createdAt.toISO(),
     }
   }
@@ -32,6 +33,7 @@ export default class UserTransformer extends BaseTransformer<User> {
       name: this.resource.name,
       createdAt: this.resource.createdAt.toISO(),
       voteCount: Number(this.resource.$extras.votes_count),
+      ratingCount: Number(this.resource.$extras.ratings_count),
     }
   }
 }

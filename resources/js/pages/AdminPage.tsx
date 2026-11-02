@@ -195,12 +195,12 @@ export default function AdminPage() {
                 用户管理
               </Title>
               <Text c="dimmed" mt={4} size="sm">
-                用户投票数统计当前有效投票；删除用户会同时删除其投票记录。
+                用户投票数统计当前有效投票；评分数统计用户提交的评分。删除用户会同时删除其投票和评分记录。
                 {userPagination ? ` 共 ${userPagination.total} 位用户。` : ''}
               </Text>
             </div>
             <div className={styles.tableScroll}>
-              <Table highlightOnHover miw={760} striped>
+              <Table highlightOnHover miw={840} striped>
                 <Table.Thead>
                   <Table.Tr>
                     <Table.Th>用户</Table.Th>
@@ -208,6 +208,7 @@ export default function AdminPage() {
                     <Table.Th>邮箱验证</Table.Th>
                     <Table.Th>角色</Table.Th>
                     <Table.Th ta="right">有效投票</Table.Th>
+                    <Table.Th ta="right">评分数</Table.Th>
                     <Table.Th>注册时间</Table.Th>
                     <Table.Th />
                   </Table.Tr>
@@ -235,6 +236,7 @@ export default function AdminPage() {
                         </Badge>
                       </Table.Td>
                       <Table.Td ta="right">{item.voteCount}</Table.Td>
+                      <Table.Td ta="right">{item.ratingCount}</Table.Td>
                       <Table.Td>{formatDate(item.createdAt)}</Table.Td>
                       <Table.Td>
                         {item.id !== user.id && (
@@ -255,7 +257,7 @@ export default function AdminPage() {
                   ))}
                   {!loading && users.length === 0 && (
                     <Table.Tr>
-                      <Table.Td colSpan={7}>
+                      <Table.Td colSpan={8}>
                         <Text c="dimmed" py="md" ta="center">
                           暂无用户
                         </Text>

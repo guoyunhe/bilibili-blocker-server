@@ -7,6 +7,7 @@ export type AdminUser = {
   role: string
   emailVerifiedAt: string | null
   voteCount: number
+  ratingCount: number
   createdAt: string
 }
 
