@@ -1,6 +1,6 @@
-import { Alert, Anchor, Divider, Grid, Text, Title } from '@mantine/core'
+import { Alert, Anchor, Grid, Text, Title } from '@mantine/core'
 import { WarningCircleIcon } from '@phosphor-icons/react/WarningCircle'
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useSearch } from 'wouter'
 
 import FlagVoteCard from './FlagVoteCard.js'
@@ -148,26 +148,19 @@ export default function AccountFlagVotingSection({
       )}
       {account.flags.length > 0 ? (
         <Grid gap="sm">
-          {account.flags.map((flag, index) => (
-            <Fragment key={flag.code}>
-              {index > 0 && !flag.recommended && account.flags[index - 1]?.recommended && (
-                <Grid.Col span={12}>
-                  <Divider label="其他规则" labelPosition="left" />
-                </Grid.Col>
-              )}
-              <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
-                <FlagVoteCard
-                  flag={{ ...flag, userVote: userVotes[flag.code] ?? null }}
-                  voteDisabled={
-                    !authReady ||
-                    votingFlag !== null ||
-                    (!!user && (!user.emailVerifiedAt || loadingVotes))
-                  }
-                  votingDirection={votingFlag?.code === flag.code ? votingFlag.direction : null}
-                  onVote={(direction) => void handleVote(flag.code, direction)}
-                />
-              </Grid.Col>
-            </Fragment>
+          {account.flags.map((flag) => (
+            <Grid.Col key={flag.code} span={{ base: 12, md: 6, lg: 4 }}>
+              <FlagVoteCard
+                flag={{ ...flag, userVote: userVotes[flag.code] ?? null }}
+                voteDisabled={
+                  !authReady ||
+                  votingFlag !== null ||
+                  (!!user && (!user.emailVerifiedAt || loadingVotes))
+                }
+                votingDirection={votingFlag?.code === flag.code ? votingFlag.direction : null}
+                onVote={(direction) => void handleVote(flag.code, direction)}
+              />
+            </Grid.Col>
           ))}
         </Grid>
       ) : (

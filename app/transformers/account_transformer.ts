@@ -63,7 +63,6 @@ export default class AccountTransformer extends BaseTransformer<Account> {
         })
         .sort(
           (left, right) =>
-            Number(right.recommended) - Number(left.recommended) ||
             Number(right.status === 'approved') - Number(left.status === 'approved') ||
             right.score - left.score ||
             left.code.localeCompare(right.code)
