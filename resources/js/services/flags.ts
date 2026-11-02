@@ -7,13 +7,8 @@ export type PublicFlag = {
   uidCount: number
 }
 
-const flagNameCollator = new Intl.Collator(['zh-CN-u-co-pinyin', 'en'], {
-  numeric: true,
-  sensitivity: 'base',
-})
-
-export function sortFlagsByName(flags: PublicFlag[]): PublicFlag[] {
-  return [...flags].sort((left, right) => flagNameCollator.compare(left.name, right.name))
+export function sortFlagsByCode(flags: PublicFlag[]): PublicFlag[] {
+  return [...flags].sort((left, right) => left.code.localeCompare(right.code))
 }
 
 type ApiEnvelope<T> = {

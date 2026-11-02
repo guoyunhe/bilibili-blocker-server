@@ -1,7 +1,7 @@
 import { Alert, Group, Loader, Stack, Text, Tooltip } from '@mantine/core'
 import { useEffect, useState } from 'react'
 
-import { getFlags, sortFlagsByName, type PublicFlag } from '../services/flags.js'
+import { getFlags, sortFlagsByCode, type PublicFlag } from '../services/flags.js'
 import { errorMessage } from '../utils/error_message.js'
 
 export default function FlagCloud() {
@@ -14,7 +14,7 @@ export default function FlagCloud() {
 
     getFlags()
       .then((result) => {
-        if (active) setFlags(sortFlagsByName(result))
+        if (active) setFlags(sortFlagsByCode(result))
       })
       .catch((reason: unknown) => {
         if (active) setError(errorMessage(reason))

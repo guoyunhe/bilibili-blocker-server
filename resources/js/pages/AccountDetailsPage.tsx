@@ -6,7 +6,7 @@ import { useParams } from 'wouter'
 import AccountFlagVotingSection from '../components/AccountFlagVotingSection.js'
 import AccountRatingSection from '../components/AccountRatingSection.js'
 import { getAccount, type AccountDetails } from '../services/accounts.js'
-import { getFlags, sortFlagsByName, type PublicFlag } from '../services/flags.js'
+import { getFlags, sortFlagsByCode, type PublicFlag } from '../services/flags.js'
 import { errorMessage } from '../utils/error_message.js'
 import styles from './AccountDetailsPage.module.css'
 
@@ -56,7 +56,7 @@ export default function AccountDetailsPage() {
     Promise.all([getAccount(uid), getFlags()])
       .then(([accountResult, flagsResult]) => {
         if (active) {
-          const sortedFlags = sortFlagsByName(flagsResult)
+          const sortedFlags = sortFlagsByCode(flagsResult)
           setFlags(sortedFlags)
           setAccount(mergeAccountWithFlags(accountResult, sortedFlags))
         }
