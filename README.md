@@ -93,8 +93,8 @@ API 前缀为 `/api`。除健康检查和注销外，接口响应数据包装在
 | -------- | -------------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------------------- |
 | `GET`    | `/api/`                                | 否   | API 健康检查                                                                                                                |
 | `GET`    | `/api/flags`                           | 否   | 列出所有可用 flag，包含 `code`、`name` 和 `description`                                                                     |
-| `GET`    | `/api/accounts/:uid`                   | 否   | 查询 UID 的公开评分、所有 flag、关联状态和投票数；未记录的 UID 也可查看                                                     |
-| `GET`    | `/api/accounts/:uid/flags/:code/votes` | 是   | 获取当前用户对账号/flag 的投票；没有记录时会创建一条空投票                                                                  |
+| `GET`    | `/api/accounts/:uid`                   | 否   | 查询 UID 的公开评分及已关联 flag 的状态和投票数；未记录的 UID 也可查看                                                     |
+| `GET`    | `/api/accounts/:uid/flags/:code/votes` | 是   | 获取当前用户对账号/flag 的投票；没有记录时返回 `null`                                                                        |
 | `POST`   | `/api/accounts/:uid/flags/:code/votes` | 是   | 提交 `{"direction":"up"}` 或 `{"direction":"down"}`；每位用户对每个账号/flag 只有一票，管理员投票会直接将状态设为认可或否定 |
 | `GET`    | `/api/accounts/:uid/rating`            | 是   | 获取当前用户对账号的评分；尚未评分时返回 `null`                                                                             |
 | `POST`   | `/api/accounts/:uid/rating`            | 是   | 提交 `{"rating":80}`（0-100 的整数）；每位用户对每个账号只能评一次分，重复提交会覆盖自己的评分                              |

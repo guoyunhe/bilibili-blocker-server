@@ -6,18 +6,42 @@ import { useParams } from 'wouter'
 import AccountFlagVotingSection from '../components/AccountFlagVotingSection.js'
 import AccountRatingSection from '../components/AccountRatingSection.js'
 import { getAccount, type AccountDetails } from '../services/accounts.js'
+import { getFlags, type PublicFlag } from '../services/flags.js'
 import { errorMessage } from '../utils/error_message.js'
 import styles from './AccountDetailsPage.module.css'
+
+function mergeAccountWithFlags(account: AccountDetails, flags: PublicFlag[]): AccountDetails {
+  const accountFlagByCode = new Map(account.flags.map((flag) => [flag.code, flag]))
+
+  return {
+    ...account,
+    flags: flags.map(({ code, name, description, recommended }) => {
+      const accountFlag = accountFlagByCode.get(code)
+      return {
+        code,
+        name,
+        description,
+        recommended,
+        status: accountFlag?.status ?? null,
+        upVotes: accountFlag?.upVotes ?? 0,
+        downVotes: accountFlag?.downVotes ?? 0,
+        score: accountFlag?.score ?? 0,
+      }
+    }),
+  }
+}
 
 export default function AccountDetailsPage() {
   const { uid = '' } = useParams<{ uid?: string }>()
   const [account, setAccount] = useState<AccountDetails | null>(null)
+  const [flags, setFlags] = useState<PublicFlag[]>([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let active = true
     setAccount(null)
+    setFlags([])
     setError('')
 
     if (!/^\d+$/.test(uid)) {
@@ -29,9 +53,12 @@ export default function AccountDetailsPage() {
     }
 
     setLoading(true)
-    getAccount(uid)
-      .then((result) => {
-        if (active) setAccount(result)
+    Promise.all([getAccount(uid), getFlags()])
+      .then(([accountResult, flagsResult]) => {
+        if (active) {
+          setFlags(flagsResult)
+          setAccount(mergeAccountWithFlags(accountResult, flagsResult))
+        }
       })
       .catch((reason: unknown) => {
         if (active) setError(errorMessage(reason))
@@ -44,6 +71,10 @@ export default function AccountDetailsPage() {
       active = false
     }
   }, [uid])
+
+  function handleAccountUpdated(updatedAccount: AccountDetails) {
+    setAccount(mergeAccountWithFlags(updatedAccount, flags))
+  }
 
   const associatedFlagCount =
     account?.flags.filter((flag) => flag.status === 'approved').length ?? 0
@@ -88,8 +119,16 @@ export default function AccountDetailsPage() {
                   {associatedFlagCount} 条
                 </Badge>
               </Group>
-              <AccountRatingSection account={account} uid={uid} onAccountUpdated={setAccount} />
-              <AccountFlagVotingSection account={account} uid={uid} onAccountUpdated={setAccount} />
+              <AccountRatingSection
+                account={account}
+                uid={uid}
+                onAccountUpdated={handleAccountUpdated}
+              />
+              <AccountFlagVotingSection
+                account={account}
+                uid={uid}
+                onAccountUpdated={handleAccountUpdated}
+              />
             </>
           )}
         </Stack>

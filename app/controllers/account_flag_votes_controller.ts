@@ -17,15 +17,20 @@ export default class AccountFlagVotesController {
     const { code } = params
     const user = auth.getUserOrFail()
     const flag = await Flag.findByOrFail('code', code)
-    const account = await Account.firstOrCreate({ uid })
-    const accountFlag = await AccountFlag.firstOrCreate({
-      accountId: account.id,
-      flagId: flag.id,
-    })
-    const vote = await AccountFlagVote.firstOrCreate(
-      { userId: user.id, accountFlagId: accountFlag.id },
-      { vote: 0 }
-    )
+    const account = await Account.findBy('uid', uid)
+    if (!account) return serialize({ vote: null })
+
+    const accountFlag = await AccountFlag.query()
+      .where('accountId', account.id)
+      .where('flagId', flag.id)
+      .first()
+    if (!accountFlag) return serialize({ vote: null })
+
+    const vote = await AccountFlagVote.query()
+      .where('userId', user.id)
+      .where('accountFlagId', accountFlag.id)
+      .first()
+    if (!vote) return serialize({ vote: null })
 
     return serialize(AccountFlagVoteTransformer.transform(vote).useVariant('toVote'))
   }

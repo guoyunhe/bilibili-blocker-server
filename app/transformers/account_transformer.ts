@@ -1,7 +1,6 @@
 import type Account from '#models/account'
 import AccountFlag from '#models/account_flag'
 import { voteDirectionForValue } from '#models/account_flag_vote'
-import Flag from '#models/flag'
 import db from '@adonisjs/lucid/services/db'
 import { BaseTransformer } from '@adonisjs/core/transformers'
 
@@ -10,14 +9,14 @@ export default class AccountTransformer extends BaseTransformer<Account> {
     const account = this.resource
     const uid = account.uid
     const accountIsPersisted = account.$isPersisted
-    const [flags, accountFlags] = await Promise.all([
-      Flag.query().orderBy('code'),
-      accountIsPersisted
-        ? AccountFlag.query().where('accountId', account.id).select('id', 'flagId', 'status')
-        : Promise.resolve([]),
-    ])
-    const accountFlagIdByFlagId = new Map(accountFlags.map(({ id, flagId }) => [flagId, id]))
-    const statusByFlagId = new Map(accountFlags.map(({ flagId, status }) => [flagId, status]))
+    const accountFlags = accountIsPersisted
+      ? await AccountFlag.query()
+          .where('accountId', account.id)
+          .select('id', 'flagId', 'status')
+          .preload('flag', (query) =>
+            query.select('id', 'code', 'name', 'description', 'recommended')
+          )
+      : []
     const accountFlagIds = accountFlags.map(({ id }) => id)
     const voteCounts =
       accountFlagIds.length === 0
@@ -48,19 +47,15 @@ export default class AccountTransformer extends BaseTransformer<Account> {
       uid,
       rating: account.rating ?? null,
       ratingCount: account.ratingCount,
-      flags: flags
-        .map(({ id, code, name, description, recommended }) => {
-          const accountFlagId = accountFlagIdByFlagId.get(id)
-          const counts =
-            accountFlagId === undefined
-              ? { up: 0, down: 0, score: 0 }
-              : (countsByAccountFlagId.get(accountFlagId) ?? { up: 0, down: 0, score: 0 })
+      flags: accountFlags
+        .map(({ id, status, flag }) => {
+          const counts = countsByAccountFlagId.get(id) ?? { up: 0, down: 0, score: 0 }
           return {
-            code,
-            name,
-            description,
-            recommended,
-            status: statusByFlagId.get(id) ?? null,
+            code: flag.code,
+            name: flag.name,
+            description: flag.description,
+            recommended: flag.recommended,
+            status,
             upVotes: counts.up,
             downVotes: counts.down,
             score: counts.score,
