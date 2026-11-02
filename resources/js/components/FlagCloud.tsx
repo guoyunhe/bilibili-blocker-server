@@ -40,11 +40,11 @@ export default function FlagCloud() {
             {flags.map((flag) => {
               const sizeRatio =
                 maxUidCount > 0 ? Math.log1p(flag.uidCount) / Math.log1p(maxUidCount) : 0
-              const fontSize = `${0.875 + sizeRatio * 0.625}rem`
+              const fontSize = `${0.5 + sizeRatio * 2}rem`
 
               return (
                 <Tooltip key={flag.code} label={flag.description} maw={280} multiline withArrow>
-                  <Text c="bilibili" component="span" fw={600} style={{ fontSize }}>
+                  <Text c="bilibili" component="span" style={{ fontSize }}>
                     {flag.name}
                   </Text>
                 </Tooltip>
