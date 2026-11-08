@@ -149,7 +149,7 @@ export default function AccountFlagVotingSection({
       {account.flags.length > 0 ? (
         <Grid gap="sm">
           {account.flags.map((flag) => (
-            <Grid.Col key={flag.code} span={{ base: 12, md: 6, lg: 4, xl: 3 }}>
+            <Grid.Col key={flag.code} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
               <FlagVoteCard
                 flag={{ ...flag, userVote: userVotes[flag.code] ?? null }}
                 voteDisabled={
