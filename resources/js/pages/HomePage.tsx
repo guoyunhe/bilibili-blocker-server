@@ -35,7 +35,7 @@ const extensionDownloads = [
     store: 'chrome',
     iconPath: '/browser-logos/chrome.svg',
     url: 'https://chromewebstore.google.com/detail/bilibili-blocker/egfeldkfhdbjcmpjbipdaafnopgpglje',
-    userCountLabel: 'ChromeStats 用户数',
+    userCountLabel: 'Chrome 网上应用店用户数',
   },
   {
     browser: 'Firefox',

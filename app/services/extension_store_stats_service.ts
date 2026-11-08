@@ -47,15 +47,16 @@ async function fetchText(url: string, headers?: Record<string, string>) {
 }
 
 async function fetchChromeCount() {
-  const data = await fetchJson<{ userCount?: unknown }>(
-    'https://chrome-stats.com/api/detail?id=egfeldkfhdbjcmpjbipdaafnopgpglje',
+  const html = await fetchText(
+    'https://chromewebstore.google.com/detail/bilibili-blocker/egfeldkfhdbjcmpjbipdaafnopgpglje?hl=en',
     {
-      'Accept': 'application/json',
+      'Accept': 'text/html',
       'User-Agent': 'Mozilla/5.0 (compatible; BilibiliBlocker/1.0)',
     }
   )
+  const value = html.match(/\b([\d,]+)\s+users\b/i)?.[1]
 
-  return readCount(data.userCount, 'Chrome')
+  return readCount(value === undefined ? undefined : Number(value.replaceAll(',', '')), 'Chrome')
 }
 
 async function fetchFirefoxCount() {
