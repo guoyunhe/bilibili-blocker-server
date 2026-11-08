@@ -5,8 +5,8 @@ import type { CommandOptions } from '@adonisjs/core/types/ace'
 
 import { generateOgImage } from '#services/og_image_service'
 
-export default class OgImageGenerate extends BaseCommand {
-  static commandName = 'og-image:generate'
+export default class GenerateOGImage extends BaseCommand {
+  static commandName = 'generate:og-image'
   static description = 'Generate the static Open Graph image from live flags'
 
   static options: CommandOptions = {
