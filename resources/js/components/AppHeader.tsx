@@ -68,6 +68,13 @@ export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
                       {user.email}
                     </Text>
                   </Menu.Label>
+                  <Menu.Item
+                    component={Link}
+                    href={`/users/${user.id}`}
+                    leftSection={<UserCircleIcon size={17} />}
+                  >
+                    我的主页
+                  </Menu.Item>
                   {user.role === 'admin' && (
                     <Menu.Item component={Link} href="/admin">
                       管理员后台
