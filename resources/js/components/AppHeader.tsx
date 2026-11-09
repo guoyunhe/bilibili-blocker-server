@@ -8,6 +8,7 @@ import {
   useComputedColorScheme,
   useMantineColorScheme,
 } from '@mantine/core'
+import { GearSixIcon } from '@phosphor-icons/react/GearSix'
 import { MoonIcon } from '@phosphor-icons/react/Moon'
 import { SignInIcon } from '@phosphor-icons/react/SignIn'
 import { SignOutIcon } from '@phosphor-icons/react/SignOut'
@@ -76,7 +77,11 @@ export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
                     我的主页
                   </Menu.Item>
                   {user.role === 'admin' && (
-                    <Menu.Item component={Link} href="/admin">
+                    <Menu.Item
+                      component={Link}
+                      href="/admin"
+                      leftSection={<GearSixIcon size={17} />}
+                    >
                       管理员后台
                     </Menu.Item>
                   )}
