@@ -58,8 +58,13 @@ export default function AppHeader({ logoutBusy, onLogout }: AppHeaderProps) {
             (user ? (
               <Menu position="bottom-end" shadow="md" width={220}>
                 <Menu.Target>
-                  <Button leftSection={<UserCircleIcon size={19} />} size="sm" variant="subtle">
-                    {user.name}
+                  <Button
+                    aria-label="账户菜单"
+                    leftSection={<UserCircleIcon size={19} />}
+                    size="sm"
+                    variant="subtle"
+                  >
+                    <span className={styles.userName}>{user.name}</span>
                   </Button>
                 </Menu.Target>
                 <Menu.Dropdown>

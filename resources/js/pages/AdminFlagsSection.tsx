@@ -1,10 +1,13 @@
 import {
   Alert,
+  Badge,
   Button,
+  Flex,
   Group,
   Modal,
   Paper,
   Select,
+  SimpleGrid,
   Stack,
   Switch,
   Table,
@@ -30,6 +33,7 @@ import {
 } from '../services/admin.js'
 import { sendAddRuleUidsMessage } from '../services/extension.js'
 import { errorMessage } from '../utils/error_message.js'
+import { useIsMobile } from '../utils/use_is_mobile.js'
 import styles from './AdminPage.module.css'
 
 type AdminFlagValues = Omit<AdminFlag, 'id'>
@@ -42,6 +46,7 @@ const emptyValues: AdminFlagValues = {
 }
 
 export default function AdminFlagsSection() {
+  const isMobile = useIsMobile()
   const [flags, setFlags] = useState<AdminFlag[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -218,9 +223,14 @@ export default function AdminFlagsSection() {
 
   return (
     <>
-      <Paper className={styles.section} p="lg" radius="lg" withBorder>
+      <Paper className={styles.section} p={{ base: 'md', sm: 'lg' }} radius="lg" withBorder>
         <Stack gap="md">
-          <Group align="flex-end" justify="space-between">
+          <Flex
+            align={isMobile ? 'stretch' : 'flex-end'}
+            direction={isMobile ? 'column' : 'row'}
+            gap="md"
+            justify="space-between"
+          >
             <div>
               <Title order={2} size="h3">
                 标记管理
@@ -230,7 +240,7 @@ export default function AdminFlagsSection() {
                 个。
               </Text>
             </div>
-            <Group gap="xs">
+            <Group gap="xs" grow={isMobile} w={isMobile ? '100%' : undefined}>
               <Button variant="default" onClick={openImportModal}>
                 批量导入 UID
               </Button>
@@ -238,7 +248,7 @@ export default function AdminFlagsSection() {
                 新增标记
               </Button>
             </Group>
-          </Group>
+          </Flex>
 
           {error && !modalOpened && (
             <Alert color="red" icon={<WarningCircleIcon size={20} />} title="操作失败">
@@ -246,26 +256,29 @@ export default function AdminFlagsSection() {
             </Alert>
           )}
 
-          <div className={styles.tableScroll}>
-            <Table highlightOnHover miw={760} striped>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>代码</Table.Th>
-                  <Table.Th>名称</Table.Th>
-                  <Table.Th>描述</Table.Th>
-                  <Table.Th>推荐屏蔽</Table.Th>
-                  <Table.Th />
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
+          {isMobile ? (
+            <Stack gap="sm">
+              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                 {flags.map((flag) => (
-                  <Table.Tr key={flag.id}>
-                    <Table.Td>{flag.code}</Table.Td>
-                    <Table.Td>{flag.name}</Table.Td>
-                    <Table.Td>{flag.description}</Table.Td>
-                    <Table.Td>{flag.recommended ? '是' : '否'}</Table.Td>
-                    <Table.Td>
-                      <Group gap="xs" wrap="nowrap">
+                  <Paper key={flag.id} p="md" radius="md" withBorder>
+                    <Stack gap="xs" h="100%">
+                      <Group align="flex-start" gap="sm" justify="space-between" wrap="nowrap">
+                        <div className={styles.cardHeading}>
+                          <Text fw={600} size="sm">
+                            {flag.name}
+                          </Text>
+                          <Text c="dimmed" size="xs">
+                            {flag.code}
+                          </Text>
+                        </div>
+                        <Badge color={flag.recommended ? 'bilibili' : 'gray'} variant="light">
+                          {flag.recommended ? '推荐屏蔽' : '不推荐'}
+                        </Badge>
+                      </Group>
+                      <Text c="dimmed" size="sm">
+                        {flag.description}
+                      </Text>
+                      <Group className={styles.cardActions} gap="xs" grow>
                         <Button
                           leftSection={<PencilSimpleIcon size={16} />}
                           size="xs"
@@ -286,34 +299,92 @@ export default function AdminFlagsSection() {
                           删除
                         </Button>
                       </Group>
-                    </Table.Td>
-                  </Table.Tr>
+                    </Stack>
+                  </Paper>
                 ))}
-                {!loading && flags.length === 0 && (
+              </SimpleGrid>
+              {!loading && flags.length === 0 && (
+                <Text c="dimmed" py="md" ta="center">
+                  暂无标记
+                </Text>
+              )}
+              {loading && (
+                <Text c="dimmed" py="md" ta="center">
+                  正在加载标记…
+                </Text>
+              )}
+            </Stack>
+          ) : (
+            <div className={styles.tableScroll}>
+              <Table highlightOnHover miw={760} striped>
+                <Table.Thead>
                   <Table.Tr>
-                    <Table.Td colSpan={5}>
-                      <Text c="dimmed" py="md" ta="center">
-                        暂无标记
-                      </Text>
-                    </Table.Td>
+                    <Table.Th>代码</Table.Th>
+                    <Table.Th>名称</Table.Th>
+                    <Table.Th>描述</Table.Th>
+                    <Table.Th>推荐屏蔽</Table.Th>
+                    <Table.Th />
                   </Table.Tr>
-                )}
-                {loading && (
-                  <Table.Tr>
-                    <Table.Td colSpan={5}>
-                      <Text c="dimmed" py="md" ta="center">
-                        正在加载标记…
-                      </Text>
-                    </Table.Td>
-                  </Table.Tr>
-                )}
-              </Table.Tbody>
-            </Table>
-          </div>
+                </Table.Thead>
+                <Table.Tbody>
+                  {flags.map((flag) => (
+                    <Table.Tr key={flag.id}>
+                      <Table.Td>{flag.code}</Table.Td>
+                      <Table.Td>{flag.name}</Table.Td>
+                      <Table.Td>{flag.description}</Table.Td>
+                      <Table.Td>{flag.recommended ? '是' : '否'}</Table.Td>
+                      <Table.Td>
+                        <Group gap="xs" wrap="nowrap">
+                          <Button
+                            leftSection={<PencilSimpleIcon size={16} />}
+                            size="xs"
+                            variant="light"
+                            onClick={() => openEditModal(flag)}
+                          >
+                            编辑
+                          </Button>
+                          <Button
+                            color="red"
+                            disabled={deletingFlagId !== null}
+                            loading={deletingFlagId === flag.id}
+                            leftSection={<TrashIcon size={16} />}
+                            size="xs"
+                            variant="light"
+                            onClick={() => void handleDelete(flag)}
+                          >
+                            删除
+                          </Button>
+                        </Group>
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                  {!loading && flags.length === 0 && (
+                    <Table.Tr>
+                      <Table.Td colSpan={5}>
+                        <Text c="dimmed" py="md" ta="center">
+                          暂无标记
+                        </Text>
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
+                  {loading && (
+                    <Table.Tr>
+                      <Table.Td colSpan={5}>
+                        <Text c="dimmed" py="md" ta="center">
+                          正在加载标记…
+                        </Text>
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
+                </Table.Tbody>
+              </Table>
+            </div>
+          )}
         </Stack>
       </Paper>
 
       <Modal
+        fullScreen={isMobile}
         opened={modalOpened}
         title={editingFlag ? '编辑标记' : '新增标记'}
         onClose={() => setModalOpened(false)}
@@ -350,6 +421,7 @@ export default function AdminFlagsSection() {
       </Modal>
 
       <Modal
+        fullScreen={isMobile}
         opened={importModalOpened}
         size="lg"
         title="批量导入 UID"

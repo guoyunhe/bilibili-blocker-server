@@ -11,3 +11,31 @@
 .tableScroll {
   overflow-x: auto;
 }
+
+.cardHeading {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.cardActions {
+  margin-top: auto;
+}
+
+.wrapAnywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (max-width: 62em) {
+  .adminPage {
+    padding-top: 24px;
+    padding-bottom: 40px;
+  }
+}
+
+@media (max-width: 36em) {
+  .adminPage {
+    padding-top: 16px;
+    padding-bottom: 32px;
+  }
+}

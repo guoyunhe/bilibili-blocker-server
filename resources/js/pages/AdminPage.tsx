@@ -4,10 +4,12 @@ import {
   Badge,
   Button,
   Container,
+  Flex,
   Group,
   Loader,
   Pagination,
   Paper,
+  SimpleGrid,
   Stack,
   Table,
   Text,
@@ -30,6 +32,7 @@ import {
   type UserPagination,
 } from '../services/admin.js'
 import { errorMessage } from '../utils/error_message.js'
+import { useIsMobile } from '../utils/use_is_mobile.js'
 import styles from './AdminPage.module.css'
 
 function formatDate(value: string) {
@@ -38,6 +41,7 @@ function formatDate(value: string) {
 
 export default function AdminPage() {
   const { authReady, user } = useAuth()
+  const isMobile = useIsMobile()
   const [users, setUsers] = useState<AdminUser[]>([])
   const [votes, setVotes] = useState<RecentVote[]>([])
   const [userPagination, setUserPagination] = useState<UserPagination | null>(null)
@@ -160,7 +164,12 @@ export default function AdminPage() {
   return (
     <Container className={styles.adminPage} size="xl">
       <Stack gap="xl">
-        <Group align="flex-end" justify="space-between">
+        <Flex
+          align={isMobile ? 'stretch' : 'flex-end'}
+          direction={isMobile ? 'column' : 'row'}
+          gap="md"
+          justify="space-between"
+        >
           <div>
             <Text c="dimmed" fw={600} size="sm">
               管理控制台
@@ -171,6 +180,7 @@ export default function AdminPage() {
           </div>
           <Button
             disabled={loading}
+            fullWidth={isMobile}
             leftSection={<ArrowClockwiseIcon size={18} />}
             loading={loading}
             variant="default"
@@ -178,7 +188,7 @@ export default function AdminPage() {
           >
             刷新数据
           </Button>
-        </Group>
+        </Flex>
 
         {error && (
           <Alert color="red" icon={<WarningCircleIcon size={20} />} title="操作失败">
@@ -188,7 +198,7 @@ export default function AdminPage() {
 
         <AdminFlagsSection />
 
-        <Paper className={styles.section} p="lg" radius="lg" withBorder>
+        <Paper className={styles.section} p={{ base: 'md', sm: 'lg' }} radius="lg" withBorder>
           <Stack gap="md">
             <div>
               <Title order={2} size="h3">
@@ -199,77 +209,156 @@ export default function AdminPage() {
                 {userPagination ? ` 共 ${userPagination.total} 位用户。` : ''}
               </Text>
             </div>
-            <div className={styles.tableScroll}>
-              <Table highlightOnHover miw={840} striped>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>用户</Table.Th>
-                    <Table.Th>邮箱</Table.Th>
-                    <Table.Th>邮箱验证</Table.Th>
-                    <Table.Th>角色</Table.Th>
-                    <Table.Th ta="right">有效投票</Table.Th>
-                    <Table.Th ta="right">评分数</Table.Th>
-                    <Table.Th>注册时间</Table.Th>
-                    <Table.Th />
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
+            {isMobile ? (
+              <Stack gap="sm">
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                   {users.map((item) => (
-                    <Table.Tr key={item.id}>
-                      <Table.Td>
-                        <Anchor component={Link} href={`/users/${item.id}`} fw={600}>
-                          {item.name}
-                        </Anchor>
-                        <Text c="dimmed" size="xs">
-                          ID {item.id}
+                    <Paper key={item.id} p="md" radius="md" withBorder>
+                      <Stack gap="xs">
+                        <Group align="flex-start" gap="sm" justify="space-between" wrap="nowrap">
+                          <div className={styles.cardHeading}>
+                            <Anchor component={Link} fw={600} href={`/users/${item.id}`} size="sm">
+                              {item.name}
+                            </Anchor>
+                            <Text c="dimmed" size="xs">
+                              ID {item.id}
+                            </Text>
+                          </div>
+                          <Badge
+                            color={item.role === 'admin' ? 'bilibili' : 'gray'}
+                            variant="light"
+                          >
+                            {item.role === 'admin' ? '管理员' : '用户'}
+                          </Badge>
+                        </Group>
+                        <Text className={styles.wrapAnywhere} c="dimmed" size="sm">
+                          {item.email}
                         </Text>
-                      </Table.Td>
-                      <Table.Td>{item.email}</Table.Td>
-                      <Table.Td>
-                        <Badge color={item.emailVerifiedAt ? 'green' : 'yellow'} variant="light">
-                          {item.emailVerifiedAt ? '已验证' : '未验证'}
-                        </Badge>
-                      </Table.Td>
-                      <Table.Td>
-                        <Badge color={item.role === 'admin' ? 'bilibili' : 'gray'} variant="light">
-                          {item.role === 'admin' ? '管理员' : '用户'}
-                        </Badge>
-                      </Table.Td>
-                      <Table.Td ta="right">{item.voteCount}</Table.Td>
-                      <Table.Td ta="right">{item.ratingCount}</Table.Td>
-                      <Table.Td>{formatDate(item.createdAt)}</Table.Td>
-                      <Table.Td>
+                        <Group align="flex-start" gap="lg">
+                          <Badge color={item.emailVerifiedAt ? 'green' : 'yellow'} variant="light">
+                            {item.emailVerifiedAt ? '邮箱已验证' : '邮箱未验证'}
+                          </Badge>
+                          <div>
+                            <Text c="dimmed" size="xs">
+                              有效投票
+                            </Text>
+                            <Text fw={600} size="sm">
+                              {item.voteCount}
+                            </Text>
+                          </div>
+                          <div>
+                            <Text c="dimmed" size="xs">
+                              评分数
+                            </Text>
+                            <Text fw={600} size="sm">
+                              {item.ratingCount}
+                            </Text>
+                          </div>
+                        </Group>
+                        <Text c="dimmed" size="xs">
+                          注册于 {formatDate(item.createdAt)}
+                        </Text>
                         {item.id !== user.id && (
                           <Button
                             color="red"
                             disabled={deletingUserId !== null}
-                            loading={deletingUserId === item.id}
+                            fullWidth
                             leftSection={<TrashIcon size={17} />}
+                            loading={deletingUserId === item.id}
                             size="xs"
                             variant="light"
                             onClick={() => void handleDelete(item)}
                           >
-                            删除
+                            删除用户
                           </Button>
                         )}
-                      </Table.Td>
-                    </Table.Tr>
+                      </Stack>
+                    </Paper>
                   ))}
-                  {!loading && users.length === 0 && (
+                </SimpleGrid>
+                {!loading && users.length === 0 && (
+                  <Text c="dimmed" py="md" ta="center">
+                    暂无用户
+                  </Text>
+                )}
+              </Stack>
+            ) : (
+              <div className={styles.tableScroll}>
+                <Table highlightOnHover miw={840} striped>
+                  <Table.Thead>
                     <Table.Tr>
-                      <Table.Td colSpan={8}>
-                        <Text c="dimmed" py="md" ta="center">
-                          暂无用户
-                        </Text>
-                      </Table.Td>
+                      <Table.Th>用户</Table.Th>
+                      <Table.Th>邮箱</Table.Th>
+                      <Table.Th>邮箱验证</Table.Th>
+                      <Table.Th>角色</Table.Th>
+                      <Table.Th ta="right">有效投票</Table.Th>
+                      <Table.Th ta="right">评分数</Table.Th>
+                      <Table.Th>注册时间</Table.Th>
+                      <Table.Th />
                     </Table.Tr>
-                  )}
-                </Table.Tbody>
-              </Table>
-            </div>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {users.map((item) => (
+                      <Table.Tr key={item.id}>
+                        <Table.Td>
+                          <Anchor component={Link} href={`/users/${item.id}`} fw={600}>
+                            {item.name}
+                          </Anchor>
+                          <Text c="dimmed" size="xs">
+                            ID {item.id}
+                          </Text>
+                        </Table.Td>
+                        <Table.Td>{item.email}</Table.Td>
+                        <Table.Td>
+                          <Badge color={item.emailVerifiedAt ? 'green' : 'yellow'} variant="light">
+                            {item.emailVerifiedAt ? '已验证' : '未验证'}
+                          </Badge>
+                        </Table.Td>
+                        <Table.Td>
+                          <Badge
+                            color={item.role === 'admin' ? 'bilibili' : 'gray'}
+                            variant="light"
+                          >
+                            {item.role === 'admin' ? '管理员' : '用户'}
+                          </Badge>
+                        </Table.Td>
+                        <Table.Td ta="right">{item.voteCount}</Table.Td>
+                        <Table.Td ta="right">{item.ratingCount}</Table.Td>
+                        <Table.Td>{formatDate(item.createdAt)}</Table.Td>
+                        <Table.Td>
+                          {item.id !== user.id && (
+                            <Button
+                              color="red"
+                              disabled={deletingUserId !== null}
+                              loading={deletingUserId === item.id}
+                              leftSection={<TrashIcon size={17} />}
+                              size="xs"
+                              variant="light"
+                              onClick={() => void handleDelete(item)}
+                            >
+                              删除
+                            </Button>
+                          )}
+                        </Table.Td>
+                      </Table.Tr>
+                    ))}
+                    {!loading && users.length === 0 && (
+                      <Table.Tr>
+                        <Table.Td colSpan={8}>
+                          <Text c="dimmed" py="md" ta="center">
+                            暂无用户
+                          </Text>
+                        </Table.Td>
+                      </Table.Tr>
+                    )}
+                  </Table.Tbody>
+                </Table>
+              </div>
+            )}
             {userPagination && userPagination.lastPage > 1 && (
-              <Group justify="flex-end">
+              <Group justify={isMobile ? 'center' : 'flex-end'}>
                 <Pagination
+                  siblings={isMobile ? 0 : 1}
                   total={userPagination.lastPage}
                   value={userPage}
                   onChange={(nextPage) => void handleUserPageChange(nextPage)}
@@ -279,7 +368,7 @@ export default function AdminPage() {
           </Stack>
         </Paper>
 
-        <Paper className={styles.section} p="lg" radius="lg" withBorder>
+        <Paper className={styles.section} p={{ base: 'md', sm: 'lg' }} radius="lg" withBorder>
           <Stack gap="md">
             <div>
               <Title order={2} size="h3">
@@ -289,65 +378,129 @@ export default function AdminPage() {
                 按最后投票变更时间排序，共 {votePagination?.total ?? 0} 条记录；取消的投票也会显示。
               </Text>
             </div>
-            <div className={styles.tableScroll}>
-              <Table highlightOnHover miw={800} striped>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>投票用户</Table.Th>
-                    <Table.Th>账号 UID</Table.Th>
-                    <Table.Th>标记</Table.Th>
-                    <Table.Th>投票</Table.Th>
-                    <Table.Th>最后变更</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
+            {isMobile ? (
+              <Stack gap="sm">
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                   {votes.map((vote) => (
-                    <Table.Tr key={vote.id}>
-                      <Table.Td>
-                        <Anchor component={Link} href={`/users/${vote.userId}`} fw={600}>
-                          {vote.userName}
-                        </Anchor>
+                    <Paper key={vote.id} p="md" radius="md" withBorder>
+                      <Stack gap="xs">
+                        <Group align="flex-start" gap="sm" justify="space-between" wrap="nowrap">
+                          <div className={styles.cardHeading}>
+                            <Anchor
+                              component={Link}
+                              fw={600}
+                              href={`/users/${vote.userId}`}
+                              size="sm"
+                            >
+                              {vote.userName}
+                            </Anchor>
+                            <Text className={styles.wrapAnywhere} c="dimmed" size="xs">
+                              {vote.userEmail}
+                            </Text>
+                          </div>
+                          <Badge
+                            color={vote.vote === 1 ? 'bilibili' : vote.vote === -1 ? 'red' : 'gray'}
+                            variant="light"
+                          >
+                            {vote.vote === 1 ? '赞成' : vote.vote === -1 ? '反对' : '已撤销'}
+                          </Badge>
+                        </Group>
+                        <Group gap="lg">
+                          <div>
+                            <Text c="dimmed" size="xs">
+                              标记
+                            </Text>
+                            <Text fw={600} size="sm">
+                              {vote.flagName}{' '}
+                              <Text c="dimmed" component="span" fw={400} size="xs">
+                                {vote.flagCode}
+                              </Text>
+                            </Text>
+                          </div>
+                          <div>
+                            <Text c="dimmed" size="xs">
+                              账号 UID
+                            </Text>
+                            <Anchor href={`/accounts/${vote.uid}`} size="sm">
+                              {vote.uid}
+                            </Anchor>
+                          </div>
+                        </Group>
                         <Text c="dimmed" size="xs">
-                          {vote.userEmail}
+                          最后变更于 {formatDate(vote.updatedAt)}
                         </Text>
-                      </Table.Td>
-                      <Table.Td>
-                        <Anchor component={Link} href={`/accounts/${vote.uid}`}>
-                          {vote.uid}
-                        </Anchor>
-                      </Table.Td>
-                      <Table.Td>
-                        <Text fw={600}>{vote.flagName}</Text>
-                        <Text c="dimmed" size="xs">
-                          {vote.flagCode}
-                        </Text>
-                      </Table.Td>
-                      <Table.Td>
-                        <Badge
-                          color={vote.vote === 1 ? 'bilibili' : vote.vote === -1 ? 'red' : 'gray'}
-                          variant="light"
-                        >
-                          {vote.vote === 1 ? '赞成' : vote.vote === -1 ? '反对' : '已撤销'}
-                        </Badge>
-                      </Table.Td>
-                      <Table.Td>{formatDate(vote.updatedAt)}</Table.Td>
-                    </Table.Tr>
+                      </Stack>
+                    </Paper>
                   ))}
-                  {!loading && votes.length === 0 && (
+                </SimpleGrid>
+                {!loading && votes.length === 0 && (
+                  <Text c="dimmed" py="md" ta="center">
+                    暂无投票记录
+                  </Text>
+                )}
+              </Stack>
+            ) : (
+              <div className={styles.tableScroll}>
+                <Table highlightOnHover miw={800} striped>
+                  <Table.Thead>
                     <Table.Tr>
-                      <Table.Td colSpan={5}>
-                        <Text c="dimmed" py="md" ta="center">
-                          暂无投票记录
-                        </Text>
-                      </Table.Td>
+                      <Table.Th>投票用户</Table.Th>
+                      <Table.Th>账号 UID</Table.Th>
+                      <Table.Th>标记</Table.Th>
+                      <Table.Th>投票</Table.Th>
+                      <Table.Th>最后变更</Table.Th>
                     </Table.Tr>
-                  )}
-                </Table.Tbody>
-              </Table>
-            </div>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {votes.map((vote) => (
+                      <Table.Tr key={vote.id}>
+                        <Table.Td>
+                          <Anchor component={Link} href={`/users/${vote.userId}`} fw={600}>
+                            {vote.userName}
+                          </Anchor>
+                          <Text c="dimmed" size="xs">
+                            {vote.userEmail}
+                          </Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Anchor component={Link} href={`/accounts/${vote.uid}`}>
+                            {vote.uid}
+                          </Anchor>
+                        </Table.Td>
+                        <Table.Td>
+                          <Text fw={600}>{vote.flagName}</Text>
+                          <Text c="dimmed" size="xs">
+                            {vote.flagCode}
+                          </Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Badge
+                            color={vote.vote === 1 ? 'bilibili' : vote.vote === -1 ? 'red' : 'gray'}
+                            variant="light"
+                          >
+                            {vote.vote === 1 ? '赞成' : vote.vote === -1 ? '反对' : '已撤销'}
+                          </Badge>
+                        </Table.Td>
+                        <Table.Td>{formatDate(vote.updatedAt)}</Table.Td>
+                      </Table.Tr>
+                    ))}
+                    {!loading && votes.length === 0 && (
+                      <Table.Tr>
+                        <Table.Td colSpan={5}>
+                          <Text c="dimmed" py="md" ta="center">
+                            暂无投票记录
+                          </Text>
+                        </Table.Td>
+                      </Table.Tr>
+                    )}
+                  </Table.Tbody>
+                </Table>
+              </div>
+            )}
             {votePagination && votePagination.lastPage > 1 && (
-              <Group justify="flex-end">
+              <Group justify={isMobile ? 'center' : 'flex-end'}>
                 <Pagination
+                  siblings={isMobile ? 0 : 1}
                   total={votePagination.lastPage}
                   value={votePage}
                   onChange={(nextPage) => void handleVotePageChange(nextPage)}
